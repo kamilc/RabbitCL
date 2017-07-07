@@ -24,7 +24,10 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 
 include_directories(include /opt/local/include )
 
-add_library(rabbit STATIC src/Layer.cpp src/IdentityLayer.cpp)
+add_library(rabbit STATIC src/Layer.cpp
+                          src/Activation.cpp
+                          src/TanhActivation.cpp
+                          src/IdentityActivation.cpp)
 
 add_executable(rabbit_test test/rabbit_test.cpp)
 
