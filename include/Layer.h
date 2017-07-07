@@ -5,21 +5,28 @@
 #define VIENNACL_WITH_OPENCL 1
 
 #include <stdio.h>
-#include <valarray>
 #include <boost/optional.hpp>
 #include "Activation.h"
+#include "TrainDef.h"
 
 class Layer {
 private:
-    int _size;
+    std::size_t _size;
     boost::optional<Layer&> _parent;
     Activation& _activation;
+    boost::optional<viennacl::matrix<float>> _synapses;
 public:
-    Layer(int size, Activation& activation);
-    Layer(Layer& parent, int size, Activation& activation);
+    Layer(std::size_t size, Activation& activation);
+    Layer(Layer& parent, std::size_t size, Activation& activation);
 
-    int size();
-    int totalSize();
+    std::size_t size();
+    std::size_t totalSize();
+    Layer& root();
+
+    void train(TrainDef& train);
+
+    viennacl::matrix<float> parentForward(viennacl::matrix<float> input);
+    viennacl::matrix<float> forward(viennacl::matrix<float> input);
 };
 
 #endif
