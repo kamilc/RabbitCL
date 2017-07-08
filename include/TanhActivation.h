@@ -8,8 +8,8 @@
 class TanhActivation : public Activation {
 public:
     TanhActivation();
-    viennacl::matrix<float> compute(viennacl::matrix<float> x);
-    viennacl::matrix<float> derivative(viennacl::matrix<float> x);
+    std::shared_ptr<viennacl::matrix<float>> compute(std::shared_ptr<viennacl::matrix<float>> x);
+    std::shared_ptr<viennacl::matrix<float>> derivative(std::shared_ptr<viennacl::matrix<float>> x);
 };
 
 #endif

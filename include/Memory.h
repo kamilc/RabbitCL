@@ -6,7 +6,7 @@
 
 class Memory {
 public:
-    static viennacl::matrix<float> convert(boost::numeric::ublas::matrix<float> input);
+    static std::shared_ptr<viennacl::matrix<float>> convert(boost::numeric::ublas::matrix<float> input);
 };
 
 #endif

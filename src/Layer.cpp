@@ -13,10 +13,13 @@ Layer::Layer(std::size_t size, Activation& activation) : _activation(activation)
 Layer::Layer(Layer& parent, std::size_t size, Activation& activation) : _activation(activation)
 {
     auto synapses = Distributions::scaled_uniform_matrix(parent.size(), size);
+    auto data = Memory::convert(synapses);
 
     this->_parent = parent;
     this->_size = size;
-    this->_synapses = Memory::convert(synapses);
+    this->_synapses = data;
+
+    std::cout << "Initialized!" << std::endl;
 }
 
 std::size_t Layer::size()
@@ -36,7 +39,7 @@ std::size_t Layer::totalSize()
     }
 }
 
-viennacl::matrix<float> Layer::parentForward(viennacl::matrix<float> input)
+std::shared_ptr<viennacl::matrix<float>> Layer::parentForward(std::shared_ptr<viennacl::matrix<float>> input)
 {
     if(this->_parent)
     {
@@ -48,12 +51,20 @@ viennacl::matrix<float> Layer::parentForward(viennacl::matrix<float> input)
     }
 }
 
-viennacl::matrix<float> Layer::forward(viennacl::matrix<float> gpuInput)
+std::shared_ptr<viennacl::matrix<float>> Layer::forward(std::shared_ptr<viennacl::matrix<float>> gpuInput)
 {
-    viennacl::matrix<float> parentInput = this->parentForward(gpuInput);
-    viennacl::matrix<float> weighted = viennacl::linalg::prod(parentInput, this->_synapses.get());
+    if(this->_parent)
+    {
+        std::shared_ptr<viennacl::matrix<float>> parentInput = this->parentForward(gpuInput);
+        viennacl::matrix<float> weighted = viennacl::linalg::prod(*parentInput, *(this->_synapses.get()));
 
-    return this->_activation.compute(weighted);
+        return this->_activation.compute(std::make_shared<viennacl::matrix<float>>(weighted));
+    }
+    else 
+    {
+        return gpuInput;
+    }
+    
 }
 
 Layer& Layer::root()
@@ -73,8 +84,8 @@ void Layer::train(TrainDef& train)
     for(int iter = 1; iter <= train.getEpochs(); iter++) {
         std::cout << "Epoch! " << iter << std::endl;
 
-        viennacl::matrix<float> gpuInput = Memory::convert(train.getInput());
-        viennacl::matrix<float> output = this->forward(gpuInput);
+        std::shared_ptr<viennacl::matrix<float>> gpuInput = Memory::convert(train.getInput());
+        std::shared_ptr<viennacl::matrix<float>> output = this->forward(gpuInput);
         //viennacl::matrix<float> errors = this->error()
 
     }

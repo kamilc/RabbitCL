@@ -5,12 +5,12 @@ Activation::Activation()
 
 }
 
-viennacl::matrix<float> Activation::compute(viennacl::matrix<float> x)
+std::shared_ptr<viennacl::matrix<float>> Activation::compute(std::shared_ptr<viennacl::matrix<float>> x)
 {
     return x;
 }
 
-viennacl::matrix<float> Activation::derivative(viennacl::matrix<float> x)
+std::shared_ptr<viennacl::matrix<float>> Activation::derivative(std::shared_ptr<viennacl::matrix<float>> x)
 {
     return x;
 }

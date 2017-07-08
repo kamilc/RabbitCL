@@ -14,7 +14,7 @@ private:
     std::size_t _size;
     boost::optional<Layer&> _parent;
     Activation& _activation;
-    boost::optional<viennacl::matrix<float>> _synapses;
+    boost::optional<std::shared_ptr<viennacl::matrix<float>>> _synapses;
 public:
     Layer(std::size_t size, Activation& activation);
     Layer(Layer& parent, std::size_t size, Activation& activation);
@@ -25,8 +25,8 @@ public:
 
     void train(TrainDef& train);
 
-    viennacl::matrix<float> parentForward(viennacl::matrix<float> input);
-    viennacl::matrix<float> forward(viennacl::matrix<float> input);
+    std::shared_ptr<viennacl::matrix<float>> parentForward(std::shared_ptr<viennacl::matrix<float>> input);
+    std::shared_ptr<viennacl::matrix<float>> forward( std::shared_ptr<viennacl::matrix<float>> input);
 };
 
 #endif
