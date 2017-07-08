@@ -5,7 +5,8 @@ project(librabbit)
 set (CMAKE_CXX_STANDARD 11)
 add_compile_options(-std=c++11)
 
-find_package( OpenCL REQUIRED )
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+find_package( OpenCL )
 
 enable_testing()
 
@@ -35,6 +36,9 @@ add_library(rabbit STATIC src/Layer.cpp
                           src/Memory.cpp)
 
 add_executable(rabbit_test test/rabbit_test.cpp)
+
+message(status "Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
+message(status "Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
 target_link_libraries(rabbit_test rabbit gtest_main pthread ${OPENCL_LIBRARIES})
 
