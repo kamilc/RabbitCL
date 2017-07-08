@@ -8,7 +8,7 @@
 
 TEST(sample_test_case, sample_test)
 {
-    boost::numeric::ublas::matrix<float> input = boost::numeric::ublas::matrix<float>(100, 4);
+    boost::numeric::ublas::matrix<float> input = boost::numeric::ublas::matrix<float>(4, 100);
     TanhActivation activation = TanhActivation();
     TrainDef train = TrainDef(input);
 
