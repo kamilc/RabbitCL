@@ -28,7 +28,8 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR})
 
 add_library(rabbit STATIC src/layer.cpp
-                          src/input.cpp)
+                          src/input.cpp
+                          src/dense.cpp)
 
 add_executable(rabbit_test test/rabbit_test.cpp)
 

@@ -3,14 +3,16 @@
 #include "gtest/gtest.h"
 
 #include "input.h"
+#include "dense.h"
 
 using namespace heed;
 
 TEST(sample_test_case, sample_test)
 {
     auto root = std::make_shared<input<float>>(input<float>(10));
+    auto hidden = std::make_shared<dense<float>>(dense<float>(15, root));
 
-    EXPECT_EQ(10, root->size());
+    EXPECT_EQ(15, hidden->size());
 
     // boost::numeric::ublas::matrix<float> input = boost::numeric::ublas::matrix<float>(4, 100);
     // TanhActivation activation = TanhActivation();
