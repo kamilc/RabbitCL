@@ -4,6 +4,8 @@
 
 #include "input.h"
 #include "dense.h"
+#include "activation.h"
+#include "function/tanh.h"
 
 using namespace heed;
 
@@ -11,8 +13,9 @@ TEST(sample_test_case, sample_test)
 {
     auto root = std::make_shared<input<float>>(input<float>(10));
     auto hidden = std::make_shared<dense<float>>(dense<float>(15, root));
+    auto network = std::make_shared<activation<float, function::tanh<float>>>(activation<float, function::tanh<float>>(hidden));
 
-    EXPECT_EQ(15, hidden->size());
+    EXPECT_EQ(15, network->size());
 
     // boost::numeric::ublas::matrix<float> input = boost::numeric::ublas::matrix<float>(4, 100);
     // TanhActivation activation = TanhActivation();

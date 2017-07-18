@@ -16,11 +16,13 @@ namespace heed
     {
     private:
         std::size_t _size;
-        std::vector<std::shared_ptr<matrix<T>>> _inputs;
+        std::vector<std::shared_ptr<layer<T>>> _inputs;
     public:
         layer(std::size_t size);
         layer(std::size_t size, std::shared_ptr<layer> input);
         layer(std::size_t size, std::vector<std::shared_ptr<layer>> inputs);
+        layer(std::shared_ptr<layer> input);
+        layer(std::vector<std::shared_ptr<layer>> inputs);
 
         std::size_t size();
 
