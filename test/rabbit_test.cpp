@@ -6,6 +6,7 @@
 #include "dense.h"
 #include "activation.h"
 #include "function/tanh.h"
+#include "function/relu.h"
 
 using namespace heed;
 
@@ -14,21 +15,8 @@ TEST(sample_test_case, sample_test)
     auto root = std::make_shared<input<float>>(input<float>(10));
     auto hidden = std::make_shared<dense<float>>(dense<float>(15, root));
     auto network = std::make_shared<activation<float, function::tanh<float>>>(activation<float, function::tanh<float>>(hidden));
+    auto network2 = std::make_shared<activation<float, function::relu<float>>>(activation<float, function::relu<float>>(hidden));
 
     EXPECT_EQ(15, network->size());
-
-    // boost::numeric::ublas::matrix<float> input = boost::numeric::ublas::matrix<float>(4, 100);
-    // TanhActivation activation = TanhActivation();
-    // TrainDef train = TrainDef(input);
-
-    // layer root = layer(100, activation);
-    // layer hidden = layer(root, 2, activation);
-    // layer network = layer(hidden, 2, activation);
-
-    // EXPECT_EQ(network.size(), 2);
-    // EXPECT_EQ(network.totalSize(), 400);
-
-    // network.train(train);
-
-    //EXPECT_EQ(1, 2);
+    EXPECT_EQ(15, network2->size());
 }

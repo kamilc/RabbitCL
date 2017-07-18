@@ -1,6 +1,7 @@
 #include "activation.h"
 #include "activation_function.h"
 #include "function/tanh.h"
+#include "function/relu.h"
 
 namespace heed
 {
@@ -18,5 +19,8 @@ namespace heed
     }
 
     template class activation<float, function::tanh<float>>;
+    template class activation<float, function::relu<float>>;
+
     template class activation<double, function::tanh<double>>;
+    template class activation<double, function::relu<double>>;
 }

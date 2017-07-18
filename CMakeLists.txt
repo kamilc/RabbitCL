@@ -32,7 +32,8 @@ add_library(rabbit STATIC src/layer.cpp
                           src/dense.cpp
                           src/activation.cpp
                           src/activation_function.cpp
-                          src/function/tanh.cpp)
+                          src/function/tanh.cpp
+                          src/function/relu.cpp)
 
 add_executable(rabbit_test test/rabbit_test.cpp)
 
