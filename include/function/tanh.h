@@ -12,8 +12,8 @@ namespace heed
         class tanh : public activation_function<T, MODE>
         {
         public:
-            std::shared_ptr<matrix<T>> compute(std::shared_ptr<matrix<T>> data);
-            std::shared_ptr<matrix<T>> derivation_slope(std::shared_ptr<matrix<T>> data);
+            std::shared_ptr<matrix<T, MODE>> compute(std::shared_ptr<matrix<T, MODE>> data);
+            std::shared_ptr<matrix<T, MODE>> derivation_slope(std::shared_ptr<matrix<T, MODE>> data);
         };
     }
 }

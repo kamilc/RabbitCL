@@ -24,7 +24,7 @@ TEST(sample_test_case, sample_test)
 
     EXPECT_EQ(8, output->size());
 
-    matrix<float> data = matrix<float>(mode::cpu, 8, 3, { 0, 0, 0, /* 0 */
+    auto data = matrix<float, mode::cpu>(8, 3, { 0, 0, 0, /* 0 */
                                                           0, 0, 1, /* 1 */
                                                           0, 1, 0, /* 2 */
                                                           0, 1, 1, /* 3 */
@@ -32,7 +32,7 @@ TEST(sample_test_case, sample_test)
                                                           1, 0, 1, /* 5 */
                                                           1, 1, 0, /* 6 */
                                                           1, 1, 1  /* 7 */ } );
-    matrix<float> ys = matrix<float>(mode::cpu, 8, 8, { 1, 0, 0, 0, 0, 0, 0, 0, /* 0 */
+    auto ys = matrix<float, mode::cpu>(8, 8, { 1, 0, 0, 0, 0, 0, 0, 0, /* 0 */
                                                         0, 1, 0, 0, 0, 0, 0, 0, /* 1 */
                                                         0, 0, 1, 0, 0, 0, 0, 0, /* 2 */
                                                         0, 0, 0, 1, 0, 0, 0, 0, /* 3 */
@@ -48,8 +48,8 @@ TEST(sample_test_case, sample_test)
     
     optimizer.run(output);
 
-    auto test = std::make_shared<matrix<float>>(matrix<float>(mode::cpu, 1, 3, { 0, 1, 0 }));
-    auto expecting = matrix<float>(mode::cpu, 1, 8, { 0, 0, 1, 0, 0, 0, 0, 0 });
+    auto test = std::make_shared<matrix<float, mode::cpu>>(matrix<float, mode::cpu>(1, 3, { 0, 1, 0 }));
+    auto expecting = matrix<float, mode::cpu>(1, 8, { 0, 0, 1, 0, 0, 0, 0, 0 });
 
     auto predicted = output->forward(test);
 

@@ -5,14 +5,14 @@ namespace heed
     namespace function
     {
         template<typename T, mode MODE>
-        std::shared_ptr<matrix<T>> softmax<T, MODE>::compute(std::shared_ptr<matrix<T>> data)
+        std::shared_ptr<matrix<T, MODE>> softmax<T, MODE>::compute(std::shared_ptr<matrix<T, MODE>> data)
         {
             // todo: implement me
             return data;
         }
         
         template<typename T, mode MODE>
-        std::shared_ptr<matrix<T>> softmax<T, MODE>::derivation_slope(std::shared_ptr<matrix<T>> data)
+        std::shared_ptr<matrix<T, MODE>> softmax<T, MODE>::derivation_slope(std::shared_ptr<matrix<T, MODE>> data)
         {
             // todo: implement me
             return data;

@@ -16,10 +16,10 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    std::shared_ptr<matrix<T>> dense<T, MODE>::forward(std::shared_ptr<matrix<T>> data)
+    std::shared_ptr<matrix<T, MODE>> dense<T, MODE>::forward(std::shared_ptr<matrix<T, MODE>> data)
     {
         // todo: implement me
-        // data * weigths |> nonlin
+        // nonlin(data * weigths)
 
         return data;
     }

@@ -14,7 +14,7 @@ namespace heed
 
         static std::shared_ptr<dense<T, MODE>> define(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun);
 
-        std::shared_ptr<matrix<T>> forward(std::shared_ptr<matrix<T>> data);
+        std::shared_ptr<matrix<T, MODE>> forward(std::shared_ptr<matrix<T, MODE>> data);
     private:
         activation_function<T, MODE> &_nonlinearity;
     };

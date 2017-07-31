@@ -12,7 +12,7 @@ namespace heed
     }
 
     template<typename T, typename A>
-    std::shared_ptr<matrix<T>> activation<T, A>::forward(std::shared_ptr<matrix<T>> data)
+    std::shared_ptr<matrix<T, MODE>> activation<T, A>::forward(std::shared_ptr<matrix<T, MODE>> data)
     {
         // implement me
         return data;

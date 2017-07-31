@@ -31,10 +31,7 @@ namespace heed
     {
         if(this->_input)
         {
-            // todo: implement me
-
-            // we need a matrix for a chosen mode
-            // this should be hold at the layer level
+            this->_weights = matrix<T, MODE>::generate((*this->_input)->size(), this->_size);
         }
     }
 

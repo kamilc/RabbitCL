@@ -9,8 +9,8 @@ namespace heed
     class activation_function
     {
     public:
-        virtual std::shared_ptr<matrix<T>> compute(std::shared_ptr<matrix<T>> data) = 0;
-        virtual std::shared_ptr<matrix<T>> derivation_slope(std::shared_ptr<matrix<T>> data) = 0;
+        virtual std::shared_ptr<matrix<T, MODE>> compute(std::shared_ptr<matrix<T, MODE>> data) = 0;
+        virtual std::shared_ptr<matrix<T, MODE>> derivation_slope(std::shared_ptr<matrix<T, MODE>> data) = 0;
     };
 }
 

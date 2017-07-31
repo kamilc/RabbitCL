@@ -10,7 +10,7 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    std::shared_ptr<matrix<T>> input<T, MODE>::forward(std::shared_ptr<matrix<T>> data)
+    std::shared_ptr<matrix<T, MODE>> input<T, MODE>::forward(std::shared_ptr<matrix<T, MODE>> data)
     {
         return data;
     }
