@@ -8,7 +8,9 @@
 #include "dense.h"
 #include "function/tanh.h"
 #include "function/relu.h"
+#include "function/softmax.h"
 #include "matrix.h"
+#include "gradient_descent.h"
 
 using namespace heed;
 
@@ -16,29 +18,40 @@ namespace ublas = boost::numeric::ublas;
 
 TEST(sample_test_case, sample_test)
 {
-    auto root = input<float, mode::cpu>::define(10);
-    auto hidden = dense<float, mode::cpu>::define(15, root, function::tanh<float, mode::cpu>());
+    auto root = input<float, mode::cpu>::define(3);
+    auto hidden = dense<float, mode::cpu>::define(3, root, function::tanh<float, mode::cpu>());
+    auto output = dense<float, mode::cpu>::define(8, hidden, function::softmax<float, mode::cpu>());
 
-    //auto hidden2 = std::make_shared<activation<float, function::tanh<float>>>(activation<float, function::tanh<float>>(hidden));
-    //auto output = std::make_shared<
+    EXPECT_EQ(8, output->size());
 
-    auto network = hidden;
+    matrix<float> data = matrix<float>(mode::cpu, 8, 3, { 0, 0, 0, /* 0 */
+                                                          0, 0, 1, /* 1 */
+                                                          0, 1, 0, /* 2 */
+                                                          0, 1, 1, /* 3 */
+                                                          1, 0, 0, /* 4 */
+                                                          1, 0, 1, /* 5 */
+                                                          1, 1, 0, /* 6 */
+                                                          1, 1, 1  /* 7 */ } );
+    matrix<float> ys = matrix<float>(mode::cpu, 8, 8, { 1, 0, 0, 0, 0, 0, 0, 0, /* 0 */
+                                                        0, 1, 0, 0, 0, 0, 0, 0, /* 1 */
+                                                        0, 0, 1, 0, 0, 0, 0, 0, /* 2 */
+                                                        0, 0, 0, 1, 0, 0, 0, 0, /* 3 */
+                                                        0, 0, 0, 0, 1, 0, 0, 0, /* 4 */
+                                                        0, 0, 0, 0, 0, 1, 0, 0, /* 5 */
+                                                        0, 0, 0, 0, 0, 0, 1, 0, /* 6 */
+                                                        0, 0, 0, 0, 0, 0, 0, 1 /* 7 */
+                                                     });
 
-    EXPECT_EQ(15, network->size());
+    auto optimizer = gradient_descent<float, mode::cpu>()
+                        .setEpochs(8*10)
+                        .setBatches(1);
+    
+    optimizer.run(output);
 
-    // std::vector<float> data = { 1, 0, 1,
-    //                             1, 1, 0,
-    //                             0, 1, 1,
-    //                             0, 1, 0 };
+    auto test = std::make_shared<matrix<float>>(matrix<float>(mode::cpu, 1, 3, { 0, 1, 0 }));
+    auto expecting = matrix<float>(mode::cpu, 1, 8, { 0, 0, 1, 0, 0, 0, 0, 0 });
 
-    // ublas::matrix<float> m(4, 3, 0);
-    // std::copy(data.begin(), data.end(), m.data().begin());
+    auto predicted = output->forward(test);
 
-    matrix<float> data = matrix<float>(mode::gpu, 4, 3, { 1, 0, 1,
-                                                          1, 1, 0,
-                                                          0, 1, 1,
-                                                          0, 1, 0});
-    matrix<float> ys = matrix<float>(mode::gpu, 4, 1, { 1, 1, 0, 0 });
-
-    //network.train(data, ys, 100, 0.001);
+    //EXPECT_EQ(predicted, expecting);
 }

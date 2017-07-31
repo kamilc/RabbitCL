@@ -33,7 +33,9 @@ add_library(rabbit STATIC src/layer.cpp
                           src/matrix.cpp
                           src/activation_function.cpp
                           src/function/tanh.cpp
-                          src/function/relu.cpp)
+                          src/function/relu.cpp
+                          src/function/softmax.cpp
+                          src/gradient_descent.cpp)
 
 add_executable(rabbit_test test/heed_test.cpp)
 
