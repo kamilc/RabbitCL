@@ -2,54 +2,55 @@
 
 namespace heed
 {
-    template<typename T, mode MODE>
-    matrix_base<T, MODE>::matrix_base(std::size_t rows, std::size_t cols, std::vector<T> data)
-    {
-        // todo: implement me
-    }
-
-    template<typename T, mode MODE>
-    matrix_base<T, MODE>::matrix_base(viennacl::matrix<T> data)
-    {
-        // todo: implement me
-    }
-
-    template<typename T, mode MODE>
-    matrix_base<T, MODE>::matrix_base(boost::numeric::ublas::matrix<T> data)
-    {
-        // todo: implement me
-    }
-
     template<typename T>
     class matrix<T, mode::cpu> : public matrix_base<T, mode::cpu> {
+    private:
+        boost::numeric::ublas::matrix<T> _data;
     public:
-        matrix(boost::numeric::ublas::matrix<T> data) : matrix_base<T, mode::cpu>(data) {}
-
-        matrix(viennacl::matrix<T> data) : matrix_base<T, mode::cpu>(data) {}
-
-        matrix(std::size_t rows, std::size_t cols, std::vector<T> data) : matrix_base<T, mode::cpu>(rows, cols, data) {}
+        matrix(std::size_t rows, std::size_t cols, std::vector<T> data)
+        {
+            this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
+            std::copy(data.begin(), data.end(), this->_data.data().begin());
+        }
 
         static matrix<T, mode::cpu> generate(std::size_t rows, std::size_t cols)
         {
-            // todo: implement me
+            static std::normal_distribution<T> distribution(0, 1);
+            static std::default_random_engine generator;
 
-            return matrix<T, mode::cpu>(rows, cols, {});
+            std::vector<T> data = std::vector<T>(rows * cols);
+            std::generate(data.begin(), data.end(), []() { return distribution(generator); });
+
+            return matrix<T, mode::cpu>(rows, cols, data);
         }
 
         bool operator==(const matrix<T, mode::cpu>& other)
         {
-            return true;
+            if (&this->_data == &other._data) 
+                return true; 
+            if (this->_data.size1() != other._data.size1()) 
+                return false; 
+            if (this->_data.size2() != other._data.size2()) 
+                return false; 
+            typename boost::numeric::ublas::matrix<T>::iterator1 l(this->_data.begin1()); 
+            typename boost::numeric::ublas::matrix<T>::const_iterator1 r(other._data.begin1()); 
+            while (l != this->_data.end1()) { 
+                if (*l != *r) 
+                    return false; 
+                ++l; 
+                ++r; 
+            } 
+            return true; 
         }
     };
 
     template<typename T>
     class matrix<T, mode::gpu> : public matrix_base<T, mode::gpu> {
     public:
-        matrix(boost::numeric::ublas::matrix<T> data) : matrix_base<T, mode::gpu>(data) {}
+        matrix(std::size_t rows, std::size_t cols, std::vector<T> data)
+        {
 
-        matrix(viennacl::matrix<T> data) : matrix_base<T, mode::gpu>(data) {}
-
-        matrix(std::size_t rows, std::size_t cols, std::vector<T> data) : matrix_base<T, mode::gpu>(rows, cols, data) {}
+        }
 
         static matrix<T, mode::gpu> generate(std::size_t rows, std::size_t cols)
         {
@@ -63,30 +64,6 @@ namespace heed
             return true;
         }
     };
-
-
-    // template<typename T, mode MODE>
-    // bool matrix_base<T, MODE>::operator==(const matrix<T, MODE> &other)
-    // {
-    //     // todo: implement me
-    //     return true;
-    // }
-
-    // template<typename T>
-    // matrix<T, mode::cpu> matrix<T, mode::cpu>::generate(std::size_t rows, std::size_t cols)
-    // {
-    //     // todo: implement me
-
-    //     return matrix<T, mode::cpu>(rows, cols, {});
-    // }
-
-    // template<typename T>
-    // matrix<T, mode::gpu> matrix<T, mode::gpu>::generate(std::size_t rows, std::size_t cols)
-    // {
-    //     // todo: implement me
-
-    //     return matrix<T, mode::gpu>(rows, cols, {});
-    // }
 
     template class matrix_base<float, mode::cpu>;
     template class matrix_base<float, mode::gpu>;
