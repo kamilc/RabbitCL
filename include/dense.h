@@ -2,17 +2,21 @@
 #define Dense_h
 
 #include "layer.h"
+#include "activation_function.h"
 
 namespace heed
 {
-    template<typename T>
-    class dense : public layer<T>
+    template<typename T, mode MODE>
+    class dense : public layer<T, MODE>
     {
     public:
-        dense(std::size_t size, std::shared_ptr<layer<T>> input);
-        dense(std::size_t size, std::vector<std::shared_ptr<layer<T>>> inputs);
+        dense(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun);
+
+        static std::shared_ptr<dense<T, MODE>> define(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun);
 
         std::shared_ptr<matrix<T>> forward(std::shared_ptr<matrix<T>> data);
+    private:
+        activation_function<T, MODE> &_nonlinearity;
     };
 }
 

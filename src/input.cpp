@@ -3,18 +3,27 @@
 
 namespace heed
 {
-    template<typename T>
-    input<T>::input(std::size_t size) : layer<T>(size)
+    template<typename T, mode MODE>
+    input<T, MODE>::input(std::size_t size) : layer<T, MODE>(size)
     {
-        // no-op
+        // no-op: implemented
     }
 
-    template<typename T>
-    std::shared_ptr<matrix<T>> input<T>::forward(std::shared_ptr<matrix<T>> data)
+    template<typename T, mode MODE>
+    std::shared_ptr<matrix<T>> input<T, MODE>::forward(std::shared_ptr<matrix<T>> data)
     {
         return data;
     }
 
-    template class input<float>;
-    template class input<double>;
+    template<typename T, mode MODE>
+    std::shared_ptr<input<T, MODE>> input<T, MODE>::define(std::size_t size)
+    {
+        return std::make_shared<input<T, MODE>>(input<T, MODE>(size));
+    }
+
+    template class input<float, mode::cpu>;
+    template class input<float, mode::gpu>;
+
+    template class input<double, mode::cpu>;
+    template class input<double, mode::gpu>;
 }

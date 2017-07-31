@@ -8,8 +8,8 @@ namespace heed
 {
     namespace function
     {
-        template<typename T>
-        class tanh : public activation_function<T>
+        template<typename T, mode MODE>
+        class tanh : public activation_function<T, MODE>
         {
         public:
             std::shared_ptr<matrix<T>> compute(std::shared_ptr<matrix<T>> data);

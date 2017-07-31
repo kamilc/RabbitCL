@@ -10,23 +10,26 @@
 
 namespace heed
 {
-
-    template<typename T>
+    template<typename T, mode MODE>
     class layer
     {
     private:
         std::size_t _size;
-        std::vector<std::shared_ptr<layer<T>>> _inputs;
+        boost::optional<std::shared_ptr<layer<T, MODE>>> _input;
+
+        // if we don't have any inputs, that means we are at the input
+        // level so we don't have any weights. they should be optional
+        // then:
+        boost::optional<matrix<T>> _weights;
     public:
         layer(std::size_t size);
         layer(std::size_t size, std::shared_ptr<layer> input);
-        layer(std::size_t size, std::vector<std::shared_ptr<layer>> inputs);
         layer(std::shared_ptr<layer> input);
-        layer(std::vector<std::shared_ptr<layer>> inputs);
 
         std::size_t size();
 
         virtual std::shared_ptr<matrix<T>> forward(std::shared_ptr<matrix<T>> data) = 0;
+        void initializeWeights();
     };
 }
 

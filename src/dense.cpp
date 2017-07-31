@@ -2,25 +2,32 @@
 
 namespace heed
 {
-    template<typename T>
-    dense<T>::dense(std::size_t size, std::shared_ptr<layer<T>> input) : layer<T>(size, input)
+    template<typename T, mode MODE>
+    dense<T, MODE>::dense(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun) :
+        layer<T, MODE>(size, input), _nonlinearity(fun)
     {
         // no-op
     }
 
-    template<typename T>
-    dense<T>::dense(std::size_t size, std::vector<std::shared_ptr<layer<T>>> inputs) : layer<T>(size, inputs)
+    template<typename T, mode MODE>
+    std::shared_ptr<dense<T, MODE>> dense<T, MODE>::define(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun)
     {
-        // no-op
+        return std::make_shared<dense<T, MODE>>(dense<T, MODE>(size, input, fun));
     }
 
-    template<typename T>
-    std::shared_ptr<matrix<T>> dense<T>::forward(std::shared_ptr<matrix<T>> data)
+    template<typename T, mode MODE>
+    std::shared_ptr<matrix<T>> dense<T, MODE>::forward(std::shared_ptr<matrix<T>> data)
     {
+        // todo: implement me
+        // data * weigths |> nonlin
+
         return data;
     }
 
-    template class dense<float>;
-    template class dense<double>;
+    template class dense<float, mode::cpu>;
+    template class dense<float, mode::gpu>;
+
+    template class dense<double, mode::cpu>;
+    template class dense<double, mode::gpu>;
 }
 

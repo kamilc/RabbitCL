@@ -5,48 +5,49 @@
 
 namespace heed
 {
-    template<typename T>
-    layer<T>::layer(std::size_t size) : layer<T>(size, std::vector<std::shared_ptr<layer<T>>>())
+    template<typename T, mode MODE>
+    layer<T, MODE>::layer(std::shared_ptr<layer<T, MODE>> input) :
+        layer<T, MODE>(input->size(), input)
     {
         // no-op
     }
 
-    template<typename T>
-    layer<T>::layer(std::size_t size, std::shared_ptr<layer<T>> input) :
-        layer<T>(size, std::vector<std::shared_ptr<layer<T>>>({ input }))
-    {
-        // no-op
-    }
-
-    template<typename T>
-    layer<T>::layer(std::shared_ptr<layer<T>> input) :
-        layer<T>(input->size(), std::vector<std::shared_ptr<layer<T>>>({ input }))
-    {
-        // no-op
-    }
-
-    template<typename T>
-    layer<T>::layer(std::vector<std::shared_ptr<layer<T>>> inputs) :
-        layer<T>(inputs[0]->size(), inputs)
-    {
-        // no-op
-        // warning! inputs must not be empty!
-    }
-
-    template<typename T>
-    layer<T>::layer(std::size_t size, std::vector<std::shared_ptr<layer<T>>> inputs)
+    template<typename T, mode MODE>
+    layer<T, MODE>::layer(std::size_t size)
     {
         this->_size = size;
-        this->_inputs = inputs;
     }
 
-    template<typename T>
-    std::size_t layer<T>::size()
+    template<typename T, mode MODE>
+    layer<T, MODE>::layer(std::size_t size, std::shared_ptr<layer<T, MODE>> input)
+    {
+        this->_size = size;
+        this->_input = input;
+        this->initializeWeights();
+    }
+
+    template<typename T, mode MODE>
+    void layer<T, MODE>::initializeWeights()
+    {
+        if(this->_input)
+        {
+            // todo: implement me
+
+            // we need a matrix for a chosen mode
+            // this should be hold at the layer level
+        }
+    }
+
+    template<typename T, mode MODE>
+    std::size_t layer<T, MODE>::size()
     {
         return this->_size;
     }
 
-    template class layer<float>;
-    template class layer<double>;
+    template class layer<float, mode::cpu>;
+    template class layer<float, mode::gpu>;
+
+    template class layer<double, mode::cpu>;
+    template class layer<double, mode::gpu>;
 }
 

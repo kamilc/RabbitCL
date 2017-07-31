@@ -5,7 +5,7 @@
 
 namespace heed
 {
-    template<typename T>
+    template<typename T, mode MODE>
     class activation_function
     {
     public:

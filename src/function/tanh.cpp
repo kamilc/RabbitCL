@@ -4,21 +4,24 @@ namespace heed
 {
     namespace function
     {
-        template<typename T>
-        std::shared_ptr<matrix<T>> tanh<T>::compute(std::shared_ptr<matrix<T>> data)
+        template<typename T, mode MODE>
+        std::shared_ptr<matrix<T>> tanh<T, MODE>::compute(std::shared_ptr<matrix<T>> data)
         {
             // todo: implement me
             return data;
         }
         
-        template<typename T>
-        std::shared_ptr<matrix<T>> tanh<T>::derivation_slope(std::shared_ptr<matrix<T>> data)
+        template<typename T, mode MODE>
+        std::shared_ptr<matrix<T>> tanh<T, MODE>::derivation_slope(std::shared_ptr<matrix<T>> data)
         {
             // todo: implement me
             return data;
         }
 
-        template class tanh<float>;
-        template class tanh<double>;
+        template class tanh<float, mode::cpu>;
+        template class tanh<float, mode::gpu>;
+
+        template class tanh<double, mode::cpu>;
+        template class tanh<double, mode::gpu>;
     }
 }
