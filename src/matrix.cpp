@@ -8,5 +8,12 @@ namespace heed
         // todo: implement me
     }
 
+    template<typename T>
+    bool matrix<T>::operator==(const matrix<T> &other)
+    {
+        // todo: implement me
+        return true;
+    }
+
     template class matrix<float>;
 }

@@ -22,6 +22,8 @@ namespace heed {
         matrix(mode compMode, boost::numeric::ublas::matrix<T>);
         matrix(mode compMode, viennacl::matrix<T>);
         matrix(mode compMode, std::size_t rows, std::size_t cols, std::vector<T> data);
+
+        bool operator==(const matrix<T>& other);
     };
 }
 

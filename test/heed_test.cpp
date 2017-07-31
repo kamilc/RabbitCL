@@ -53,5 +53,5 @@ TEST(sample_test_case, sample_test)
 
     auto predicted = output->forward(test);
 
-    //EXPECT_EQ(predicted, expecting);
+    EXPECT_EQ(*predicted == expecting, true);
 }
