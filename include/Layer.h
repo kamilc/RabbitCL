@@ -29,7 +29,7 @@ namespace heed
         std::size_t size();
 
         virtual void forward(matrix<T, MODE> &data, matrix<T, MODE> &out) = 0;
-        void initializeWeights();
+        void initialize_weights();
     };
 }
 

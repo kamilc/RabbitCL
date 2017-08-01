@@ -23,11 +23,11 @@ namespace heed
     {
         this->_size = size;
         this->_input = input;
-        this->initializeWeights();
+        this->initialize_weights();
     }
 
     template<typename T, mode MODE>
-    void layer<T, MODE>::initializeWeights()
+    void layer<T, MODE>::initialize_weights()
     {
         if(this->_input)
         {
