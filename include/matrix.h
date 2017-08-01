@@ -22,8 +22,13 @@ namespace heed {
     class matrix : public matrix_base<T, MODE> {
     public:
         matrix(std::size_t rows, std::size_t cols, std::vector<T> data);
+        matrix(std::size_t rows, std::size_t cols);
+        matrix(std::size_t rows, std::size_t cols, T pre);
 
-        static matrix generate(std::size_t rows, std::size_t cols);
+        std::size_t rows();
+        std::size_t cols();
+
+        //static matrix generate(std::tuple<std::size_t, std::size_t> *size);
         bool operator==(const matrix<T, MODE>& other);
     };
 }

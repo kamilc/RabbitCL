@@ -18,11 +18,13 @@ namespace ublas = boost::numeric::ublas;
 
 TEST(sample_test_case, sample_test)
 {
-    auto root = input<float, mode::cpu>::define(3);
-    auto hidden = dense<float, mode::cpu>::define(3, root, function::tanh<float, mode::cpu>());
-    auto output = dense<float, mode::cpu>::define(8, hidden, function::softmax<float, mode::cpu>());
+    input<float, mode::cpu> input1(3);
+    dense<float, mode::cpu> hidden(3, input1, function::tanh<float, mode::cpu>());
+    dense<float, mode::cpu> output(8, hidden, function::softmax<float, mode::cpu>());
 
-    EXPECT_EQ(8, output->size());
+    EXPECT_EQ(8, output.size());
+
+    
 
     auto data = matrix<float, mode::cpu>(8, 3, { 0, 0, 0, /* 0 */
                                                           0, 0, 1, /* 1 */
@@ -48,10 +50,11 @@ TEST(sample_test_case, sample_test)
     
     optimizer.run(output);
 
-    auto test = std::make_shared<matrix<float, mode::cpu>>(matrix<float, mode::cpu>(1, 3, { 0, 1, 0 }));
+    auto test = matrix<float, mode::cpu>(1, 3, { 0, 1, 0 });
     auto expecting = matrix<float, mode::cpu>(1, 8, { 0, 0, 1, 0, 0, 0, 0, 0 });
+    auto predicted = matrix<float, mode::cpu>(1, 8, 0);
 
-    auto predicted = output->forward(test);
+    output.forward(test, predicted);
 
-    EXPECT_EQ(*predicted == expecting, true);
+    EXPECT_EQ(predicted == expecting, true);
 }

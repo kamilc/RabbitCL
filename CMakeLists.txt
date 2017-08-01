@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(librabbit)
 
-set (CMAKE_CXX_STANDARD 17)
-add_compile_options(-std=c++17)
+set (CMAKE_CXX_STANDARD 11)
+add_compile_options(-std=c++11)
+# set (CMAKE_CXX_COMPILER /usr/bin/clang++)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )

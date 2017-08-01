@@ -10,15 +10,9 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    std::shared_ptr<matrix<T, MODE>> input<T, MODE>::forward(std::shared_ptr<matrix<T, MODE>> data)
+    void input<T, MODE>::forward(matrix<T, MODE> &data, matrix<T, MODE> &out)
     {
-        return data;
-    }
-
-    template<typename T, mode MODE>
-    std::shared_ptr<input<T, MODE>> input<T, MODE>::define(std::size_t size)
-    {
-        return std::make_shared<input<T, MODE>>(input<T, MODE>(size));
+        // todo: implement me
     }
 
     template class input<float, mode::cpu>;

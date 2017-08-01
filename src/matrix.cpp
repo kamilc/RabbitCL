@@ -10,36 +10,64 @@ namespace heed
         matrix(std::size_t rows, std::size_t cols, std::vector<T> data)
         {
             this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
-            std::copy(data.begin(), data.end(), this->_data.data().begin());
+            
+            for(size_t i = 0; i < this->_data.size1(); i++) {
+                for(size_t j = 0; j < this->_data.size2(); j++) {
+                    this->_data(i,j) = data[i + j * this->_data.size1()];
+                }
+            }
         }
 
-        static matrix<T, mode::cpu> generate(std::size_t rows, std::size_t cols)
+        matrix(std::size_t rows, std::size_t cols)
         {
             static std::normal_distribution<T> distribution(0, 1);
             static std::default_random_engine generator;
 
-            std::vector<T> data = std::vector<T>(rows * cols);
+            auto data = std::vector<T>(rows * cols);
+            
             std::generate(data.begin(), data.end(), []() { return distribution(generator); });
 
-            return matrix<T, mode::cpu>(rows, cols, data);
+            this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
+            std::copy(data.begin(), data.end(), this->_data.data().begin());
+        }
+
+        matrix(std::size_t rows, std::size_t cols, T pre)
+        {
+            this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
+            
+            for(size_t i = 0; i < this->_data.size1(); i++) {
+                for(size_t j = 0; j < this->_data.size2(); j++) {
+                    this->_data(i,j) = pre;
+                }
+            }
+        }
+
+        std::size_t rows()
+        {
+            return this->_data.size1();
+        }
+
+        std::size_t cols()
+        {
+            return this->_data.size2();
         }
 
         bool operator==(const matrix<T, mode::cpu>& other)
         {
-            if (&this->_data == &other._data) 
-                return true; 
-            if (this->_data.size1() != other._data.size1()) 
-                return false; 
+            if (&this->_data == &other._data)
+                return true;
+            if (this->_data.size1() != other._data.size1())
+                return false;
             if (this->_data.size2() != other._data.size2()) 
-                return false; 
-            typename boost::numeric::ublas::matrix<T>::iterator1 l(this->_data.begin1()); 
-            typename boost::numeric::ublas::matrix<T>::const_iterator1 r(other._data.begin1()); 
-            while (l != this->_data.end1()) { 
-                if (*l != *r) 
-                    return false; 
-                ++l; 
-                ++r; 
-            } 
+                return false;
+            
+            for(size_t i = 0; i < this->_data.size1(); i++) {
+                for(size_t j = 0; j < this->_data.size2(); j++) {
+                    if(this->_data(i, j) != other._data(i, j)) {
+                        return false;
+                    }
+                }
+            }
             return true; 
         }
     };
@@ -52,12 +80,31 @@ namespace heed
 
         }
 
-        static matrix<T, mode::gpu> generate(std::size_t rows, std::size_t cols)
+        matrix(std::size_t rows, std::size_t cols)
         {
-            // todo: implement me
 
-            return matrix<T, mode::gpu>(rows, cols, {});
         }
+
+
+        std::size_t rows()
+        {
+            return 0;
+        }
+
+        std::size_t cols()
+        {
+            return 0;
+        }
+
+        // static matrix<T, mode::gpu> generate(std::tuple<std::size_t, std::size_t> *size)
+        // {
+        //     // todo: implement me
+
+        //     auto rows = std::get<0>(*size);
+        //     auto cols = std::get<1>(*size);
+
+        //     return matrix<T, mode::gpu>(rows, cols, {});
+        // }
 
         bool operator==(const matrix<T, mode::cpu>& other)
         {

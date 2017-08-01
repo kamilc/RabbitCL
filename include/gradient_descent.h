@@ -17,7 +17,7 @@ namespace heed
         gradient_descent& setBatches(unsigned long batches);
         gradient_descent& setEta(T eta);
 
-        void run(std::shared_ptr<layer<T, MODE>> network);
+        void run(layer<T, MODE> &network);
     private:
         T _eta;
         unsigned long  _epochs;

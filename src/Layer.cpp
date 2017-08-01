@@ -6,8 +6,8 @@
 namespace heed
 {
     template<typename T, mode MODE>
-    layer<T, MODE>::layer(std::shared_ptr<layer<T, MODE>> input) :
-        layer<T, MODE>(input->size(), input)
+    layer<T, MODE>::layer(layer<T, MODE> &input) :
+        layer<T, MODE>(input.size(), input)
     {
         // no-op
     }
@@ -19,7 +19,7 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    layer<T, MODE>::layer(std::size_t size, std::shared_ptr<layer<T, MODE>> input)
+    layer<T, MODE>::layer(std::size_t size, layer<T, MODE> &input)
     {
         this->_size = size;
         this->_input = input;
@@ -31,7 +31,10 @@ namespace heed
     {
         if(this->_input)
         {
-            this->_weights = matrix<T, MODE>::generate((*this->_input)->size(), this->_size);
+            auto cols = this->_size;
+            auto rows = this->_input->size();
+
+            this->_weights = matrix<T, MODE>(rows, cols);
         }
     }
 

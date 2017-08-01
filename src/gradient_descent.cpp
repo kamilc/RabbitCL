@@ -9,7 +9,7 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    void gradient_descent<T, MODE>::run(std::shared_ptr<layer<T, MODE>> network)
+    void gradient_descent<T, MODE>::run(layer<T, MODE> &network)
     {
         // todo: implement me
     }

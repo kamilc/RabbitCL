@@ -182,11 +182,20 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //Git command line client
 GIT_EXECUTABLE:FILEPATH=/usr/bin/git
 
+//Include for OpenCL on OSX
+OPENCL_INCLUDE_DIRS:PATH=/System/Library/Frameworks/OpenCL.framework
+
+//OpenCL lib for OSX
+OPENCL_LIBRARIES:FILEPATH=/System/Library/Frameworks/OpenCL.framework
+
 //Path to a file.
 OpenCL_INCLUDE_DIR:PATH=/System/Library/Frameworks/OpenCL.framework
 
 //Path to a library.
 OpenCL_LIBRARY:FILEPATH=/System/Library/Frameworks/OpenCL.framework
+
+//Include for OpenCL CPP bindings on OSX
+_OPENCL_CPP_INCLUDE_DIRS:PATH=_OPENCL_CPP_INCLUDE_DIRS-NOTFOUND
 
 //Value Computed by CMake
 librabbit_BINARY_DIR:STATIC=/Users/kamil/Projects/RabbitCL
@@ -332,9 +341,11 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding OpenCL
-FIND_PACKAGE_MESSAGE_DETAILS_OpenCL:INTERNAL=[/System/Library/Frameworks/OpenCL.framework][/System/Library/Frameworks/OpenCL.framework][v1.2()]
+FIND_PACKAGE_MESSAGE_DETAILS_OpenCL:INTERNAL=[/System/Library/Frameworks/OpenCL.framework][/System/Library/Frameworks/OpenCL.framework][v()]
 //ADVANCED property for variable: GIT_EXECUTABLE
 GIT_EXECUTABLE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENCL_INCLUDE_DIRS
+OPENCL_INCLUDE_DIRS-ADVANCED:INTERNAL=1
 //Have symbol CL_VERSION_1_2
 OPENCL_VERSION_1_2:INTERNAL=1
 //Have symbol CL_VERSION_2_0

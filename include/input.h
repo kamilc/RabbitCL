@@ -10,9 +10,8 @@ namespace heed
     {
     public:
         input(std::size_t size);
-        std::shared_ptr<matrix<T, MODE>> forward(std::shared_ptr<matrix<T, MODE>> data);
-
-        static std::shared_ptr<input<T, MODE>> define(std::size_t size);
+        
+        void forward(matrix<T, MODE> &data, matrix<T, MODE> &out);
     };
 }
 

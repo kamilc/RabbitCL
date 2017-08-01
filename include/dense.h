@@ -10,11 +10,9 @@ namespace heed
     class dense : public layer<T, MODE>
     {
     public:
-        dense(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun);
+        dense(std::size_t size, layer<T, MODE> &input, activation_function<T, MODE> fun);
 
-        static std::shared_ptr<dense<T, MODE>> define(std::size_t size, std::shared_ptr<layer<T, MODE>> input, activation_function<T, MODE> fun);
-
-        std::shared_ptr<matrix<T, MODE>> forward(std::shared_ptr<matrix<T, MODE>> data);
+        void forward(matrix<T, MODE> &data, matrix<T, MODE> &out);
     private:
         activation_function<T, MODE> &_nonlinearity;
     };
