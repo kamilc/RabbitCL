@@ -5,14 +5,14 @@ namespace heed
     namespace function
     {
         template<typename T, mode MODE>
-        std::shared_ptr<matrix<T, MODE>> relu<T, MODE>::compute(std::shared_ptr<matrix<T, MODE>> data)
+        matrix<T, MODE> relu<T, MODE>::compute(matrix<T, MODE> &data)
         {
             // todo: implement me
             return data;
         }
         
         template<typename T, mode MODE>
-        std::shared_ptr<matrix<T, MODE>> relu<T, MODE>::derivation_slope(std::shared_ptr<matrix<T, MODE>> data)
+        matrix<T, MODE> relu<T, MODE>::derivation_slope(matrix<T, MODE> &data)
         {
             // todo: implement me
             return data;

@@ -13,7 +13,7 @@ namespace heed
     template<typename T, mode MODE>
     class layer
     {
-    private:
+    protected:
         std::size_t _size;
         boost::optional<layer<T, MODE>&> _input;
 
@@ -28,7 +28,7 @@ namespace heed
 
         std::size_t size();
 
-        virtual void forward(matrix<T, MODE> &data, matrix<T, MODE> &out) = 0;
+        virtual matrix<T, MODE> forward(matrix<T, MODE> &data) = 0;
         void initialize_weights();
     };
 }

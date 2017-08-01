@@ -10,9 +10,16 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    void dense<T, MODE>::forward(matrix<T, MODE> &data, matrix<T, MODE> &out)
+    matrix<T, MODE> dense<T, MODE>::forward(matrix<T, MODE> &data)
     {
-        // todo: implement me
+        // first get the computed data from layers below:
+        auto in = this->_input->forward(data);
+
+        // next multiply in place by the weights:
+        auto out = in.dot(*(this->_weights));
+
+        // normally hold this matrix as it will be needed but for now return it:
+        return out;
     }
 
     template class dense<float, mode::cpu>;

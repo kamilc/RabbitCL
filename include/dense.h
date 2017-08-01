@@ -12,7 +12,7 @@ namespace heed
     public:
         dense(std::size_t size, layer<T, MODE> &input, activation_function<T, MODE> fun);
 
-        void forward(matrix<T, MODE> &data, matrix<T, MODE> &out);
+        matrix<T, MODE> forward(matrix<T, MODE> &data);
     private:
         activation_function<T, MODE> &_nonlinearity;
     };

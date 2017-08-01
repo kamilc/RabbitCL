@@ -12,8 +12,8 @@ namespace heed
         class relu : public activation_function<T, MODE>
         {
         public:
-            std::shared_ptr<matrix<T, MODE>> compute(std::shared_ptr<matrix<T, MODE>> data);
-            std::shared_ptr<matrix<T, MODE>> derivation_slope(std::shared_ptr<matrix<T, MODE>> data);
+            matrix<T, MODE> compute(matrix<T, MODE> &data);
+            matrix<T, MODE> derivation_slope(matrix<T, MODE> &data);
         };
     }
 }

@@ -10,8 +10,8 @@ namespace heed
     {
     public:
         input(std::size_t size);
-        
-        void forward(matrix<T, MODE> &data, matrix<T, MODE> &out);
+
+        matrix<T, MODE> forward(matrix<T, MODE> &data);
     };
 }
 

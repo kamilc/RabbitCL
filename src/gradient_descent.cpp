@@ -17,21 +17,24 @@ namespace heed
     template<typename T, mode MODE>
     gradient_descent<T, MODE>& gradient_descent<T, MODE>::setEpochs(unsigned long epochs)
     {
-        // todo: implement me
+        this->_epochs = epochs;
+
         return *this;
     }
 
     template<typename T, mode MODE>
     gradient_descent<T, MODE>& gradient_descent<T, MODE>::setBatches(unsigned long batches)
     {
-        // todo: implement me
+        this->_batches = batches;
+
         return *this;
     }
 
     template<typename T, mode MODE>
     gradient_descent<T, MODE>& gradient_descent<T, MODE>::setEta(T eta)
     {
-        // todo: implement me
+        this->_eta = eta;
+        
         return *this;
     }
 

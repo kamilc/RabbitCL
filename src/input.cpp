@@ -10,9 +10,10 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    void input<T, MODE>::forward(matrix<T, MODE> &data, matrix<T, MODE> &out)
+    matrix<T, MODE> input<T, MODE>::forward(matrix<T, MODE> &data)
     {
-        // todo: implement me
+        // return calling the copy constructor:
+        return data;
     }
 
     template class input<float, mode::cpu>;

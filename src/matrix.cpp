@@ -1,68 +1,80 @@
 #include "matrix.h"
 
+using namespace Eigen;
+
 namespace heed
 {
     template<typename T>
     class matrix<T, mode::cpu> : public matrix_base<T, mode::cpu> {
     private:
-        boost::numeric::ublas::matrix<T> _data;
+        Matrix<T, Dynamic, Dynamic> _data;
     public:
         matrix(std::size_t rows, std::size_t cols, std::vector<T> data)
         {
-            this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
+            this->_data = Matrix<T, Dynamic, Dynamic>(rows, cols);
             
-            for(size_t i = 0; i < this->_data.size1(); i++) {
-                for(size_t j = 0; j < this->_data.size2(); j++) {
-                    this->_data(i,j) = data[i + j * this->_data.size1()];
+            for(size_t i = 0; i < this->_data.rows(); i++) {
+                for(size_t j = 0; j < this->_data.cols(); j++) {
+                    this->_data(i,j) = data[i + j * this->_data.rows()];
                 }
             }
         }
 
         matrix(std::size_t rows, std::size_t cols)
         {
-            static std::normal_distribution<T> distribution(0, 1);
-            static std::default_random_engine generator;
-
-            auto data = std::vector<T>(rows * cols);
-            
-            std::generate(data.begin(), data.end(), []() { return distribution(generator); });
-
-            this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
-            std::copy(data.begin(), data.end(), this->_data.data().begin());
+            this->_data = Matrix<T, Dynamic, Dynamic>::Random(rows, cols);
         }
 
         matrix(std::size_t rows, std::size_t cols, T pre)
         {
-            this->_data = boost::numeric::ublas::matrix<T>(rows, cols);
+            this->_data = Matrix<T, Dynamic, Dynamic>(rows, cols);
             
-            for(size_t i = 0; i < this->_data.size1(); i++) {
-                for(size_t j = 0; j < this->_data.size2(); j++) {
+            for(size_t i = 0; i < this->_data.rows(); i++) {
+                for(size_t j = 0; j < this->_data.cols(); j++) {
                     this->_data(i,j) = pre;
                 }
             }
         }
 
+        matrix(Matrix<T, Dynamic, Dynamic> data)
+        {
+            this->_data = data;
+        }
+
+        void copy_from(matrix<T, mode::cpu> &other)
+        {
+            this->_data = other._data;
+        }
+
+        matrix<T, mode::cpu> dot(matrix<T, mode::cpu> &other)
+        {
+            // std::cout << "LHS: " << this->_data << std::endl;
+            // std::cout << "RHS: " << other._data << std::endl;
+
+            return matrix<T, mode::cpu>(this->_data * other._data);
+        }
+
         std::size_t rows()
         {
-            return this->_data.size1();
+            return this->_data.rows();
         }
 
         std::size_t cols()
         {
-            return this->_data.size2();
+            return this->_data.cols();
         }
 
         bool operator==(const matrix<T, mode::cpu>& other)
         {
             if (&this->_data == &other._data)
                 return true;
-            if (this->_data.size1() != other._data.size1())
+            if (this->_data.rows() != other._data.rows())
                 return false;
-            if (this->_data.size2() != other._data.size2()) 
+            if (this->_data.cols() != other._data.cols()) 
                 return false;
             
-            for(size_t i = 0; i < this->_data.size1(); i++) {
-                for(size_t j = 0; j < this->_data.size2(); j++) {
+            for(size_t i = 0; i < this->_data.rows(); i++) {
+                for(size_t j = 0; j < this->_data.cols(); j++) {
                     if(this->_data(i, j) != other._data(i, j)) {
                         return false;
                     }
@@ -77,37 +89,41 @@ namespace heed
     public:
         matrix(std::size_t rows, std::size_t cols, std::vector<T> data)
         {
-
+            // todo: implement me
         }
 
         matrix(std::size_t rows, std::size_t cols)
         {
-
+            // todo: implement me
         }
 
 
         std::size_t rows()
         {
+            // todo: implement me
             return 0;
         }
 
         std::size_t cols()
         {
+            // todo: implement me
             return 0;
         }
 
-        // static matrix<T, mode::gpu> generate(std::tuple<std::size_t, std::size_t> *size)
-        // {
-        //     // todo: implement me
+        void copy_from(matrix<T, mode::gpu> &other)
+        {
+            // todo: implement me
+        }
 
-        //     auto rows = std::get<0>(*size);
-        //     auto cols = std::get<1>(*size);
-
-        //     return matrix<T, mode::gpu>(rows, cols, {});
-        // }
+        matrix<T, mode::gpu> dot(matrix<T, mode::gpu> &other)
+        {
+            // todo: implement me
+            return other;
+        }
 
         bool operator==(const matrix<T, mode::cpu>& other)
         {
+            // todo: implement me
             return true;
         }
     };
