@@ -1,43 +1,45 @@
 #include "matrix.h"
 
-using namespace Eigen;
+using namespace arma;
 
 namespace heed
 {
     template<typename T>
     class matrix<T, mode::cpu> : public matrix_base<T, mode::cpu> {
     private:
-        Matrix<T, Dynamic, Dynamic> _data;
+        Mat<T> _data;
     public:
         matrix(std::size_t rows, std::size_t cols, std::vector<T> data)
         {
-            this->_data = Matrix<T, Dynamic, Dynamic>(rows, cols);
+            this->_data = Mat<T>(rows, cols);
             
-            for(size_t i = 0; i < this->_data.rows(); i++) {
-                for(size_t j = 0; j < this->_data.cols(); j++) {
-                    this->_data(i,j) = data[i + j * this->_data.rows()];
+            for(size_t i = 0; i < this->_data.n_rows; i++) {
+                for(size_t j = 0; j < this->_data.n_cols; j++) {
+                    this->_data(i,j) = data[i + j * this->_data.n_rows];
                 }
             }
         }
 
         matrix(std::size_t rows, std::size_t cols)
         {
-            this->_data = Matrix<T, Dynamic, Dynamic>::Random(rows, cols);
+            this->_data = Mat<T>(rows, cols);
+            this->_data.randn();
         }
 
         matrix(std::size_t rows, std::size_t cols, T pre)
         {
-            this->_data = Matrix<T, Dynamic, Dynamic>(rows, cols);
+            this->_data = Mat<T>(rows, cols);
             
-            for(size_t i = 0; i < this->_data.rows(); i++) {
-                for(size_t j = 0; j < this->_data.cols(); j++) {
+            for(size_t i = 0; i < this->_data.n_rows; i++) {
+                for(size_t j = 0; j < this->_data.n_cols; j++) {
                     this->_data(i,j) = pre;
                 }
             }
         }
 
-        matrix(Matrix<T, Dynamic, Dynamic> data)
+        matrix(Mat<T> data)
         {
+            auto y = exp(data);
             this->_data = data;
         }
 
@@ -71,25 +73,25 @@ namespace heed
 
         std::size_t rows()
         {
-            return this->_data.rows();
+            return this->_data.n_rows;
         }
 
         std::size_t cols()
         {
-            return this->_data.cols();
+            return this->_data.n_cols;
         }
 
         bool operator==(const matrix<T, mode::cpu>& other)
         {
             if (&this->_data == &other._data)
                 return true;
-            if (this->_data.rows() != other._data.rows())
+            if (this->_data.n_rows != other._data.n_rows)
                 return false;
-            if (this->_data.cols() != other._data.cols()) 
+            if (this->_data.n_cols != other._data.n_cols)
                 return false;
             
-            for(size_t i = 0; i < this->_data.rows(); i++) {
-                for(size_t j = 0; j < this->_data.cols(); j++) {
+            for(size_t i = 0; i < this->_data.n_rows; i++) {
+                for(size_t j = 0; j < this->_data.n_cols; j++) {
                     if(this->_data(i, j) != other._data(i, j)) {
                         return false;
                     }

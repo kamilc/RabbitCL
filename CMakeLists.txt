@@ -6,6 +6,9 @@ set (CMAKE_CXX_STANDARD 14)
 add_compile_options(-std=c++14)
 # set (CMAKE_CXX_COMPILER /usr/bin/clang++)
 
+find_package(Armadillo REQUIRED)
+include_directories(${ARMADILLO_INCLUDE_DIRS})
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )
 
@@ -43,7 +46,7 @@ add_executable(rabbit_test test/heed_test.cpp)
 message(status "Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message(status "Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
-target_link_libraries(rabbit_test rabbit gtest_main pthread ${OPENCL_LIBRARIES})
+target_link_libraries(rabbit_test rabbit gtest_main pthread ${OPENCL_LIBRARIES} ${ARMADILLO_LIBRARIES})
 
 add_test(NAME rabbit_test COMMAND rabbit_test)
 

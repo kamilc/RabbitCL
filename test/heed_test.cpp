@@ -12,16 +12,17 @@
 #include "matrix.h"
 #include "gradient_descent.h"
 
-#include <eigen3/Eigen/Dense>
+#include <armadillo>
+
+using namespace arma;
 
 using namespace heed;
-using namespace Eigen;
 
 // namespace ublas = boost::numeric::ublas;
 
-MatrixXd mxd()
+Mat<float> mxd()
 {
-    MatrixXd m(2,2);
+    Mat<float> m(2,2);
     m(0,0) = 3;
     m(1,0) = 2.5;
     m(0,1) = -1;

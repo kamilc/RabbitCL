@@ -8,7 +8,9 @@
 #include <random>
 #include <type_traits>
 
-using namespace Eigen;
+#include <armadillo>
+
+using namespace arma;
 
 namespace heed {
 
@@ -25,7 +27,7 @@ namespace heed {
     template<typename T, mode MODE>
     class matrix : public matrix_base<T, MODE> {
     private:
-        std::conditional_t<MODE == mode::cpu, Matrix<T, Dynamic, Dynamic>, viennacl::matrix<T>> _data;
+        std::conditional_t<MODE == mode::cpu, Mat<T>, viennacl::matrix<T>> _data;
     public:
         matrix(std::size_t rows, std::size_t cols, std::vector<T> data);
         matrix(std::size_t rows, std::size_t cols);
