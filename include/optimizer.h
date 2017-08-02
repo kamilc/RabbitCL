@@ -10,7 +10,7 @@ namespace heed
     class optimizer
     {
     public:
-        virtual void run(layer<T, MODE> &network) = 0;
+        virtual void run(layer<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets) = 0;
     };
 }
 

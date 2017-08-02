@@ -66,7 +66,7 @@ TEST(sample_test_case, sample_test)
                         .setEpochs(8*10)
                         .setBatches(1);
     
-    optimizer.run(output);
+    optimizer.run(output, data, ys);
 
     auto test = matrix<float, mode::cpu>(1, 3, { 0, 1, 0 });
     auto expecting = matrix<float, mode::cpu>(1, 8, { 0, 0, 1, 0, 0, 0, 0, 0 });

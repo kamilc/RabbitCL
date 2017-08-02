@@ -59,6 +59,12 @@ namespace heed
             return *this;
         }
 
+        matrix<T, mode::cpu>& slice_rows(std::size_t start, std::size_t end)
+        {
+            // todo: implement me
+            return *this;
+        }
+
         T sum()
         {
             // todo: implement me
@@ -183,6 +189,12 @@ namespace heed
         }
 
         matrix<T, mode::gpu>& maximum()
+        {
+            // todo: implement me
+            return *this;
+        }
+
+        matrix<T, mode::gpu>& slice_rows(std::size_t start, std::size_t end)
         {
             // todo: implement me
             return *this;

@@ -41,6 +41,7 @@ namespace heed {
         matrix<T, MODE> dot(matrix<T, MODE> &other);
         matrix<T, MODE>& maximum(T scalar);
         matrix<T, MODE>& maximum();
+        matrix<T, MODE>& slice_rows(std::size_t start, std::size_t end);
 
         T sum();
 

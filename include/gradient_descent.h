@@ -17,7 +17,8 @@ namespace heed
         gradient_descent& setBatches(unsigned long batches);
         gradient_descent& setEta(T eta);
 
-        void run(layer<T, MODE> &network);
+        void run(layer<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets);
+        void run_batch(layer<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets);
     private:
         T _eta;
         unsigned long  _epochs;
