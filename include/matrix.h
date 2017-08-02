@@ -40,11 +40,17 @@ namespace heed {
 
         matrix<T, MODE> dot(matrix<T, MODE> &other);
         matrix<T, MODE>& maximum(T scalar);
+        matrix<T, MODE>& maximum();
+
+        T sum();
 
         static matrix<T, MODE> maximum(matrix<T, MODE> &other, T scalar);
         static matrix<T, MODE> sign(matrix<T, MODE> &other);
+        static matrix<T, MODE> exp(matrix<T, MODE> &other);
 
         bool operator==(const matrix<T, MODE>& other);
+        matrix<T, MODE> operator-(const matrix<T, MODE>& other);
+        matrix<T, MODE> operator/(const T scalar);
     };
 }
 

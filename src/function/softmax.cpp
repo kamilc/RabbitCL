@@ -7,8 +7,9 @@ namespace heed
         template<typename T, mode MODE>
         matrix<T, MODE> softmax<T, MODE>::compute(matrix<T, MODE> &data)
         {
-            // todo: implement me
-            return data;
+            auto diff = data - data.maximum();
+            auto e_x = matrix<T, MODE>::exp(diff);
+            return e_x / e_x.sum();
         }
         
         template<typename T, mode MODE>

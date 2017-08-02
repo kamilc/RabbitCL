@@ -29,17 +29,11 @@ namespace heed
         matrix(std::size_t rows, std::size_t cols, T pre)
         {
             this->_data = Mat<T>(rows, cols);
-            
-            for(size_t i = 0; i < this->_data.n_rows; i++) {
-                for(size_t j = 0; j < this->_data.n_cols; j++) {
-                    this->_data(i,j) = pre;
-                }
-            }
+            this->_data.fill(pre);
         }
 
         matrix(Mat<T> data)
         {
-            auto y = exp(data);
             this->_data = data;
         }
 
@@ -59,6 +53,18 @@ namespace heed
             return *this;
         }
 
+        matrix<T, mode::cpu>& maximum()
+        {
+            // todo: implement me
+            return *this;
+        }
+
+        T sum()
+        {
+            // todo: implement me
+            return 1;
+        }
+
         static matrix<T, mode::cpu> maximum(matrix<T, mode::cpu> &other, T scalar)
         {
             // todo: implement me
@@ -66,6 +72,12 @@ namespace heed
         }
 
         static matrix<T, mode::cpu> sign(matrix<T, mode::cpu> &other)
+        {
+            // todo: implement me
+            return other;
+        }
+
+        static matrix<T, mode::cpu> exp(matrix<T, mode::cpu> &other)
         {
             // todo: implement me
             return other;
@@ -98,6 +110,18 @@ namespace heed
                 }
             }
             return true; 
+        }
+
+        matrix<T, mode::cpu> operator-(const matrix<T, mode::cpu>& other)
+        {
+            // todo: implement me
+            return other;
+        }
+
+        matrix<T, mode::cpu> operator/(const T scalar)
+        {
+            // todo: implement me
+            return *this;
         }
     };
 
@@ -144,6 +168,18 @@ namespace heed
             return *this;
         }
 
+        matrix<T, mode::gpu>& maximum()
+        {
+            // todo: implement me
+            return *this;
+        }
+
+        T sum()
+        {
+            // todo: implement me
+            return 1;
+        }
+
         static matrix<T, mode::gpu> maximum(matrix<T, mode::gpu> &other, T scalar)
         {
             // todo: implement me
@@ -156,10 +192,28 @@ namespace heed
             return other;
         }
 
+        static matrix<T, mode::gpu> exp(matrix<T, mode::gpu> &other)
+        {
+            // todo: implement me
+            return other;
+        }
+
         bool operator==(const matrix<T, mode::gpu>& other)
         {
             // todo: implement me
             return true;
+        }
+
+        matrix<T, mode::gpu> operator-(const matrix<T, mode::gpu>& other)
+        {
+            // todo: implement me
+            return other;
+        }
+
+        matrix<T, mode::gpu> operator/(const T scalar)
+        {
+            // todo: implement me
+            return *this;
         }
     };
 
