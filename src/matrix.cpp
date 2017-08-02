@@ -48,10 +48,25 @@ namespace heed
 
         matrix<T, mode::cpu> dot(matrix<T, mode::cpu> &other)
         {
-            // std::cout << "LHS: " << this->_data << std::endl;
-            // std::cout << "RHS: " << other._data << std::endl;
-
             return matrix<T, mode::cpu>(this->_data * other._data);
+        }
+
+        matrix<T, mode::cpu>& maximum(T scalar)
+        {
+            // todo: implement me
+            return *this;
+        }
+
+        static matrix<T, mode::cpu> maximum(matrix<T, mode::cpu> &other, T scalar)
+        {
+            // todo: implement me
+            return other;
+        }
+
+        static matrix<T, mode::cpu> sign(matrix<T, mode::cpu> &other)
+        {
+            // todo: implement me
+            return other;
         }
 
         std::size_t rows()
@@ -121,7 +136,25 @@ namespace heed
             return other;
         }
 
-        bool operator==(const matrix<T, mode::cpu>& other)
+        matrix<T, mode::gpu>& maximum(T scalar)
+        {
+            // todo: implement me
+            return *this;
+        }
+
+        static matrix<T, mode::gpu> maximum(matrix<T, mode::gpu> &other, T scalar)
+        {
+            // todo: implement me
+            return other;
+        }
+
+        static matrix<T, mode::gpu> sign(matrix<T, mode::gpu> &other)
+        {
+            // todo: implement me
+            return other;
+        }
+
+        bool operator==(const matrix<T, mode::gpu>& other)
         {
             // todo: implement me
             return true;

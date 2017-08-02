@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(librabbit)
 
-set (CMAKE_CXX_STANDARD 11)
-add_compile_options(-std=c++11)
+set (CMAKE_CXX_STANDARD 14)
+add_compile_options(-std=c++14)
 # set (CMAKE_CXX_COMPILER /usr/bin/clang++)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")

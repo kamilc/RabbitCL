@@ -7,15 +7,15 @@ namespace heed
         template<typename T, mode MODE>
         matrix<T, MODE> relu<T, MODE>::compute(matrix<T, MODE> &data)
         {
-            // todo: implement me
-            return data;
+            return matrix<T, MODE>::maximum(data, 0);
         }
         
         template<typename T, mode MODE>
         matrix<T, MODE> relu<T, MODE>::derivation_slope(matrix<T, MODE> &data)
         {
-            // todo: implement me
-            return data;
+            auto signs = matrix<T, MODE>::sign(data);
+
+            return signs.maximum(0);
         }
 
         template class relu<float, mode::cpu>;
