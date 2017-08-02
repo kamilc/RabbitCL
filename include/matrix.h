@@ -52,6 +52,9 @@ namespace heed {
         matrix<T, MODE> operator-(const matrix<T, MODE>& other);
         matrix<T, MODE> operator/(const T scalar);
     };
+
+    template<typename T, mode MODE>
+    matrix<T, MODE> operator-(T scalar, const matrix<T, MODE>& other);
 }
 
 #endif

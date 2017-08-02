@@ -125,6 +125,20 @@ namespace heed
         }
     };
 
+    template<>
+    matrix<float, mode::cpu> operator-(float scalar, const matrix<float, mode::cpu>& other)
+    {
+        // todo: implement me
+        return other;
+    }
+
+    template<>
+    matrix<double, mode::cpu> operator-(double scalar, const matrix<double, mode::cpu>& other)
+    {
+        // todo: implement me
+        return other;
+    }
+
     template<typename T>
     class matrix<T, mode::gpu> : public matrix_base<T, mode::gpu> {
     public:
@@ -217,6 +231,20 @@ namespace heed
         }
     };
 
+    template<>
+    matrix<float, mode::gpu> operator-(float scalar, const matrix<float, mode::gpu>& other)
+    {
+        // todo: implement me
+        return other;
+    }
+
+    template<>
+    matrix<double, mode::gpu> operator-(double scalar, const matrix<double, mode::gpu>& other)
+    {
+        // todo: implement me
+        return other;
+    }
+
     template class matrix_base<float, mode::cpu>;
     template class matrix_base<float, mode::gpu>;
 
@@ -228,4 +256,5 @@ namespace heed
 
     template class matrix<double, mode::cpu>;
     template class matrix<double, mode::gpu>;
+
 }
