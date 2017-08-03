@@ -14,7 +14,7 @@ namespace heed {
     template <typename T, mode MODE>
     struct activation
     {
-        typedef tuple<matrix<T, MODE>, optional<matrix<T, MODE>>> (*function)(matrix<T, MODE>&);
+        typedef tuple<matrix<T, MODE>, optional<matrix<T, MODE>>> (*function)(matrix<T, MODE>&, bool);
     };
 }
 

@@ -22,7 +22,7 @@ TEST(sample_test_case, sample_test)
 
     network.add(input<float, mode::cpu>::with(3))
            .add(dense<float, mode::cpu>::with(3, relu<float, mode::cpu>))
-           .add(dense<float, mode::cpu>::with(8, relu<float, mode::cpu>));
+           .add(dense<float, mode::cpu>::with(8, softmax<float, mode::cpu>));
 
     auto data = matrix<float, mode::cpu>(8, 3, { 0, 0, 0, /* 0 */
                                                  0, 0, 1, /* 1 */

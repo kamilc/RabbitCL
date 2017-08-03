@@ -23,7 +23,7 @@ namespace heed
         // };
 
         template<typename T, mode MODE>
-        tuple<matrix<T, MODE>, optional<matrix<T, MODE>>> relu(matrix<T, MODE>& in)
+        tuple<matrix<T, MODE>, optional<matrix<T, MODE>>> relu(matrix<T, MODE>& in, bool derive)
         {
             // todo: implement me
             return in;
