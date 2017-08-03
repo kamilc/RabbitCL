@@ -6,7 +6,10 @@
 
 #include <stdio.h>
 #include <boost/optional.hpp>
+
+#include "utilities.h"
 #include "matrix.h"
+#include "layer_config.h"
 
 namespace heed
 {
@@ -15,16 +18,10 @@ namespace heed
     {
     protected:
         std::size_t _size;
-        boost::optional<layer<T, MODE>&> _input;
-
-        // if we don't have any inputs, that means we are at the input
-        // level so we don't have any weights. they should be optional
-        // then:
+        boost::optional<std::size_t> _parent_size;
         boost::optional<matrix<T, MODE>> _weights;
     public:
-        layer(std::size_t size);
-        layer(std::size_t size, layer &input);
-        layer(layer &input);
+        layer(layer_config<T, MODE> &config);
 
         std::size_t size();
 

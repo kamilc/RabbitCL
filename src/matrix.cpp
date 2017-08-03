@@ -257,16 +257,7 @@ namespace heed
         return other;
     }
 
-    template class matrix_base<float, mode::cpu>;
-    template class matrix_base<float, mode::gpu>;
-
-    template class matrix_base<double, mode::cpu>;
-    template class matrix_base<double, mode::gpu>;
-
-    template class matrix<float, mode::cpu>;
-    template class matrix<float, mode::gpu>;
-
-    template class matrix<double, mode::cpu>;
-    template class matrix<double, mode::gpu>;
+    INSTANTIATE(matrix_base);
+    INSTANTIATE(matrix);
 
 }

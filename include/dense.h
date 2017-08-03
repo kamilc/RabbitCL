@@ -1,8 +1,10 @@
 #ifndef Dense_h
 #define Dense_h
 
+#include "utilities.h"
 #include "layer.h"
-#include "activation_function.h"
+#include "dense_config.h"
+#include "function.h"
 
 namespace heed
 {
@@ -10,11 +12,13 @@ namespace heed
     class dense : public layer<T, MODE>
     {
     public:
-        dense(std::size_t size, layer<T, MODE> &input, activation_function<T, MODE> fun);
+        dense(dense_config<T, MODE> &config);
+
+        static dense_config<T, MODE> with(std::size_t size, typename activation<T, MODE>::function fun);
 
         matrix<T, MODE> forward(matrix<T, MODE> &data);
     private:
-        activation_function<T, MODE> &_nonlinearity;
+        typename activation<T, MODE>::function &_fun;
     };
 }
 

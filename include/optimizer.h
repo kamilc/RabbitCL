@@ -1,8 +1,9 @@
 #ifndef Optimizer_h
 #define Optimizer_h
 
+#include "utilities.h"
 #include "matrix.h"
-#include "layer.h"
+#include "sequence.h"
 
 namespace heed
 {
@@ -10,7 +11,7 @@ namespace heed
     class optimizer
     {
     public:
-        virtual void run(layer<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets) = 0;
+        virtual void run(sequence<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets) = 0;
     };
 }
 

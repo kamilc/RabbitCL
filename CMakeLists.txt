@@ -31,11 +31,14 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 
 include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR})
 
-add_library(rabbit STATIC src/layer.cpp
+add_library(rabbit STATIC src/sequence.cpp
+                          src/layer_config.cpp
+                          src/layer.cpp
+                          src/input_config.cpp
                           src/input.cpp
+                          src/dense_config.cpp
                           src/dense.cpp
                           src/matrix.cpp
-                          src/activation_function.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp

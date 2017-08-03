@@ -4,29 +4,25 @@ namespace heed
 {
     namespace function
     {
-        template<typename T, mode MODE>
-        matrix<T, MODE> softmax<T, MODE>::compute(matrix<T, MODE> &data)
-        {
-            auto diff = data - data.maximum();
-            auto e_x = matrix<T, MODE>::exp(diff);
+        // template<typename T, mode MODE>
+        // matrix<T, MODE> softmax<T, MODE>::compute(matrix<T, MODE> &data)
+        // {
+        //     auto diff = data - data.maximum();
+        //     auto e_x = matrix<T, MODE>::exp(diff);
 
-            auto out = e_x / e_x.sum();
+        //     auto out = e_x / e_x.sum();
 
-            return out;
-        }
+        //     return out;
+        // }
         
-        template<typename T, mode MODE>
-        matrix<T, MODE> softmax<T, MODE>::derivation_slope(matrix<T, MODE> &data)
-        {
-            auto derivation = data - (static_cast<T>(1.0) - data);
+        // template<typename T, mode MODE>
+        // matrix<T, MODE> softmax<T, MODE>::derivation_slope(matrix<T, MODE> &data)
+        // {
+        //     auto derivation = data - (static_cast<T>(1.0) - data);
 
-            return derivation;
-        }
+        //     return derivation;
+        // }
 
-        template class softmax<float, mode::cpu>;
-        template class softmax<float, mode::gpu>;
-
-        template class softmax<double, mode::cpu>;
-        template class softmax<double, mode::gpu>;
+        // INSTANTIATE(softmax);
     }
 }

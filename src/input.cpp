@@ -4,7 +4,7 @@
 namespace heed
 {
     template<typename T, mode MODE>
-    input<T, MODE>::input(std::size_t size) : layer<T, MODE>(size)
+    input<T, MODE>::input(input_config<T, MODE> &config) : layer<T, MODE>(config)
     {
         // no-op: implemented
     }
@@ -16,9 +16,11 @@ namespace heed
         return data;
     }
 
-    template class input<float, mode::cpu>;
-    template class input<float, mode::gpu>;
+    template<typename T, mode MODE>
+    input_config<T, MODE> input<T, MODE>::with(std::size_t size)
+    {
+        return input_config<T, MODE>(size);
+    }
 
-    template class input<double, mode::cpu>;
-    template class input<double, mode::gpu>;
+    INSTANTIATE(input);
 }

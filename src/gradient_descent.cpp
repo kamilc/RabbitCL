@@ -11,7 +11,7 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    void gradient_descent<T, MODE>::run(layer<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets)
+    void gradient_descent<T, MODE>::run(sequence<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets)
     {
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
@@ -28,7 +28,7 @@ namespace heed
     }
 
     template<typename T, mode MODE>
-    void gradient_descent<T, MODE>::run_batch(layer<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets)
+    void gradient_descent<T, MODE>::run_batch(sequence<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets)
     {
         // todo: implement me
     }
@@ -57,9 +57,5 @@ namespace heed
         return *this;
     }
 
-    template class gradient_descent<float, mode::cpu>;
-    template class gradient_descent<float, mode::gpu>;
-
-    template class gradient_descent<double, mode::cpu>;
-    template class gradient_descent<double, mode::gpu>;
+    INSTANTIATE(gradient_descent);
 }

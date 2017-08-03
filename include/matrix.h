@@ -2,13 +2,12 @@
 #define Matrix_h
 
 #include <viennacl/matrix.hpp>
-#include <eigen3/Eigen/Dense>
-
 #include <boost/variant.hpp>
 #include <random>
 #include <type_traits>
-
 #include <armadillo>
+
+#include "utilities.h"
 
 using namespace arma;
 
