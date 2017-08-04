@@ -4,10 +4,6 @@ project(librabbit)
 
 set (CMAKE_CXX_STANDARD 14)
 add_compile_options(-std=c++14)
-# set (CMAKE_CXX_COMPILER /usr/bin/clang++)
-
-find_package(Armadillo REQUIRED)
-include_directories(${ARMADILLO_INCLUDE_DIRS})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )
@@ -31,7 +27,8 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 
 include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR})
 
-add_library(rabbit STATIC src/sequence.cpp
+add_library(mozart STATIC src/sequence.cpp
+                          src/matrix_helpers.cpp
                           src/layer_config.cpp
                           src/layer.cpp
                           src/input_config.cpp
@@ -43,15 +40,15 @@ add_library(rabbit STATIC src/sequence.cpp
                           src/function/softmax.cpp
                           src/gradient_descent.cpp)
 
-add_executable(rabbit_test test/heed_test.cpp)
+add_executable(mozart_test test/mozart_test.cpp)
 
 message(status "Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message(status "Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
-target_link_libraries(rabbit_test rabbit gtest_main pthread ${OPENCL_LIBRARIES} ${ARMADILLO_LIBRARIES})
+target_link_libraries(mozart_test mozart gtest_main pthread ${OPENCL_LIBRARIES} ${ARMADILLO_LIBRARIES})
 
-add_test(NAME rabbit_test COMMAND rabbit_test)
+add_test(NAME mozart_test COMMAND mozart_test)
 
-install(TARGETS rabbit DESTINATION lib)
+install(TARGETS mozart DESTINATION lib)
 
-install(FILES rabbit.h DESTINATION include)
+install(FILES mozart.h DESTINATION include)

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-namespace heed {
+namespace mozart {
     template<typename T>
     input_config<T>::input_config(size_t size) : _size(size) {}
 

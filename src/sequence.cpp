@@ -1,6 +1,6 @@
 #include "sequence.h"
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     sequence<T>& sequence<T>::add(const layer_config<T> &config)

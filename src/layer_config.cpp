@@ -1,6 +1,6 @@
 #include "layer_config.h"
 
-namespace heed {
+namespace mozart {
 
     template<typename T>
     void layer_config<T>::set_input_size(std::size_t size)

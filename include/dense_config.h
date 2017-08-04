@@ -8,7 +8,7 @@
 using namespace std;
 using namespace boost;
 
-namespace heed {
+namespace mozart {
     template<typename T>
     class dense_config : public layer_config<T>
     {      

@@ -3,7 +3,7 @@
 #include "function/tanh.h"
 #include "function/relu.h"
 
-namespace heed
+namespace mozart
 {
     template<typename T, typename A>
     activation<T, A>::activation(std::shared_ptr<layer<T>> input) : layer<T>(input)

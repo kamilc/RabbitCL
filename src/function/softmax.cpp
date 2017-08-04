@@ -1,6 +1,6 @@
 #include "function/softmax.h"
 
-namespace heed
+namespace mozart
 {
     namespace function
     {

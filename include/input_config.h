@@ -4,7 +4,7 @@
 #include "utilities.h"
 #include "layer_config.h"
 
-namespace heed {
+namespace mozart {
     template<typename T>
     class input_config : public layer_config<T>
     {

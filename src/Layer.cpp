@@ -2,7 +2,7 @@
 
 using namespace viennacl;
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     layer<T>::layer(layer_config<T> &config)

@@ -8,7 +8,7 @@
 
 using namespace viennacl;
 
-namespace heed 
+namespace mozart 
 {
     template<typename T>
     class input : public layer<T>

@@ -1,9 +1,6 @@
 #ifndef Layer_h
 #define Layer_h
 
-// We're using the OpenCL backend:
-#define VIENNACL_WITH_OPENCL 1
-
 #include <stdio.h>
 #include <boost/optional.hpp>
 #include "viennacl/matrix.hpp"
@@ -15,7 +12,7 @@ using namespace viennacl;
 using namespace std;
 using namespace boost;
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     class layer

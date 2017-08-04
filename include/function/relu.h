@@ -10,7 +10,7 @@ using namespace std;
 using namespace viennacl;
 using namespace boost;
 
-namespace heed
+namespace mozart
 {
     namespace function
     {

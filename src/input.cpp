@@ -1,6 +1,6 @@
 #include "input.h"
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     input<T>::input(input_config<T> &config) : layer<T>(config)

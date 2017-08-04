@@ -6,7 +6,7 @@
 
 #include "utilities.h"
 
-namespace heed {
+namespace mozart {
 
     template<typename T>
     class layer_config

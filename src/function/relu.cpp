@@ -1,6 +1,6 @@
 #include "function/relu.h"
 
-namespace heed
+namespace mozart
 {
     namespace function
     {

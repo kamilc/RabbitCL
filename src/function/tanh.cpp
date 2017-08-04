@@ -1,6 +1,6 @@
 #include "function/tanh.h"
 
-namespace heed
+namespace mozart
 {
     namespace function
     {

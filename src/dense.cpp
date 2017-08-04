@@ -1,6 +1,6 @@
 #include "dense.h"
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     dense<T>::dense(dense_config<T> &config) :

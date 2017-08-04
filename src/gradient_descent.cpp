@@ -2,7 +2,7 @@
 
 using namespace std;
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     gradient_descent<T>::gradient_descent()

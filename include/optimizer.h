@@ -7,7 +7,7 @@
 
 using namespace viennacl;
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     class optimizer

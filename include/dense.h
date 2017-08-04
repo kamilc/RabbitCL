@@ -6,7 +6,7 @@
 #include "dense_config.h"
 #include "function.h"
 
-namespace heed
+namespace mozart
 {
     template<typename T>
     class dense : public layer<T>
