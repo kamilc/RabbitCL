@@ -1,19 +1,21 @@
 #ifndef Sequence_h
 #define Sequence_h
 
+#include "viennacl/matrix.hpp"
 #include "utilities.h"
-#include "matrix.h"
 #include "layer_config.h"
+
+using namespace viennacl;
 
 namespace heed
 {
-    template<typename T, mode MODE>
+    template<typename T>
     class sequence
     {
     public:
-        sequence& add(const layer_config<T, MODE> &config);
+        sequence& add(const layer_config<T> &config);
 
-        virtual matrix<T, MODE> forward(matrix<T, MODE> &data);
+        virtual matrix<T> forward(matrix<T> &data);
     };
 }
 

@@ -1,25 +1,24 @@
 #include "input.h"
-#include "matrix.h"
 
 namespace heed
 {
-    template<typename T, mode MODE>
-    input<T, MODE>::input(input_config<T, MODE> &config) : layer<T, MODE>(config)
+    template<typename T>
+    input<T>::input(input_config<T> &config) : layer<T>(config)
     {
         // no-op: implemented
     }
 
-    template<typename T, mode MODE>
-    matrix<T, MODE> input<T, MODE>::forward(matrix<T, MODE> &data)
+    template<typename T>
+    matrix<T> input<T>::forward(matrix<T> &data)
     {
         // return calling the copy constructor:
         return data;
     }
 
-    template<typename T, mode MODE>
-    input_config<T, MODE> input<T, MODE>::with(std::size_t size)
+    template<typename T>
+    input_config<T> input<T>::with(std::size_t size)
     {
-        return input_config<T, MODE>(size);
+        return input_config<T>(size);
     }
 
     INSTANTIATE(input);

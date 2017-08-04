@@ -3,11 +3,10 @@
 
 #include "utilities.h"
 #include "layer_config.h"
-#include "matrix.h"
 
 namespace heed {
-    template<typename T, mode MODE>
-    class input_config : public layer_config<T, MODE>
+    template<typename T>
+    class input_config : public layer_config<T>
     {
     private:
         std::size_t _size;

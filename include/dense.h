@@ -8,17 +8,17 @@
 
 namespace heed
 {
-    template<typename T, mode MODE>
-    class dense : public layer<T, MODE>
+    template<typename T>
+    class dense : public layer<T>
     {
     public:
-        dense(dense_config<T, MODE> &config);
+        dense(dense_config<T> &config);
 
-        static dense_config<T, MODE> with(std::size_t size, typename activation<T, MODE>::function fun);
+        static dense_config<T> with(std::size_t size, typename activation<T>::function fun);
 
-        matrix<T, MODE> forward(matrix<T, MODE> &data);
+        matrix<T> forward(matrix<T> &data);
     private:
-        typename activation<T, MODE>::function &_fun;
+        typename activation<T>::function &_fun;
     };
 }
 

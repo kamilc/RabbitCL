@@ -4,53 +4,55 @@ using namespace std;
 
 namespace heed
 {
-    template<typename T, mode MODE>
-    gradient_descent<T, MODE>::gradient_descent()
+    template<typename T>
+    gradient_descent<T>::gradient_descent()
     {
         // no-op
     }
 
-    template<typename T, mode MODE>
-    void gradient_descent<T, MODE>::run(sequence<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets)
+    template<typename T>
+    void gradient_descent<T>::run(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
             cout << "Epoch " << epoch << endl;
 
-            auto start = epoch * this->_batches;
-            auto end = start + this->_batches - 1;
+            // auto start = epoch * this->_batches;
+            // auto end = start + this->_batches - 1;
 
-            auto batch_data = data.slice_rows(start, end);
-            auto batch_targets = targets.slice_rows(start, end);
+            // auto batch_data = data.slice_rows(start, end);
+            // auto batch_targets = targets.slice_rows(start, end);
 
-            run_batch(network, batch_data, batch_targets);
+            // run_batch(network, batch_data, batch_targets);
+
+            // todo: implement me
         }
     }
 
-    template<typename T, mode MODE>
-    void gradient_descent<T, MODE>::run_batch(sequence<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets)
+    template<typename T>
+    void gradient_descent<T>::run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
         // todo: implement me
     }
 
-    template<typename T, mode MODE>
-    gradient_descent<T, MODE>& gradient_descent<T, MODE>::setEpochs(unsigned long epochs)
+    template<typename T>
+    gradient_descent<T>& gradient_descent<T>::setEpochs(unsigned long epochs)
     {
         this->_epochs = epochs;
 
         return *this;
     }
 
-    template<typename T, mode MODE>
-    gradient_descent<T, MODE>& gradient_descent<T, MODE>::setBatches(unsigned long batches)
+    template<typename T>
+    gradient_descent<T>& gradient_descent<T>::setBatches(unsigned long batches)
     {
         this->_batches = batches;
 
         return *this;
     }
 
-    template<typename T, mode MODE>
-    gradient_descent<T, MODE>& gradient_descent<T, MODE>::setEta(T eta)
+    template<typename T>
+    gradient_descent<T>& gradient_descent<T>::setEta(T eta)
     {
         this->_eta = eta;
 

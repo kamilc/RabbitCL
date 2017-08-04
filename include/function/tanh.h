@@ -1,20 +1,25 @@
 #ifndef ActivationTanh_h
 #define ActivationTanh_h
 
+#include <tuple>
+#include "boost/optional.hpp"
+#include "viennacl/matrix.hpp"
 #include "utilities.h"
-#include "matrix.h"
+
+using namespace std;
+using namespace boost;
+using namespace viennacl;
 
 namespace heed
 {
     namespace function
     {
-        // template<typename T, mode MODE>
-        // class tanh : public activation_function<T, MODE>
-        // {
-        // public:
-        //     matrix<T, MODE> compute(matrix<T, MODE> &data);
-        //     matrix<T, MODE> derivation_slope(matrix<T, MODE> &data);
-        // };
+        template<typename T>
+        tuple<matrix<T>, optional<matrix<T>>> tanh(matrix<T>& in, bool derive)
+        {
+            // todo: implement me
+            return in;
+        }
     }
 }
 

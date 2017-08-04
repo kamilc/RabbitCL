@@ -1,17 +1,19 @@
 #ifndef Optimizer_h
 #define Optimizer_h
 
+#include "viennacl/matrix.hpp"
 #include "utilities.h"
-#include "matrix.h"
 #include "sequence.h"
+
+using namespace viennacl;
 
 namespace heed
 {
-    template<typename T, mode MODE>
+    template<typename T>
     class optimizer
     {
     public:
-        virtual void run(sequence<T, MODE> &network, matrix<T, MODE> &data, matrix<T, MODE> &targets) = 0;
+        virtual void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets) = 0;
     };
 }
 

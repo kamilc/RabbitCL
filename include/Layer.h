@@ -6,26 +6,30 @@
 
 #include <stdio.h>
 #include <boost/optional.hpp>
+#include "viennacl/matrix.hpp"
 
 #include "utilities.h"
-#include "matrix.h"
 #include "layer_config.h"
+
+using namespace viennacl;
+using namespace std;
+using namespace boost;
 
 namespace heed
 {
-    template<typename T, mode MODE>
+    template<typename T>
     class layer
     {
     protected:
-        std::size_t _size;
-        boost::optional<std::size_t> _parent_size;
-        boost::optional<matrix<T, MODE>> _weights;
+        size_t _size;
+        optional<size_t> _parent_size;
+        optional<matrix<T>> _weights;
     public:
-        layer(layer_config<T, MODE> &config);
+        layer(layer_config<T> &config);
 
-        std::size_t size();
+        size_t size();
 
-        virtual matrix<T, MODE> forward(matrix<T, MODE> &data) = 0;
+        virtual matrix<T> forward(matrix<T> &data) = 0;
         void initialize_weights();
     };
 }

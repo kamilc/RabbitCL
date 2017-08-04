@@ -2,16 +2,16 @@
 
 namespace heed
 {
-    template<typename T, mode MODE>
-    dense<T, MODE>::dense(dense_config<T, MODE> &config) :
-        layer<T, MODE>(config),
+    template<typename T>
+    dense<T>::dense(dense_config<T> &config) :
+        layer<T>(config),
         _fun(config.fun)
     {
         // no-op
     }
 
-    template<typename T, mode MODE>
-    matrix<T, MODE> dense<T, MODE>::forward(matrix<T, MODE> &data)
+    template<typename T>
+    matrix<T> dense<T>::forward(matrix<T> &data)
     {
         // // first get the computed data from layers below:
         // auto in = this->_input->forward(data);
@@ -25,10 +25,10 @@ namespace heed
         return data;
     }
 
-    template<typename T, mode MODE>
-    dense_config<T, MODE> dense<T, MODE>::with(std::size_t size, typename activation<T, MODE>::function fun)
+    template<typename T>
+    dense_config<T> dense<T>::with(std::size_t size, typename activation<T>::function fun)
     {
-        return dense_config<T, MODE>(size, fun);
+        return dense_config<T>(size, fun);
     }
 
     INSTANTIATE(dense);

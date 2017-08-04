@@ -4,17 +4,18 @@
 #include <functional>
 #include <tuple>
 #include "boost/optional.hpp"
-#include "matrix.h"
+#include "viennacl/matrix.hpp"
 
 using namespace std;
 using namespace boost;
+using namespace viennacl;
 
 namespace heed {
 
-    template <typename T, mode MODE>
+    template <typename T>
     struct activation
     {
-        typedef tuple<matrix<T, MODE>, optional<matrix<T, MODE>>> (*function)(matrix<T, MODE>&, bool);
+        typedef tuple<matrix<T>, optional<matrix<T>>> (*function)(matrix<T>&, bool);
     };
 }
 

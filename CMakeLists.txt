@@ -38,7 +38,6 @@ add_library(rabbit STATIC src/sequence.cpp
                           src/input.cpp
                           src/dense_config.cpp
                           src/dense.cpp
-                          src/matrix.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp

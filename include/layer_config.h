@@ -5,11 +5,10 @@
 #include <cstddef>
 
 #include "utilities.h"
-#include "matrix.h"
 
 namespace heed {
 
-    template<typename T, mode MODE>
+    template<typename T>
     class layer_config
     {
     protected:

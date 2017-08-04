@@ -1,21 +1,24 @@
 #ifndef Input_h
 #define Input_h
 
+#include "viennacl/matrix.hpp"
 #include "utilities.h"
 #include "layer.h"
 #include "input_config.h"
 
+using namespace viennacl;
+
 namespace heed 
 {
-    template<typename T, mode MODE>
-    class input : public layer<T, MODE>
+    template<typename T>
+    class input : public layer<T>
     {
     public:
-        input(input_config<T, MODE> &config);
+        input(input_config<T> &config);
 
-        static input_config<T, MODE> with(std::size_t size);
+        static input_config<T> with(std::size_t size);
 
-        matrix<T, MODE> forward(matrix<T, MODE> &data);
+        matrix<T> forward(matrix<T> &data);
     };
 }
 
