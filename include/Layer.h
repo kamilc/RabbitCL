@@ -6,7 +6,6 @@
 #include "viennacl/matrix.hpp"
 
 #include "utilities.h"
-#include "layer_config.h"
 
 using namespace viennacl;
 using namespace std;
@@ -22,8 +21,6 @@ namespace mozart
         optional<size_t> _parent_size;
         optional<matrix<T>> _weights;
     public:
-        layer(layer_config<T> &config);
-
         size_t size();
 
         virtual matrix<T> forward(matrix<T> &data) = 0;

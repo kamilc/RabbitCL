@@ -9,5 +9,15 @@ namespace mozart {
         this->fun = fun;
     }
 
+    template<typename T>
+    std::shared_ptr<layer<T>> dense_config<T>::construct() const
+    {
+        auto ptr = make_shared<dense<T>>();
+
+        // todo:
+
+        return ptr;
+    }
+
     INSTANTIATE(dense_config);
 }

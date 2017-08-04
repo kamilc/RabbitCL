@@ -5,7 +5,10 @@ namespace mozart
     template<typename T>
     sequence<T>& sequence<T>::add(const layer_config<T> &config)
     {
-        // todo: implement me
+        auto layer = config.construct();
+
+        this->_layers.push_front(layer);
+
         return *this;
     }
 
@@ -14,6 +17,12 @@ namespace mozart
     {
         // todo: implement me
         return data;
+    }
+
+    template<typename T>
+    size_t sequence<T>::size()
+    {
+        return this->_layers.size();
     }
 
     INSTANTIATE(sequence);

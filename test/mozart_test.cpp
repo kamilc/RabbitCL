@@ -18,9 +18,11 @@ TEST(sample_test_case, sample_test)
 {
     sequence<float> network;
 
-    network.add(input<float>::with(3))
-           .add(dense<float>::with(3, relu<float>))
-           .add(dense<float>::with(8, softmax<float>));
+    network.add(input_config<float>(3))
+           .add(dense_config<float>(3, relu<float>))
+           .add(dense_config<float>(8, softmax<float>));
+
+    EXPECT_EQ(network.size(), 3);
 
     auto data = make_matrix<float>({
         {0, 0, 0},

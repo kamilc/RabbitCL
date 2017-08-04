@@ -12,13 +12,9 @@ namespace mozart
     class dense : public layer<T>
     {
     public:
-        dense(dense_config<T> &config);
-
-        static dense_config<T> with(std::size_t size, typename activation<T>::function fun);
-
         matrix<T> forward(matrix<T> &data);
     private:
-        typename activation<T>::function &_fun;
+        typename activation<T>::function _fun;
     };
 }
 

@@ -14,10 +14,6 @@ namespace mozart
     class input : public layer<T>
     {
     public:
-        input(input_config<T> &config);
-
-        static input_config<T> with(std::size_t size);
-
         matrix<T> forward(matrix<T> &data);
     };
 }

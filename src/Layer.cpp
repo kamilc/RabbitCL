@@ -4,12 +4,12 @@ using namespace viennacl;
 
 namespace mozart
 {
-    template<typename T>
-    layer<T>::layer(layer_config<T> &config)
-    {
-        this->_parent_size = config.input_size();
-        this->_size = config.size();
-    }
+    // template<typename T>
+    // layer<T>::layer(layer_config<T> &config)
+    // {
+    //     this->_parent_size = config.input_size();
+    //     this->_size = config.size();
+    // }
 
     template<typename T>
     void layer<T>::initialize_weights()

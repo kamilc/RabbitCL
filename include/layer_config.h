@@ -3,8 +3,12 @@
 
 #include <boost/optional.hpp>
 #include <cstddef>
+#include <memory>
 
 #include "utilities.h"
+#include "layer.h"
+
+using namespace std;
 
 namespace mozart {
 
@@ -19,6 +23,8 @@ namespace mozart {
         std::size_t input_size();
         std::size_t size();
         bool has_inputs();
+
+        virtual std::shared_ptr<layer<T>> construct() const = 0;
     };
 }
 
