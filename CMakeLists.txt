@@ -4,6 +4,7 @@ project(librabbit)
 
 set (CMAKE_CXX_STANDARD 14)
 add_compile_options(-std=c++14)
+add_definitions(-DVIENNACL_WITH_OPENCL)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )
@@ -35,6 +36,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/input.cpp
                           src/dense_config.cpp
                           src/dense.cpp
+                          src/activation.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp

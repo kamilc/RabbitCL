@@ -4,7 +4,7 @@
 #include "utilities.h"
 #include "layer.h"
 #include "dense_config.h"
-#include "function.h"
+#include "activation.h"
 
 namespace mozart
 {

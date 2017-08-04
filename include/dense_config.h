@@ -3,7 +3,7 @@
 
 #include "utilities.h"
 #include "layer_config.h"
-#include "function.h"
+#include "activation.h"
 
 using namespace std;
 using namespace boost;

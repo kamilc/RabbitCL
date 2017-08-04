@@ -1,5 +1,5 @@
 #include "dense_config.h"
-#include "function.h"
+#include "activation.h"
 
 namespace mozart {
     template<typename T>
