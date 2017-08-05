@@ -2,6 +2,7 @@
 #define DenseConfig_h
 
 #include <memory>
+#include "viennacl/matrix.hpp"
 #include "utilities.h"
 #include "layer_config.h"
 #include "activation.h"
@@ -9,17 +10,18 @@
 
 using namespace std;
 using namespace boost;
+using namespace viennacl;
 
 namespace mozart {
     template<typename T>
     class dense_config : public layer_config<T>
-    {      
+    {;
     public:
         typename activation<T>::function fun;
 
         dense_config(size_t size, typename activation<T>::function func);
 
-        std::shared_ptr<layer<T>> construct() const;
+        std::shared_ptr<layer<T>> construct(std::size_t parent_size) const;
     };
 }
 

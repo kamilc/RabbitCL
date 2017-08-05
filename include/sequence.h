@@ -18,6 +18,7 @@ namespace mozart
     {
     private:
         std::list<std::shared_ptr<layer<T>>> _layers;
+        size_t _last_layer_size = 0;
     public:
         sequence& add(const layer_config<T> &config);
 

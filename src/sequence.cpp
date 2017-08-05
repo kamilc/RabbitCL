@@ -5,7 +5,7 @@ namespace mozart
     template<typename T>
     sequence<T>& sequence<T>::add(const layer_config<T> &config)
     {
-        auto layer = config.construct();
+        auto layer = config.construct(this->_last_layer_size);
 
         this->_layers.push_front(layer);
 

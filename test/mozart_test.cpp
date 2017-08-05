@@ -3,8 +3,8 @@
 #include "gtest/gtest.h"
 
 #include "sequence.h"
-#include "input.h"
-#include "dense.h"
+#include "input_config.h"
+#include "dense_config.h"
 #include "function/tanh.h"
 #include "function/relu.h"
 #include "function/softmax.h"

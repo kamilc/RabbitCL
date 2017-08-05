@@ -13,12 +13,10 @@ namespace mozart {
     template<typename T>
     class input_config : public layer_config<T>
     {
-    private:
-        std::size_t _size;
     public:
         input_config(std::size_t size);
 
-        std::shared_ptr<layer<T>> construct() const;
+        std::shared_ptr<layer<T>> construct(std::size_t parent_size) const;
     };
 }
 

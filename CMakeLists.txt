@@ -9,6 +9,9 @@ add_definitions(-DVIENNACL_WITH_OPENCL)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )
 
+find_package(Armadillo REQUIRED)
+include_directories(${ARMADILLO_INCLUDE_DIRS})
+
 enable_testing()
 
 include(ExternalProject)

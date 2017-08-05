@@ -18,13 +18,10 @@ namespace mozart
     {
     protected:
         size_t _size;
-        optional<size_t> _parent_size;
-        optional<matrix<T>> _weights;
     public:
         size_t size();
 
         virtual matrix<T> forward(matrix<T> &data) = 0;
-        void initialize_weights();
     };
 }
 
