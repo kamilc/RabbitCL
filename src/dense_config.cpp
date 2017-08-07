@@ -14,9 +14,7 @@ namespace mozart {
     {
         auto _layer = make_shared<dense<T>>();
 
-        _layer->_weights = matrix<T>(parent_size, this->_size);
-
-        // todo: initialize weights randomly with std = 0 and variance of 1
+        _layer->_weights = make_random_matrix<T>(parent_size, this->_size, 0.0, 1.0);
 
         return _layer;
     }

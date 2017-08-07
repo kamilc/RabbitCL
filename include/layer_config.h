@@ -17,7 +17,7 @@ namespace mozart {
     protected:
         std::size_t _size;
     public:
-        std::size_t size();
+        std::size_t size() const;
 
         virtual std::shared_ptr<layer<T>> construct(std::size_t parent_size) const = 0;
     };

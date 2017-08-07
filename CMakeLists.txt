@@ -9,9 +9,6 @@ add_definitions(-DVIENNACL_WITH_OPENCL)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )
 
-find_package(Armadillo REQUIRED)
-include_directories(${ARMADILLO_INCLUDE_DIRS})
-
 enable_testing()
 
 include(ExternalProject)
@@ -43,6 +40,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp
+                          src/random_matrix_generator.cpp
                           src/gradient_descent.cpp)
 
 add_executable(mozart_test test/mozart_test.cpp)
@@ -50,7 +48,7 @@ add_executable(mozart_test test/mozart_test.cpp)
 message(status "Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message(status "Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
-target_link_libraries(mozart_test mozart gtest_main pthread ${OPENCL_LIBRARIES} ${ARMADILLO_LIBRARIES})
+target_link_libraries(mozart_test mozart gtest_main pthread ${OPENCL_LIBRARIES})
 
 add_test(NAME mozart_test COMMAND mozart_test)
 

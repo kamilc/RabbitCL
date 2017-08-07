@@ -3,7 +3,7 @@
 namespace mozart {
 
     template<typename T>
-    std::size_t layer_config<T>::size()
+    std::size_t layer_config<T>::size() const
     {
         return this->_size;
     }

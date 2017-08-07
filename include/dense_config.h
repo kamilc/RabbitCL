@@ -7,6 +7,7 @@
 #include "layer_config.h"
 #include "activation.h"
 #include "dense.h"
+#include "matrix_helpers.h"
 
 using namespace std;
 using namespace boost;

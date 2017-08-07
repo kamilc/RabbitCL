@@ -6,8 +6,9 @@ namespace mozart
     sequence<T>& sequence<T>::add(const layer_config<T> &config)
     {
         auto layer = config.construct(this->_last_layer_size);
-
         this->_layers.push_front(layer);
+
+        this->_last_layer_size = config.size();
 
         return *this;
     }
