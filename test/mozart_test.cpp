@@ -14,7 +14,28 @@
 using namespace mozart;
 using namespace mozart::function;
 
-TEST(sample_test_case, sample_test)
+TEST(relu_test_case, relu_test)
+{
+    auto data = make_matrix<float>({
+        {-5, -4, -2 },
+        { 0,  1, -1 },
+        { 2,  1, -10},
+    });
+
+    auto result = relu<float>(data, false);
+
+    EXPECT_EQ(result.out(0, 0), 0);
+    EXPECT_EQ(result.out(0, 1), 0);
+    EXPECT_EQ(result.out(0, 2), 0);
+    EXPECT_EQ(result.out(1, 0), 0);
+    EXPECT_EQ(result.out(1, 1), 1);
+    EXPECT_EQ(result.out(1, 2), 0);
+    EXPECT_EQ(result.out(2, 0), 2);
+    EXPECT_EQ(result.out(2, 1), 1);
+    EXPECT_EQ(result.out(2, 2), 0);
+}
+
+TEST(learn_binary_test_case, learn_binary_test)
 {
     sequence<float> network;
 

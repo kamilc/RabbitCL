@@ -12,9 +12,9 @@ namespace mozart
             const char * relu_ocl_program =
             "__kernel void relu(\n"
             "          __global float * in,\n"
-            "          __global float * result)\n"
+            "          __global float * out)\n"
             "{ \n"
-            "  size_t ix = get_global_id()\n"
+            "  size_t ix = get_global_id(0);\n"
             "  out[ix] = (in[ix] > 0) ? in[ix] : 0;\n"
             "};\n";
 
@@ -27,9 +27,9 @@ namespace mozart
                 const char * relu_deriv_ocl_program =
                 "__kernel void relu_deriv(\n"
                 "          __global float * in,\n"
-                "          __global float * result)\n"
+                "          __global float * out)\n"
                 "{ \n"
-                "  size_t ix = get_global_id()\n"
+                "  size_t ix = get_global_id(0);\n"
                 "  out[ix] = (in[ix] > 0) ? 1 : 0;\n"
                 "};\n";
                 auto &relu_deriv_ocl =

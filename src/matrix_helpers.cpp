@@ -8,10 +8,12 @@ namespace mozart {
         auto cols = 0;
 
         for(auto r : values) {
-            ++rows;
-            for(auto c: r) {
-                ++cols;
+            if(rows == 0) {
+                for(auto c: r) {
+                    cols++;
+                }
             }
+            rows++;
         }
 
         auto mat = matrix<T>(rows, cols);
@@ -19,11 +21,12 @@ namespace mozart {
         size_t rindex = 0;
         size_t cindex = 0;
         for(auto r  = values.begin(); r < values.end(); r++) {
+            cindex = 0;
             for(auto c = (*r).begin(); c < (*r).end(); c++) {
                 mat(rindex, cindex) = *c;
+                cindex++;
             }
-            ++rindex;
-            ++cindex;
+            rindex++;
         }
         
         return mat;
