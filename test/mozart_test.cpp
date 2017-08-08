@@ -56,6 +56,48 @@ TEST(relu_test_case, relu_deriv_test)
     EXPECT_EQ(result.deriv.get()(2, 2), 0);
 }
 
+TEST(softmax_test_case, softmax_test)
+{
+    auto data = make_matrix<float>({
+        {  3.0, 1.0,  0.2 },
+        {  3.0, 1.5, -0.2 },
+        { -3.0, 1.5, -0.2 },
+    });
+
+    auto result = softmax<float>(data, false);
+
+    EXPECT_NEAR(result.out(0, 0), 0.8360188, 0.0001);
+    EXPECT_NEAR(result.out(0, 1), 0.11314284, 0.0001);
+    EXPECT_NEAR(result.out(0, 2), 0.05083836, 0.0001);
+    EXPECT_NEAR(result.out(1, 0), 0.79120662, 0.0001);
+    EXPECT_NEAR(result.out(1, 1), 0.17654206, 0.0001);
+    EXPECT_NEAR(result.out(1, 2), 0.03225133, 0.0001);
+    EXPECT_NEAR(result.out(2, 0), 0.00930563, 0.0001);
+    EXPECT_NEAR(result.out(2, 1), 0.8376665, 0.0001);
+    EXPECT_NEAR(result.out(2, 2), 0.15302787, 0.0001);
+}
+
+TEST(softmax_test_case, softmax_deriv_test)
+{
+    auto data = make_matrix<float>({
+        {-5, -4, -2 },
+        { 0,  1, -1 },
+        { 2,  1, -10},
+    });
+
+    auto result = softmax<float>(data, true);
+
+    EXPECT_EQ(result.deriv.get()(0, 0), 0);
+    EXPECT_EQ(result.deriv.get()(0, 1), 0);
+    EXPECT_EQ(result.deriv.get()(0, 2), 0);
+    EXPECT_EQ(result.deriv.get()(1, 0), 0);
+    EXPECT_EQ(result.deriv.get()(1, 1), 1);
+    EXPECT_EQ(result.deriv.get()(1, 2), 0);
+    EXPECT_EQ(result.deriv.get()(2, 0), 1);
+    EXPECT_EQ(result.deriv.get()(2, 1), 1);
+    EXPECT_EQ(result.deriv.get()(2, 2), 0);
+}
+
 TEST(learn_binary_test_case, learn_binary_test)
 {
     sequence<float> network;
