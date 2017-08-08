@@ -4,12 +4,9 @@ namespace mozart
 {
     namespace function
     {
-        template<typename T>
-        activation<T> relu(matrix<T>& in, bool derive)
+        inline ocl::kernel& get_relu_kernel()
         {
-            activation<T> result(in, derive);
-
-            const char * relu_ocl_program =
+            static const char * relu_ocl_program =
             "__kernel void relu(\n"
             "          __global float * in,\n"
             "          __global float * out)\n"
@@ -20,11 +17,12 @@ namespace mozart
 
             auto &relu_ocl =
                 ocl::current_context().add_program(relu_ocl_program, "relu");
-            ocl::kernel &relu_kernel = relu_ocl.get_kernel("relu");
-            ocl::enqueue(relu_kernel(in, result.out));
+            return relu_ocl.get_kernel("relu");
+        }
 
-            if(derive) {
-                const char * relu_deriv_ocl_program =
+        inline ocl::kernel& get_relu_deriv_kernel()
+        {
+            static const char * relu_deriv_ocl_program =
                 "__kernel void relu_deriv(\n"
                 "          __global float * in,\n"
                 "          __global float * out)\n"
@@ -32,9 +30,21 @@ namespace mozart
                 "  size_t ix = get_global_id(0);\n"
                 "  out[ix] = (in[ix] > 0) ? 1 : 0;\n"
                 "};\n";
-                auto &relu_deriv_ocl =
-                ocl::current_context().add_program(relu_deriv_ocl_program, "relu_deriv");
-                ocl::kernel &relu_deriv_kernel = relu_deriv_ocl.get_kernel("relu_deriv");
+            auto &relu_deriv_ocl =
+            ocl::current_context().add_program(relu_deriv_ocl_program, "relu_deriv");
+            return relu_deriv_ocl.get_kernel("relu_deriv");
+        }
+
+        template<typename T>
+        activation<T> relu(matrix<T>& in, bool derive)
+        {
+            activation<T> result(in, derive);
+
+            ocl::kernel &relu_kernel = get_relu_kernel();
+            ocl::enqueue(relu_kernel(in, result.out));
+
+            if(derive) {
+                ocl::kernel &relu_deriv_kernel = get_relu_deriv_kernel();
                 ocl::enqueue(relu_deriv_kernel(result.out, *result.deriv));
             }
 

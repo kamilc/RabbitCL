@@ -16,11 +16,7 @@ namespace mozart
     namespace function
     {
         template<typename T>
-        activation<T> softmax(matrix<T>& in, bool derive)
-        {
-            // todo: implement me
-            return activation<T>(in, derive);
-        }
+        activation<T> softmax(matrix<T>& in, bool derive);
     }
 }
 
