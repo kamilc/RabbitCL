@@ -47,12 +47,10 @@ namespace mozart
                 "              unsigned int isize1)\n"
                 "{ \n"
                 "  unsigned int gid = get_global_id(0);\n"
-                "  unsigned int gws = get_global_size(0);\n"
                 "  unsigned int padded = isize1 - size1;\n"
                 "  unsigned int row = gid / size2;\n"
                 "  unsigned int idx = gid + row*padded;\n"
                 "  out[idx] = in[idx] * (1.0f - in[idx]);\n"
-                "  //out[idx] = size1;\n"
                 "};\n";
             auto &softmax_deriv_ocl =
             ocl::current_context().add_program(softmax_deriv_ocl_program, "softmax_deriv");
