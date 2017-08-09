@@ -20,7 +20,7 @@ namespace mozart {
         typedef activation<T> (*function)(matrix<T>&, bool);
 
         matrix<T> out;
-        optional<matrix<T>> deriv;
+        matrix<T> deriv;
 
         activation(matrix<T> &in, bool derive);
     };

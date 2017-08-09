@@ -15,8 +15,6 @@ namespace mozart
     {
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
-            cout << "Epoch " << epoch << endl;
-
             // auto start = epoch * this->_batches;
             // auto end = start + this->_batches - 1;
 

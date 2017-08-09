@@ -11,15 +11,15 @@ namespace mozart
             "          __global float * in,\n"
             "          __global float * out,\n"
             "          __local  float * buff,\n"
-            "           size_t isize1,\n"
-            "           size_t isize2)\n"
+            "           unsigned int isize1,\n"
+            "           unsigned int isize2)\n"
             "{ \n"
-            "  size_t gid = get_global_id(0);\n"
-            "  size_t lid = get_local_id(0);\n"
-            "  size_t group_size = get_local_size(0);\n"
-            "  size_t padded = isize1 - group_size;\n"
-            "  size_t row = gid / group_size;\n"
-            "  size_t idx = gid + row*padded;\n"
+            "  unsigned int gid = get_global_id(0);\n"
+            "  unsigned int lid = get_local_id(0);\n"
+            "  unsigned int group_size = get_local_size(0);\n"
+            "  unsigned int padded = isize1 - group_size;\n"
+            "  unsigned int row = gid / group_size;\n"
+            "  unsigned int idx = gid + row*padded;\n"
             "  buff[lid] = exp(in[idx]);\n"
             "  barrier(CLK_LOCAL_MEM_FENCE);\n"
             "  for(int i = (group_size+1)/2; i>0; i >>= 1) {\n"
@@ -41,10 +41,18 @@ namespace mozart
             static const char * softmax_deriv_ocl_program =
                 "__kernel void softmax_deriv(\n"
                 "          __global float * in,\n"
-                "          __global float * out)\n"
+                "          __global float * out,\n"
+                "              unsigned int size1,\n"
+                "              unsigned int size2,\n"
+                "              unsigned int isize1)\n"
                 "{ \n"
-                "  size_t ix = get_global_id(0);\n"
-                "  out[ix] = (in[ix] > 0) ? 1 : 0;\n"
+                "  unsigned int gid = get_global_id(0);\n"
+                "  unsigned int gws = get_global_size(0);\n"
+                "  unsigned int padded = isize1 - size1;\n"
+                "  unsigned int row = gid / size2;\n"
+                "  unsigned int idx = gid + row*padded;\n"
+                "  out[idx] = in[idx] * (1.0f - in[idx]);\n"
+                "  //out[idx] = size1;\n"
                 "};\n";
             auto &softmax_deriv_ocl =
             ocl::current_context().add_program(softmax_deriv_ocl_program, "softmax_deriv");
@@ -64,11 +72,18 @@ namespace mozart
                                         local_mem(in.size2()),
                                         cl_uint(result.out.internal_size1()),
                                         cl_uint(result.out.internal_size2())));
+            finish();
 
             if(derive) {
-                
                 ocl::kernel &softmax_deriv_kernel = get_softmax_deriv_kernel();
-                ocl::enqueue(softmax_deriv_kernel(result.out, *result.deriv));
+                softmax_deriv_kernel.local_work_size(0, in.size1());
+                softmax_deriv_kernel.global_work_size(0, in.size2() * in.size1());
+                ocl::enqueue(softmax_deriv_kernel(result.out,
+                                                  result.deriv,
+                                                  cl_uint(result.deriv.size1()),
+                                                  cl_uint(result.deriv.size2()),
+                                                  cl_uint(result.deriv.internal_size1())));
+                finish();
             }
 
             return result;

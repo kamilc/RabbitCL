@@ -1,6 +1,9 @@
 #include <iostream>
 
+// #define VIENNACL_DEBUG_ALL 1
+
 #include "gtest/gtest.h"
+#include "viennacl/backend/memory.hpp"
 
 #include "sequence.h"
 #include "input_config.h"
@@ -10,6 +13,7 @@
 #include "function/softmax.h"
 #include "gradient_descent.h"
 #include "matrix_helpers.h"
+
 
 using namespace mozart;
 using namespace mozart::function;
@@ -45,15 +49,15 @@ TEST(relu_test_case, relu_deriv_test)
 
     auto result = relu<float>(data, true);
 
-    EXPECT_EQ(result.deriv.get()(0, 0), 0);
-    EXPECT_EQ(result.deriv.get()(0, 1), 0);
-    EXPECT_EQ(result.deriv.get()(0, 2), 0);
-    EXPECT_EQ(result.deriv.get()(1, 0), 0);
-    EXPECT_EQ(result.deriv.get()(1, 1), 1);
-    EXPECT_EQ(result.deriv.get()(1, 2), 0);
-    EXPECT_EQ(result.deriv.get()(2, 0), 1);
-    EXPECT_EQ(result.deriv.get()(2, 1), 1);
-    EXPECT_EQ(result.deriv.get()(2, 2), 0);
+    EXPECT_EQ(result.deriv(0, 0), 0);
+    EXPECT_EQ(result.deriv(0, 1), 0);
+    EXPECT_EQ(result.deriv(0, 2), 0);
+    EXPECT_EQ(result.deriv(1, 0), 0);
+    EXPECT_EQ(result.deriv(1, 1), 1);
+    EXPECT_EQ(result.deriv(1, 2), 0);
+    EXPECT_EQ(result.deriv(2, 0), 1);
+    EXPECT_EQ(result.deriv(2, 1), 1);
+    EXPECT_EQ(result.deriv(2, 2), 0);
 }
 
 TEST(softmax_test_case, softmax_test)
@@ -65,6 +69,10 @@ TEST(softmax_test_case, softmax_test)
     });
 
     auto result = softmax<float>(data, false);
+
+    //std::cout << "Got for softmax in test: " << result.out << std::endl;
+
+    viennacl::backend::finish();
 
     EXPECT_NEAR(result.out(0, 0), 0.8360188, 0.0001);
     EXPECT_NEAR(result.out(0, 1), 0.11314284, 0.0001);
@@ -80,22 +88,22 @@ TEST(softmax_test_case, softmax_test)
 TEST(softmax_test_case, softmax_deriv_test)
 {
     auto data = make_matrix<float>({
-        {-5, -4, -2 },
-        { 0,  1, -1 },
-        { 2,  1, -10},
+        {  3.0, 1.0,  0.2 },
+        {  3.0, 1.5, -0.2 },
+        { -3.0, 1.5, -0.2 },
     });
 
     auto result = softmax<float>(data, true);
 
-    EXPECT_EQ(result.deriv.get()(0, 0), 0);
-    EXPECT_EQ(result.deriv.get()(0, 1), 0);
-    EXPECT_EQ(result.deriv.get()(0, 2), 0);
-    EXPECT_EQ(result.deriv.get()(1, 0), 0);
-    EXPECT_EQ(result.deriv.get()(1, 1), 1);
-    EXPECT_EQ(result.deriv.get()(1, 2), 0);
-    EXPECT_EQ(result.deriv.get()(2, 0), 1);
-    EXPECT_EQ(result.deriv.get()(2, 1), 1);
-    EXPECT_EQ(result.deriv.get()(2, 2), 0);
+    EXPECT_NEAR(result.deriv(0, 0), 0.13709136, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 1), 0.10034154, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 2), 0.04825382, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 0), 0.16519871, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 1), 0.14537496, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 2), 0.03121118, 0.0001);
+    EXPECT_NEAR(result.deriv(2, 0), 0.00921904, 0.0001);
+    EXPECT_NEAR(result.deriv(2, 1), 0.13598134, 0.0001);
+    EXPECT_NEAR(result.deriv(2, 2), 0.12961034, 0.0001);
 }
 
 TEST(learn_binary_test_case, learn_binary_test)

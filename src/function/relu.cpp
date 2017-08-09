@@ -6,6 +6,7 @@ namespace mozart
     {
         inline ocl::kernel& get_relu_kernel()
         {
+            // todo: fix the issue with global and local work sizes and indexing
             static const char * relu_ocl_program =
             "__kernel void relu(\n"
             "          __global float * in,\n"
@@ -45,7 +46,7 @@ namespace mozart
 
             if(derive) {
                 ocl::kernel &relu_deriv_kernel = get_relu_deriv_kernel();
-                ocl::enqueue(relu_deriv_kernel(result.out, *result.deriv));
+                ocl::enqueue(relu_deriv_kernel(result.out, result.deriv));
             }
 
             return result;
