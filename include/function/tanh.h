@@ -1,26 +1,22 @@
 #ifndef ActivationTanh_h
 #define ActivationTanh_h
 
-#include <tuple>
-#include "boost/optional.hpp"
 #include "viennacl/matrix.hpp"
+#include "viennacl/ocl/backend.hpp"
+#include "viennacl/backend/memory.hpp"
 #include "utilities.h"
 #include "activation.h"
 
 using namespace std;
-using namespace boost;
 using namespace viennacl;
+using namespace viennacl::backend;
 
 namespace mozart
 {
     namespace function
     {
         template<typename T>
-        activation<T> tanh(matrix<T>& in, bool derive)
-        {
-            // todo: implement me
-            return activation<T>(in, derive);
-        }
+        activation<T> tanh(matrix<T>& in, bool derive);
     }
 }
 

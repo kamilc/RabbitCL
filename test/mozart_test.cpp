@@ -60,6 +60,48 @@ TEST(relu_test_case, relu_deriv_test)
     EXPECT_EQ(result.deriv(2, 2), 0);
 }
 
+TEST(tanh_test_case, tanh_test)
+{
+    auto data = make_matrix<float>({
+        {-5, -4, -2 },
+        { 0,  1, -1 },
+        { 2,  1, -10},
+    });
+
+    auto result = tanh<float>(data, false);
+
+    EXPECT_NEAR(result.out(0, 0), -0.9999092, 0.0001);
+    EXPECT_NEAR(result.out(0, 1), -0.9993293, 0.0001);
+    EXPECT_NEAR(result.out(0, 2), -0.96402758, 0.0001);
+    EXPECT_NEAR(result.out(1, 0), 0, 0.0001);
+    EXPECT_NEAR(result.out(1, 1), 0.76159416, 0.0001);
+    EXPECT_NEAR(result.out(1, 2), -0.76159416, 0.0001);
+    EXPECT_NEAR(result.out(2, 0), 0.96402758, 0.0001);
+    EXPECT_NEAR(result.out(2, 1), 0.76159416, 0.0001);
+    EXPECT_NEAR(result.out(2, 2), -1, 0.0001);
+}
+
+TEST(tanh_test_case, tanh_deriv_test)
+{
+    auto data = make_matrix<float>({
+        {-5, -4, -2 },
+        { 0,  1, -1 },
+        { 2,  1, -10},
+    });
+
+    auto result = tanh<float>(data, true);
+
+    EXPECT_NEAR(result.deriv(0, 0), 0.00018158, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 1), 0.00134095, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 2), 0.07065082, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 0), 1, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 1), 0.41997434, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 2), 0.41997434, 0.0001);
+    EXPECT_NEAR(result.deriv(2, 0), 7.06508249e-02, 0.0001);
+    EXPECT_NEAR(result.deriv(2, 1), 4.19974342e-01, 0.0001);
+    EXPECT_NEAR(result.deriv(2, 2), 8.24461455e-09, 0.0001);
+}
+
 TEST(softmax_test_case, softmax_test)
 {
     auto data = make_matrix<float>({
