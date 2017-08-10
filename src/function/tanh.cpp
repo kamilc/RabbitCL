@@ -4,6 +4,8 @@ namespace mozart
 {
     namespace function
     {
+        // todo: provide the activation function also for the
+        // speedy native_ variants
         inline ocl::kernel& get_tanh_kernel()
         {
             static const char * tanh_ocl_program =
