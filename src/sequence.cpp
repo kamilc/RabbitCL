@@ -21,6 +21,13 @@ namespace mozart
     }
 
     template<typename T>
+    std::vector<matrix<T>> sequence<T>::train_forward(matrix_range<matrix<T>> &data)
+    {
+        // todo: implement me
+        return std::vector<matrix<T>>(this->size(), matrix<T>(1, 1));
+    }
+
+    template<typename T>
     size_t sequence<T>::size()
     {
         return this->_layers.size();

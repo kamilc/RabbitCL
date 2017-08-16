@@ -3,7 +3,9 @@
 
 #include <list>
 #include <memory>
+#include <vector>
 #include "viennacl/matrix.hpp"
+#include "viennacl/matrix_proxy.hpp"
 #include "utilities.h"
 #include "layer_config.h"
 #include "layer.h"
@@ -25,6 +27,7 @@ namespace mozart
         size_t size();
 
         virtual matrix<T> forward(matrix<T> &data);
+        virtual std::vector<matrix<T>> train_forward(matrix_range<matrix<T>> &data);
     };
 }
 

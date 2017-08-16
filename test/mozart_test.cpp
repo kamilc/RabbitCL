@@ -11,9 +11,9 @@
 #include "function/tanh.h"
 #include "function/relu.h"
 #include "function/softmax.h"
+#include "function/squared_error.h"
 #include "gradient_descent.h"
 #include "matrix_helpers.h"
-
 
 using namespace mozart;
 using namespace mozart::function;
@@ -180,7 +180,7 @@ TEST(learn_binary_test_case, learn_binary_test)
         {0, 0, 0, 0, 0, 0, 0, 1} /* 7 */                    
      });
 
-    auto optimizer = gradient_descent<float>()
+    auto optimizer = gradient_descent<float>(squared_error<float>)
                         .setEpochs(8*10)
                         .setBatches(1);
 

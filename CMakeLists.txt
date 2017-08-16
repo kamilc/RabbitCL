@@ -37,6 +37,8 @@ add_library(mozart STATIC src/sequence.cpp
                           src/dense_config.cpp
                           src/dense.cpp
                           src/activation.cpp
+                          src/cost.cpp
+                          src/function/squared_error.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp

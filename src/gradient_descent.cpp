@@ -5,9 +5,9 @@ using namespace std;
 namespace mozart
 {
     template<typename T>
-    gradient_descent<T>::gradient_descent()
+    gradient_descent<T>::gradient_descent(typename cost<T>::function func)
     {
-        // no-op
+        this->_cost = func;
     }
 
     template<typename T>
@@ -15,22 +15,56 @@ namespace mozart
     {
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
-            // auto start = epoch * this->_batches;
-            // auto end = start + this->_batches - 1;
+            auto start = epoch * this->_batches;
+            auto end = start + this->_batches;
+            auto columns_length = data.size2();
 
-            // auto batch_data = data.slice_rows(start, end);
-            // auto batch_targets = targets.slice_rows(start, end);
+            auto batch_data = project(data, range(start, end), range(0, columns_length - 1));
+            auto batch_targets = project(targets, range(start, end), range(0, columns_length - 1));
 
-            // run_batch(network, batch_data, batch_targets);
+            auto error = run_batch(network, batch_data, batch_targets);
 
-            // todo: implement me
+            std::cout << "Batch \t[ " << epoch << " ] \t- " << error << std::endl;
         }
     }
 
     template<typename T>
-    void gradient_descent<T>::run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
+    T gradient_descent<T>::run_batch(sequence<T> &network, matrix_range<matrix<T>> &data, matrix_range<matrix<T>> &targets)
     {
-        // todo: implement me
+        // 1. get outputs of layers
+        std::vector<matrix<T>> outputs = network.train_forward(data);
+        matrix<T>& last_output = outputs[outputs.size() - 1];
+
+        // 2. compute the network error
+        cost<T> network_error = this->_cost(last_output, true);
+
+        // 3. compute little deltas
+        std::vector<matrix<T>> deltas(outputs.size());
+
+        deltas[outputs.size() - 1] = this->compute_last_deltas(last_output);
+        for(auto layer_index = outputs.size() - 2; layer_index > 0; layer_index--)
+        {
+            deltas[layer_index] = this->compute_deltas(outputs[layer_index]);
+        }
+
+        // 4. compute Δw
+
+        // 5. update weights
+
+        // 6. return the averaged error
+        return 0.5;
+    }
+
+    template<typename T>
+    inline matrix<T> gradient_descent<T>::compute_last_deltas(matrix<T>& outputs)
+    {
+        return matrix<T>(1, 1);
+    }
+
+    template<typename T>
+    inline matrix<T> gradient_descent<T>::compute_deltas(matrix<T>& outputs)
+    {
+        return matrix<T>(1, 1);
     }
 
     template<typename T>
