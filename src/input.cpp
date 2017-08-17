@@ -9,5 +9,11 @@ namespace mozart
         return data;
     }
 
+    template<typename T>
+    void input<T>::update_weights(matrix<T>& deltas)
+    {
+        // no-op
+    }
+
     INSTANTIATE(input);
 }

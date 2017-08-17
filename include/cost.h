@@ -23,6 +23,8 @@ namespace mozart {
         matrix<T> deriv;
 
         cost(matrix<T> &in, bool derive);
+
+        T avg();
     };
 }
 

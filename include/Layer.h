@@ -22,6 +22,7 @@ namespace mozart
         size_t size();
 
         virtual matrix<T> forward(matrix<T> &data) = 0;
+        virtual void update_weights(matrix<T>& deltas) = 0;
     };
 }
 

@@ -33,5 +33,11 @@ namespace mozart
         return this->_layers.size();
     }
 
+    template<typename T>
+    std::shared_ptr<layer<T>> sequence<T>::operator[](std::size_t index)
+    {
+        return this->_layers[index];
+    }
+
     INSTANTIATE(sequence);
 }

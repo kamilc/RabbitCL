@@ -16,6 +16,7 @@ namespace mozart
         friend class dense_config<T>;
     public:
         matrix<T> forward(matrix<T> &data);
+        void update_weights(matrix<T>& deltas);
     private:
         typename activation<T>::function _fun;
         matrix<T> _weights;

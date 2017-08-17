@@ -18,6 +18,7 @@ namespace mozart
         friend class input_config<T>;
     public:
         matrix<T> forward(matrix<T> &data);
+        void update_weights(matrix<T>& deltas);
     };
 }
 

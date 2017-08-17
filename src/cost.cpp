@@ -1,6 +1,7 @@
 #include "cost.h"
 
 namespace mozart {
+
     template<typename T>
     cost<T>::cost(matrix<T> &in, bool derive)
     {
@@ -11,6 +12,13 @@ namespace mozart {
         else {
             this->deriv = matrix<T>(0, 0);
         }
+    }
+
+    template<typename T>
+    T cost<T>::avg()
+    {
+        // todo: implement me
+        return 0.45;
     }
 
     INSTANTIATE(cost);

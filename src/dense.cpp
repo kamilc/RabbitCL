@@ -17,6 +17,12 @@ namespace mozart
         return data;
     }
 
+    template<typename T>
+    void dense<T>::update_weights(matrix<T>& deltas)
+    {
+        // todo: implement me
+    }
+
     INSTANTIATE(dense);
 }
 

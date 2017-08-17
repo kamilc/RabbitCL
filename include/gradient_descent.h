@@ -3,12 +3,14 @@
 
 #include "viennacl/matrix.hpp"
 #include "viennacl/matrix_proxy.hpp"
+#include "viennacl/linalg/prod.hpp"
 #include "utilities.h"
 #include "optimizer.h"
 #include "sequence.h"
 #include "cost.h"
 
 using namespace viennacl;
+using namespace viennacl::linalg;
 using namespace std;
 
 namespace mozart

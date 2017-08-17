@@ -47,12 +47,20 @@ namespace mozart
             deltas[layer_index] = this->compute_deltas(outputs[layer_index]);
         }
 
-        // 4. compute Δw
+        // 4. compute Δw and update the weights on the fly
+        //    this means multiplying the little delta by the input to the current layer
+        //    which is the output of the previous one
+        for(auto layer_index = outputs.size() - 1; layer_index > 0; layer_index--)
+        {
+            matrix<T>& delta = deltas[layer_index];
+            matrix<T>& layer_input = outputs[layer_index - 1];
 
-        // 5. update weights
+            auto weight_delta = matrix<T>(-1 * this->_eta * prod(delta, layer_input));
+            network[layer_index]->update_weights(weight_delta);
+        }
 
-        // 6. return the averaged error
-        return 0.5;
+        // 5. return the averaged error
+        return network_error.avg();
     }
 
     template<typename T>
