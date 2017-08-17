@@ -1,11 +1,11 @@
-#ifndef CostSquaredError_h
-#define CostSquaredError_h
+#ifndef ReduceAvg_h
+#define ReduceAvg_h
 
 #include "viennacl/matrix.hpp"
+#include "viennacl/scalar.hpp"
 #include "viennacl/ocl/backend.hpp"
 #include "viennacl/backend/memory.hpp"
 #include "utilities.h"
-#include "cost.h"
 #include "kernel_class.h"
 
 using namespace std;
@@ -17,10 +17,9 @@ namespace mozart
     namespace function
     {
         template<typename T>
-        cost<T> squared_error(matrix<T>& in, bool derive);
+        scalar<T> reduce_avg(matrix<T>& in);
 
-        KERNEL_CLASS(squared_error_kernel);
-        KERNEL_CLASS(squared_error_deriv_kernel);
+        SCALAR_KERNEL_CLASS(reduce_avg_kernel);
     }
 }
 

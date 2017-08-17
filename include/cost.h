@@ -6,10 +6,12 @@
 #include "boost/optional.hpp"
 #include "viennacl/matrix.hpp"
 #include "utilities.h"
+#include "function/reduce_avg.h"
 
 using namespace std;
 using namespace boost;
 using namespace viennacl;
+using namespace mozart::function;
 
 namespace mozart {
 
