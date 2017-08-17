@@ -66,12 +66,14 @@ namespace mozart
     template<typename T>
     inline matrix<T> gradient_descent<T>::compute_last_deltas(matrix<T>& outputs)
     {
+        // todo: implement me
         return matrix<T>(1, 1);
     }
 
     template<typename T>
     inline matrix<T> gradient_descent<T>::compute_deltas(matrix<T>& outputs)
     {
+        // todo: implement me
         return matrix<T>(1, 1);
     }
 
