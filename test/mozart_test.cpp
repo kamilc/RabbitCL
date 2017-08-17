@@ -112,8 +112,6 @@ TEST(softmax_test_case, softmax_test)
 
     auto result = softmax<float>(data, false);
 
-    //std::cout << "Got for softmax in test: " << result.out << std::endl;
-
     viennacl::backend::finish();
 
     EXPECT_NEAR(result.out(0, 0), 0.8360188, 0.0001);
@@ -187,7 +185,6 @@ TEST(learn_binary_test_case, learn_binary_test)
     optimizer.run(network, data, ys);
 
     auto test = make_matrix<float>({{ 0, 1, 0 }});
-    auto expecting = make_matrix<float>({{ 0, 0, 1, 0, 0, 0, 0, 0 }});
     auto predicted = network.forward(test);
 
     EXPECT_EQ(predicted(0, 0), 0);
