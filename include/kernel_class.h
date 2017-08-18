@@ -68,6 +68,20 @@ public: \
     static void run_scalar(matrix<T>& in, scalar<T>& out, std::size_t local_size, std::size_t global_size) \
     { \
         kernel_name kernel = kernel_name::instance(); \
+        if(local_size == 0 || global_size == 0) \
+        { \
+            auto total_size = in.size1() * in.size2();\
+            local_size = 2;\
+            global_size = 2;\
+            while(global_size < total_size)\
+            {\
+                global_size *= 2;\
+            }\
+            while(local_size < 128 && local_size < global_size)\
+            {\
+                local_size *= 2;\
+            }\
+        } \
         kernel.local_work_size(0, local_size); \
         kernel.global_work_size(0, global_size); \
         kernel.compute_scalar(in, out); \

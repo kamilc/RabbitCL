@@ -13,18 +13,25 @@ namespace mozart
     template<typename T>
     void gradient_descent<T>::run(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
+        auto batches_len = data.size1() / this->_batches;
+        auto columns_length = data.size2();
+
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
-            auto start = epoch * this->_batches;
-            auto end = start + this->_batches;
-            auto columns_length = data.size2();
+            T error = 0;
 
-            auto batch_data = project(data, range(start, end), range(0, columns_length - 1));
-            auto batch_targets = project(targets, range(start, end), range(0, columns_length - 1));
+            for(auto batch = 0; batch < batches_len; batch++)
+            {
+                auto start = batch * this->_batches;
+                auto end = start + this->_batches;
+    
+                auto batch_data = project(data, range(start, end), range(0, columns_length));
+                auto batch_targets = project(targets, range(start, end), range(0, columns_length - 1));
+    
+                error = run_batch(network, batch_data, batch_targets);
+            }
 
-            auto error = run_batch(network, batch_data, batch_targets);
-
-            std::cout << "Batch \t[ " << epoch << " ] \t- " << error << std::endl;
+            std::cout << "Epoch \t[ " << epoch << " ] \t- " << error << std::endl;
         }
     }
 
@@ -36,7 +43,7 @@ namespace mozart
         matrix<T>& last_output = outputs[outputs.size() - 1];
 
         // 2. compute the network error
-        cost<T> network_error = this->_cost(last_output, true);
+        cost<T> network_error = this->_cost(last_output, targets, true);
 
         // 3. compute little deltas
         std::vector<matrix<T>> deltas(outputs.size());

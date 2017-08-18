@@ -19,7 +19,7 @@ namespace mozart {
     class cost
     {
     public:
-        typedef cost<T> (*function)(matrix<T>&, bool);
+        typedef cost<T> (*function)(matrix<T>&, matrix_range<matrix<T>>&, bool);
 
         matrix<T> out;
         matrix<T> deriv;

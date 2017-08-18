@@ -23,8 +23,16 @@ namespace mozart
     template<typename T>
     std::vector<matrix<T>> sequence<T>::train_forward(matrix_range<matrix<T>> &data)
     {
-        // todo: implement me
-        return std::vector<matrix<T>>(this->size(), matrix<T>(1, 1));
+        std::vector<matrix<T>> out(this->size());
+
+        out[0] = matrix<T>(data);
+
+        for(auto index = 1; index < this->size(); index++)
+        {
+            out[index] = this->_layers[index]->forward(out[index - 1]);
+        }
+
+        return out;
     }
 
     template<typename T>

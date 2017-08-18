@@ -14,9 +14,22 @@
 #include "function/squared_error.h"
 #include "gradient_descent.h"
 #include "matrix_helpers.h"
+#include "function/reduce_avg.h"
 
 using namespace mozart;
 using namespace mozart::function;
+
+TEST(reduce_avg_test_case, reduce_avg_test)
+{
+    auto data = make_matrix<float>({
+        { 1, 2, 3.0 },
+        { 6, 7, 9.5 }
+    });
+
+    float result = reduce_avg<float>(data);
+
+    EXPECT_NEAR(result, 4.75, 0.0001);
+}
 
 TEST(relu_test_case, relu_test)
 {
