@@ -1,6 +1,12 @@
 #ifndef Scalar_h
 #define Scalar_h
 
+#include <boost/compute/container.hpp>
+#include "utilities.h"
+
+using namespace std;
+using namespace boost;
+
 namespace mozart
 {
     template<typename T>
@@ -12,6 +18,8 @@ namespace mozart
 
         void operator=(T value);
         operator T();
+    private:
+        compute::array<T, 1> _data;
     };
 }
 

@@ -32,6 +32,7 @@ include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR} ${BoostComp
 
 add_library(mozart STATIC src/sequence.cpp
                           src/matrix.cpp
+                          src/scalar.cpp
                           src/matrix_helpers.cpp
                           src/layer_config.cpp
                           src/layer.cpp

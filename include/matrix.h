@@ -16,6 +16,9 @@ namespace mozart
     public:
         matrix();
         matrix(size_t size1, size_t size2);
+        matrix(size_t size1, size_t size2, compute::context context);
+
+        static compute::context default_context();
 
         size_t size1();
         size_t size2();
@@ -23,8 +26,12 @@ namespace mozart
         void set(size_t at1, size_t at2, T value);
 
         T operator()(size_t at1, size_t at2);
+    protected:
+        size_t index(size_t at1, size_t at2);
     private:
         bool transposed = false;
+        size_t _size1;
+        size_t _size2;
         compute::context _context;
         compute::vector<T> _data;
     };
