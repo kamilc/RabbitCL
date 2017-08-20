@@ -32,6 +32,13 @@ namespace mozart
     }
 
     template<typename T>
+    compute::command_queue matrix<T>::default_queue()
+    {
+        // todo" implement me
+        return compute::system::default_queue();
+    }
+
+    template<typename T>
     size_t matrix<T>::size1()
     {
         return this->_size1;
@@ -53,6 +60,15 @@ namespace mozart
     void matrix<T>::set(size_t at1, size_t at2, T value)
     {
         this->_data[this->index(at1, at2)] = value;
+    }
+
+    template<typename T>
+    void matrix<T>::fill_randn(T mean, T stddev)
+    {
+        compute::command_queue queue = matrix<T>::default_queue();
+        compute::default_random_engine engine(queue);
+        compute::normal_distribution<float> distribution(mean, stddev);
+        distribution.generate(this->_data.begin(), this->_data.end(), engine, queue);
     }
 
     template<typename T>

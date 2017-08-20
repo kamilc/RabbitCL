@@ -19,11 +19,13 @@ namespace mozart
         matrix(size_t size1, size_t size2, compute::context context);
 
         static compute::context default_context();
+        static compute::command_queue default_queue();
 
         size_t size1();
         size_t size2();
 
         void set(size_t at1, size_t at2, T value);
+        void fill_randn(T mean, T stddev);
 
         T operator()(size_t at1, size_t at2);
     protected:

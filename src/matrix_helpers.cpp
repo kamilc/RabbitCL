@@ -36,9 +36,8 @@ namespace mozart {
     matrix<T> make_random_matrix(std::size_t rows, std::size_t cols, T mean, T variance)
     {
         auto out = matrix<T>(rows, cols);
-        // auto generator = random_matrix_generator<T>(rows, cols, mean, variance);
 
-        // viennacl::copy(generator, out);
+        out.fill_randn(mean, variance);
 
         return out;
     }
