@@ -6,7 +6,7 @@
 #include "viennacl/backend/memory.hpp"
 #include "utilities.h"
 #include "activation.h"
-#include "kernel_class.h"
+#include "kernel.h"
 
 using namespace std;
 using namespace viennacl;
@@ -18,9 +18,6 @@ namespace mozart
     {
         template<typename T>
         activation<T> relu(matrix<T>& in, bool derive);
-
-        KERNEL_CLASS(relu_kernel);
-        KERNEL_CLASS(relu_deriv_kernel);
     }
 }
 

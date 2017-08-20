@@ -26,7 +26,7 @@ namespace mozart
         gradient_descent& setEta(T eta);
 
         void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
-        T run_batch(sequence<T> &network, matrix_range<matrix<T>> &data, matrix_range<matrix<T>> &targets);
+        T run_batch(sequence<T> &network, matrix_base<T> &data, matrix_base<T> &targets);
     private:
         T _eta;
         unsigned long  _epochs;

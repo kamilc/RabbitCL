@@ -26,9 +26,12 @@ ExternalProject_Add(googletest
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
                  ${CMAKE_BINARY_DIR}/googletest-build)
 
-include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR})
+include(BuildBoostCompute)
+
+include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR} ${BoostCompute_INCLUDE_DIRS})
 
 add_library(mozart STATIC src/sequence.cpp
+                          src/matrix.cpp
                           src/matrix_helpers.cpp
                           src/layer_config.cpp
                           src/layer.cpp

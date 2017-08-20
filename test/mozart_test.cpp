@@ -31,6 +31,45 @@ TEST(reduce_avg_test_case, reduce_avg_test)
     EXPECT_NEAR(result, 4.75, 0.0001);
 }
 
+TEST(squared_error_test_case, squared_error_test)
+{
+    auto predicted = make_matrix<float>({
+        { 0,  1, -1 },
+        { 2,  1, -10},
+    });
+
+    auto targets = make_matrix<float>({
+        { 1.5,   -2,   0 },
+        { 2.1,  1.1, -10 }
+    });
+
+    auto result = squared_error<float>(predicted, targets, false);
+
+    EXPECT_NEAR(result.out, -0.15, 0.0001);
+}
+
+TEST(squared_error_test_case, squared_error_deriv_test)
+{
+    auto predicted = make_matrix<float>({
+        { 0,  1, -1 },
+        { 2,  1, -10},
+    });
+
+    auto targets = make_matrix<float>({
+        { 1.5,   -2,   0 },
+        { 2.1,  1.1, -10 }
+    });
+
+    auto result = squared_error<float>(predicted, targets, false);
+
+    EXPECT_NEAR(result.deriv(0, 0), 0 - 1.5, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 1), 1 + 2, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 2), -1 - 0, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 0), 2 - 2.1, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 1), 1 - 1.1, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 2), -10 + 10, 0.0001);
+}
+
 TEST(relu_test_case, relu_test)
 {
     auto data = make_matrix<float>({

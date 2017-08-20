@@ -22,8 +22,8 @@ public: \
             this->_compiled = true; \
         } \
     }\
-    void compute_matrix(matrix<T>& in, matrix_range<matrix<T>>& targets, matrix<T>& out);\
-    static void run_matrix(matrix<T>& in, matrix_range<matrix<T>>& targets, matrix<T>& out, std::size_t local_size, std::size_t global_size) \
+    void compute_matrix(matrix<T>& in, matrix_base<T>& targets, scalar<T>& out);\
+    static void run_matrix(matrix<T>& in, matrix_base<T>& targets, scalar<T>& out, std::size_t local_size, std::size_t global_size) \
     { \
         kernel_name kernel = kernel_name::instance(); \
         kernel.local_work_size(0, local_size); \

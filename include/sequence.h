@@ -29,7 +29,7 @@ namespace mozart
         std::shared_ptr<layer<T>> operator[](std::size_t index);
 
         virtual matrix<T> forward(matrix<T> &data);
-        virtual std::vector<matrix<T>> train_forward(matrix_range<matrix<T>> &data);
+        virtual std::vector<matrix<T>> train_forward(matrix_base<T> &data);
     };
 }
 

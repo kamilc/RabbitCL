@@ -6,7 +6,7 @@
 #include "viennacl/backend/memory.hpp"
 #include "utilities.h"
 #include "cost.h"
-#include "kernel_error_class.h"
+#include "kernel.h"
 
 using namespace std;
 using namespace viennacl;
@@ -17,10 +17,7 @@ namespace mozart
     namespace function
     {
         template<typename T>
-        cost<T> squared_error(matrix<T>& in, matrix_range<matrix<T>>& targets, bool derive);
-
-        KERNEL_ERROR_CLASS(squared_error_kernel);
-        KERNEL_ERROR_CLASS(squared_error_deriv_kernel);
+        cost<T> squared_error(matrix<T>& in, matrix_base<T>& targets, bool derive);
     }
 }
 

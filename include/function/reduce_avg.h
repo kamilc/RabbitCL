@@ -7,7 +7,7 @@
 #include "viennacl/ocl/local_mem.hpp"
 #include "viennacl/backend/memory.hpp"
 #include "utilities.h"
-#include "kernel_class.h"
+#include "kernel.h"
 
 using namespace std;
 using namespace viennacl;
@@ -21,7 +21,7 @@ namespace mozart
         template<typename T>
         scalar<T> reduce_avg(matrix<T>& in);
 
-        SCALAR_KERNEL_CLASS(reduce_avg_kernel);
+        KERNEL(reduce_avg_kernel);
     }
 }
 

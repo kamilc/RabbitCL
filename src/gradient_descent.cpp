@@ -36,7 +36,7 @@ namespace mozart
     }
 
     template<typename T>
-    T gradient_descent<T>::run_batch(sequence<T> &network, matrix_range<matrix<T>> &data, matrix_range<matrix<T>> &targets)
+    T gradient_descent<T>::run_batch(sequence<T> &network, matrix_base<T> &data, matrix_base<T> &targets)
     {
         // 1. get outputs of layers
         std::vector<matrix<T>> outputs = network.train_forward(data);
@@ -66,8 +66,8 @@ namespace mozart
             network[layer_index]->update_weights(weight_delta);
         }
 
-        // 5. return the averaged error
-        return network_error.avg();
+        // 5. return the error
+        return network_error.out;
     }
 
     template<typename T>
