@@ -1,11 +1,11 @@
 #ifndef Input_h
 #define Input_h
 
-#include "viennacl/matrix.hpp"
+#include "matrix.h"
 #include "utilities.h"
 #include "layer.h"
 
-using namespace viennacl;
+
 
 namespace mozart 
 {

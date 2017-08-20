@@ -25,10 +25,10 @@ namespace mozart
                 auto start = batch * this->_batches;
                 auto end = start + this->_batches;
     
-                auto batch_data = project(data, range(start, end), range(0, columns_length));
-                auto batch_targets = project(targets, range(start, end), range(0, columns_length - 1));
+                // auto batch_data = project(data, range(start, end), range(0, columns_length));
+                // auto batch_targets = project(targets, range(start, end), range(0, columns_length - 1));
     
-                error = run_batch(network, batch_data, batch_targets);
+                // error = run_batch(network, batch_data, batch_targets);
             }
 
             std::cout << "Epoch \t[ " << epoch << " ] \t- " << error << std::endl;
@@ -36,7 +36,7 @@ namespace mozart
     }
 
     template<typename T>
-    T gradient_descent<T>::run_batch(sequence<T> &network, matrix_base<T> &data, matrix_base<T> &targets)
+    T gradient_descent<T>::run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
         // 1. get outputs of layers
         std::vector<matrix<T>> outputs = network.train_forward(data);
@@ -62,8 +62,8 @@ namespace mozart
             matrix<T>& delta = deltas[layer_index];
             matrix<T>& layer_input = outputs[layer_index - 1];
 
-            auto weight_delta = matrix<T>(-1 * this->_eta * prod(delta, layer_input));
-            network[layer_index]->update_weights(weight_delta);
+            // auto weight_delta = matrix<T>(-1 * this->_eta * prod(delta, layer_input));
+            // network[layer_index]->update_weights(weight_delta);
         }
 
         // 5. return the error

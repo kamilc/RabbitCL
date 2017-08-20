@@ -4,12 +4,12 @@
 #include <functional>
 #include <tuple>
 #include "boost/optional.hpp"
-#include "viennacl/matrix.hpp"
+#include "matrix.h"
 #include "utilities.h"
 
 using namespace std;
 using namespace boost;
-using namespace viennacl;
+
 
 namespace mozart {
 

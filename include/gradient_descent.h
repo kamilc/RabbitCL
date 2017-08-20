@@ -1,16 +1,12 @@
 #ifndef GradientDescent_h
 #define GradientDescent_h
 
-#include "viennacl/matrix.hpp"
-#include "viennacl/matrix_proxy.hpp"
-#include "viennacl/linalg/prod.hpp"
+#include "matrix.h"
 #include "utilities.h"
 #include "optimizer.h"
 #include "sequence.h"
 #include "cost.h"
 
-using namespace viennacl;
-using namespace viennacl::linalg;
 using namespace std;
 
 namespace mozart
@@ -26,7 +22,7 @@ namespace mozart
         gradient_descent& setEta(T eta);
 
         void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
-        T run_batch(sequence<T> &network, matrix_base<T> &data, matrix_base<T> &targets);
+        T run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
     private:
         T _eta;
         unsigned long  _epochs;

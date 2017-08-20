@@ -1,11 +1,11 @@
 #ifndef Optimizer_h
 #define Optimizer_h
 
-#include "viennacl/matrix.hpp"
+#include "matrix.h"
 #include "utilities.h"
 #include "sequence.h"
 
-using namespace viennacl;
+
 
 namespace mozart
 {

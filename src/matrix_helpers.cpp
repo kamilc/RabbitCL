@@ -23,7 +23,7 @@ namespace mozart {
         for(auto r  = values.begin(); r < values.end(); r++) {
             cindex = 0;
             for(auto c = (*r).begin(); c < (*r).end(); c++) {
-                mat(rindex, cindex) = *c;
+                mat.set(rindex, cindex, *c);
                 cindex++;
             }
             rindex++;
@@ -35,10 +35,10 @@ namespace mozart {
     template<typename T>
     matrix<T> make_random_matrix(std::size_t rows, std::size_t cols, T mean, T variance)
     {
-        auto out = matrix<T, column_major>(rows, cols);
-        auto generator = random_matrix_generator<T>(rows, cols, mean, variance);
+        auto out = matrix<T>(rows, cols);
+        // auto generator = random_matrix_generator<T>(rows, cols, mean, variance);
 
-        viennacl::copy(generator, out);
+        // viennacl::copy(generator, out);
 
         return out;
     }

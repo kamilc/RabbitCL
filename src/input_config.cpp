@@ -12,7 +12,7 @@ namespace mozart {
     template<typename T>
     std::shared_ptr<layer<T>> input_config<T>::construct(std::size_t parent_size) const
     {
-        auto _layer = make_shared<input<T>>();
+        auto _layer = std::make_shared<input<T>>();
 
         _layer->_size = this->_size;
 

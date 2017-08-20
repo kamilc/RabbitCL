@@ -1,6 +1,6 @@
 #include "layer.h"
 
-using namespace viennacl;
+
 
 namespace mozart
 {

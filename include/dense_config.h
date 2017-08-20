@@ -2,7 +2,7 @@
 #define DenseConfig_h
 
 #include <memory>
-#include "viennacl/matrix.hpp"
+#include "matrix.h"
 #include "utilities.h"
 #include "layer_config.h"
 #include "activation.h"
@@ -11,7 +11,7 @@
 
 using namespace std;
 using namespace boost;
-using namespace viennacl;
+
 
 namespace mozart {
     template<typename T>

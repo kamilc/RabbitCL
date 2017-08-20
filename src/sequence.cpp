@@ -21,7 +21,7 @@ namespace mozart
     }
 
     template<typename T>
-    std::vector<matrix<T>> sequence<T>::train_forward(matrix_base<T> &data)
+    std::vector<matrix<T>> sequence<T>::train_forward(matrix<T> &data)
     {
         std::vector<matrix<T>> out(this->size());
 

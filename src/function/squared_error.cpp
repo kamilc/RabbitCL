@@ -26,7 +26,7 @@ namespace mozart
         // }
 
         // template<typename T>
-        // void squared_error_kernel<T>::compute_matrix(matrix<T>& in, matrix_base<T>& targets, scalar<T>& out)
+        // void squared_error_kernel<T>::compute_matrix(matrix<T>& in, matrix<T>& targets, scalar<T>& out)
         // {
         //     ocl::enqueue(this->_kernel(in,
         //                                targets,
@@ -64,7 +64,7 @@ namespace mozart
         // }
 
         template<typename T>
-        cost<T> squared_error(matrix<T>& in, matrix_base<T>& targets, bool derive)
+        cost<T> squared_error(matrix<T>& in, matrix<T>& targets, bool derive)
         {
             cost<T> result(in, derive);
 
@@ -84,7 +84,7 @@ namespace mozart
             return result;
         }
 
-        template cost<float> squared_error(matrix<float>& in, matrix_base<float>& targets, bool derive);
-        template cost<double> squared_error(matrix<double>& in, matrix_base<double>& targets, bool derive);
+        template cost<float> squared_error(matrix<float>& in, matrix<float>& targets, bool derive);
+        template cost<double> squared_error(matrix<double>& in, matrix<double>& targets, bool derive);
     }
 }

@@ -3,7 +3,7 @@
 // #define VIENNACL_DEBUG_ALL 1
 
 #include "gtest/gtest.h"
-#include "viennacl/backend/memory.hpp"
+
 
 #include "sequence.h"
 #include "input_config.h"

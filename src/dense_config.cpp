@@ -12,7 +12,7 @@ namespace mozart {
     template<typename T>
     std::shared_ptr<layer<T>> dense_config<T>::construct(std::size_t parent_size) const
     {
-        auto _layer = make_shared<dense<T>>();
+        auto _layer = std::make_shared<dense<T>>();
 
         _layer->_weights = make_random_matrix<T>(parent_size, this->_size, 0.0, 1.0);
 

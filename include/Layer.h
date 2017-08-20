@@ -3,11 +3,11 @@
 
 #include <stdio.h>
 #include <boost/optional.hpp>
-#include "viennacl/matrix.hpp"
+#include "matrix.h"
 
 #include "utilities.h"
 
-using namespace viennacl;
+
 using namespace std;
 using namespace boost;
 
