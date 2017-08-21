@@ -1,6 +1,6 @@
 #include <iostream>
 
-// #define VIENNACL_DEBUG_ALL 1
+#define BOOST_COMPUTE_DEBUG_KERNEL_COMPILATION 1
 
 #include "gtest/gtest.h"
 
@@ -21,10 +21,12 @@ using namespace mozart::function;
 
 TEST(reduce_avg_test_case, reduce_avg_test)
 {
+    std::cout << "Still alive" << std::endl;
     auto data = make_matrix<float>({
         { 1, 2, 3.0 },
         { 6, 7, 9.5 }
     });
+    std::cout << "Still alive 2" << std::endl;
 
     float result = reduce_avg<float>(data);
 

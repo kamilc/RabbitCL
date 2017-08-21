@@ -5,20 +5,20 @@ namespace mozart {
         __kernel void reduce_avg_kernel(              
                     __global float * in,
                     __global float * out,
-                    __global matrix_size * in_size)
+                  struct matrix_size in_size)
         {
-            __local  float * local_buffer;
+            __local float * local_buffer;
 
-            unsigned int global_id  = get_global_id(0);          
-            unsigned int total_size = in_size.size1 * in_size.size2;  
+            unsigned int global_id  = get_global_id(0);
+            unsigned int total_size = in_size.size1 * in_size.size2;
                                                     
             if(global_id < total_size)                
             {                                         
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_size = get_local_size(0);       
                 unsigned int group_id = get_group_id(0);
-                unsigned int row = global_id / size2;   
-                unsigned int pad = isize2 - size2;      
+                unsigned int row = global_id / in_size.size2;   
+                unsigned int pad = in_size.internal_size2 - in_size.size2;      
                                                     
                 local_buffer[local_id] = in[global_id + row * pad];
                 barrier(CLK_LOCAL_MEM_FENCE);           
@@ -61,7 +61,7 @@ namespace mozart {
         {
             scalar<T> out(0);
 
-            kernel<T, reduce_avg_kernel>::instance().run(in.data(), out.data(), in.ocl_size());
+            kernel<T, reduce_avg_kernel>::instance().run(in.data(), out.data(), in.size());
 
             return out;
         }
