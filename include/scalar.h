@@ -16,6 +16,8 @@ namespace mozart
         scalar();
         scalar(T initial);
 
+        compute::array<T, 1> data();
+
         void operator=(T value);
         operator T();
     private:

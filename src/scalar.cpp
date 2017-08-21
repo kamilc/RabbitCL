@@ -26,5 +26,11 @@ namespace mozart
         return this->_data[0];
     }
 
+    template<typename T>
+    compute::array<T, 1> scalar<T>::data()
+    {
+        return this->_data;
+    }
+
     INSTANTIATE(scalar)
 }

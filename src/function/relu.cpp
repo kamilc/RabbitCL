@@ -1,96 +1,93 @@
 #include "function/relu.h"
 
+using namespace boost;
+
 namespace mozart
 {
+    KERNEL(relu_kernel,
+        template<typename T>
+        __kernel void relu_kernel(
+                    __global T * in,
+                    __global T * out,
+                   matrix_size * in_size,
+                   matrix_size * out_size)
+        {
+            unsigned int gid = get_global_id(0);
+            unsigned int padded = in_size.internal_size1 - in_size.size1;
+            unsigned int row = gid / in_size.size2;
+            unsigned int idx = gid + row * padded;
+
+            out[idx] = fmax(0.0f, in[idx]);
+        };
+
+        template __attribute__((mangled_name(relu_kernel)))
+        __kernel void relu_kernel(__global float * in,
+                                  __global float * out,
+                                     matrix_size * in_size,
+                                     matrix_size * out_size);
+
+        template __attribute__((mangled_name(relu_kernel)))
+        __kernel void relu_kernel(__global double * in,
+                                  __global double * out,
+                                    matrix_size * in_size,
+                                    matrix_size * out_size);
+    );
+
+    KERNEL(relu_deriv_kernel,
+        template<typename T>
+        __kernel void relu_deriv_kernel(
+                  __global T * in,
+                  __global T * out,
+                 matrix_size * in_size,
+                 matrix_size * out_size)
+        {
+            unsigned int gid = get_global_id(0);
+            unsigned int padded = in_size.internal_size1 - in_size.size1;
+            unsigned int row = gid / in_size.size2;
+            unsigned int idx = gid + row * padded;
+
+            out[idx] = fmin(1.0f, floor(in[idx]));
+        };
+
+        template __attribute__((mangled_name(relu_deriv_kernel)))
+        __kernel void relu_deriv_kernel(__global float * in,
+                                  __global float * out,
+                                     matrix_size * in_size,
+                                     matrix_size * out_size);
+
+        template __attribute__((mangled_name(relu_deriv_kernel)))
+        __kernel void relu_deriv_kernel(__global double * in,
+                                  __global double * out,
+                                    matrix_size * in_size,
+                                    matrix_size * out_size);
+    );
+
     namespace function
     {
-        // template<typename T>
-        // inline const char * relu_kernel<T>::name()
-        // {
-        //     return "relu_kernel";
-        // }
-
-        // template<typename T>
-        // inline const char * relu_kernel<T>::code()
-        // {
-        //     return  "__kernel void relu_kernel(\n"
-        //             "          __global float * in,\n"
-        //             "          __global float * out,\n"
-        //             "              unsigned int size1,\n"
-        //             "              unsigned int size2,\n"
-        //             "              unsigned int isize1)\n"
-        //             "{ \n"
-        //             "  unsigned int gid = get_global_id(0);\n"
-        //             "  unsigned int padded = isize1 - size1;\n"
-        //             "  unsigned int row = gid / size2;\n"
-        //             "  unsigned int idx = gid + row*padded;\n"
-        //             "  out[idx] = fmax(0.0f, in[idx]);\n"
-        //             "};\n";
-        // }
-
-        // template<typename T>
-        // void relu_kernel<T>::compute_matrix(matrix<T>& in, matrix<T>& out)
-        // {
-        //     ocl::enqueue(this->_kernel(in,
-        //                                out,
-        //                                cl_uint(out.size1()),
-        //                                cl_uint(out.size2()),
-        //                                cl_uint(out.internal_size1())));
-        //     finish();
-        // }
-
-        // template<typename T>
-        // inline const char * relu_deriv_kernel<T>::name()
-        // {
-        //     return "relu_deriv_kernel";
-        // }
-
-        // template<typename T>
-        // inline const char * relu_deriv_kernel<T>::code()
-        // {
-        //     return  "__kernel void relu_deriv_kernel(\n"
-        //             "          __global float * in,\n"
-        //             "          __global float * out,\n"
-        //             "              unsigned int size1,\n"
-        //             "              unsigned int size2,\n"
-        //             "              unsigned int isize1)\n"
-        //             "{ \n"
-        //             "  unsigned int gid = get_global_id(0);\n"
-        //             "  unsigned int padded = isize1 - size1;\n"
-        //             "  unsigned int row = gid / size2;\n"
-        //             "  unsigned int idx = gid + row*padded;\n"
-        //             "  out[idx] = fmin(1.0f, floor(in[idx]));\n"
-        //             "};\n";
-        // }
-
-        // template<typename T>
-        // void relu_deriv_kernel<T>::compute_matrix(matrix<T>& in, matrix<T>& out)
-        // {
-        //     ocl::enqueue(this->_kernel(in,
-        //                                out,
-        //                                cl_uint(out.size1()),
-        //                                cl_uint(out.size2()),
-        //                                cl_uint(out.internal_size1())));
-        //     finish();
-        // }
-
         template<typename T>
         activation<T> relu(matrix<T>& in, bool derive)
         {
             activation<T> result(in, derive);
 
-            //relu_kernel<T>::run_matrix(in, result.out, in.size1(), in.size2() * in.size1());
+            kernel<T, relu_kernel>::instance().run(
+                in.data(),
+                result.out.data(),
+                in.ocl_size(),
+                result.out.ocl_size()
+            );
 
             if(derive)
             {
-                //relu_deriv_kernel<T>::run_matrix(result.out, result.deriv, in.size1(), in.size2() * in.size1());
+                kernel<T, relu_deriv_kernel>::instance().run(
+                    result.out.data(),
+                    result.deriv.data(),
+                    result.out.ocl_size(),
+                    result.deriv.ocl_size()
+                );
             }
 
             return result;
         }
-
-        // INSTANTIATE(relu_kernel);
-        // INSTANTIATE(relu_deriv_kernel);
 
         template activation<float> relu(matrix<float>& in, bool derive);
         template activation<double> relu(matrix<double>& in, bool derive);

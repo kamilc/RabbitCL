@@ -17,25 +17,36 @@ namespace mozart
 
     template<typename T>
     matrix<T>::matrix(size_t size1, size_t size2, compute::context context) :
-    matrix(std::make_shared<compute::vector<T>>(size1 * size2, context), 0, size1, 0, size2, context)
+    matrix(std::make_shared<compute::vector<T>>(size1 * size2, context),
+          0, size1, size1,
+          0, size2, size2,
+          context)
     {
         // no-op
     }
 
     template<typename T>
     matrix<T>::matrix(matrix<T> source, size_t start1, size_t size1, size_t start2, size_t size2) :
-      matrix(source._data, start1, size1, start2, size2, source._context)
+      matrix(source._data,
+             start1, size1, source._internal_size1,
+             start2, size2, source._internal_size2, 
+             source._context)
     {
         // no-op
     }
 
     template<typename T>
-    matrix<T>::matrix(std::shared_ptr<compute::vector<T>> data, size_t start1, size_t size1, size_t start2, size_t size2, compute::context context)
+    matrix<T>::matrix(std::shared_ptr<compute::vector<T>> data,
+                      size_t start1, size_t size1, size_t internal_size1,
+                      size_t start2, size_t size2, size_t internal_size2,
+                      compute::context context)
     {
         this->_start1 = start1;
         this->_start2 = start2;
         this->_size1 = size1;
         this->_size2 = size2;
+        this->_internal_size1 = internal_size1;
+        this->_internal_size2 = internal_size2;
         this->_context = context;
         this->_data = data;
     }
@@ -81,6 +92,12 @@ namespace mozart
     }
 
     template<typename T>
+    compute::vector<T>& matrix<T>::data()
+    {
+        return *this->_data;
+    }
+
+    template<typename T>
     void matrix<T>::fill_randn(T mean, T stddev)
     {
         compute::command_queue queue = matrix<T>::default_queue();
@@ -108,7 +125,11 @@ namespace mozart
     matrix<T> dot(matrix<T>& lhs, matrix<T>& rhs)
     {
         // todo: implement me
-        return matrix<T>(lhs.size1(), rhs.size2());
+        matrix<T> out(lhs.size1(), rhs.size2());
+
+        // run<T>(kernel<dot<T>>::instance(), lhs, rhs, out);
+
+        return out;
     }
 
     template<typename T>
@@ -116,6 +137,32 @@ namespace mozart
     {
         // todo: implement me
         return matrix<T>(rhs.size1(), rhs.size2());
+    }
+
+    template<typename T>
+    matrix_size matrix<T>::size()
+    {
+        matrix_size _size;
+
+        _size.size1 = this->_size1;
+        _size.size2 = this->_size2;
+        _size.internal_size1 = this->_internal_size1;
+        _size.internal_size2 = this->_internal_size2;
+        _size.start1 = this->_start1;
+        _size.start2 = this->_start2;
+        _size.transposed = this->_transposed;
+
+        return _size;
+    }
+
+    template<typename T>
+    compute::array<matrix_size, 1> matrix<T>::ocl_size()
+    {
+        compute::array<matrix_size, 1> out;
+
+        out[0] = this->size();
+
+        return out;
     }
 
     template matrix<float> dot(matrix<float>& lhs, matrix<float>& rhs);

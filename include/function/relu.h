@@ -1,6 +1,7 @@
 #ifndef ActivationReLU_h
 #define ActivationReLU_h
 
+#include <boost/compute/container.hpp>
 #include "matrix.h"
 #include "utilities.h"
 #include "activation.h"

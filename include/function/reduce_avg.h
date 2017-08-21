@@ -1,6 +1,7 @@
 #ifndef ReduceAvg_h
 #define ReduceAvg_h
 
+#include <boost/compute/container.hpp>
 #include "matrix.h"
 #include "scalar.h"
 #include "utilities.h"
@@ -14,8 +15,6 @@ namespace mozart
     {
         template<typename T>
         scalar<T> reduce_avg(matrix<T>& in);
-
-        KERNEL(reduce_avg_kernel);
     }
 }
 

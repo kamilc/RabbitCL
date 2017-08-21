@@ -1,7 +1,15 @@
 #ifndef KernelClass_h
 #define KernelClass_h
 
-#define KERNEL(name) \
+#include <cstddef>
+#include <boost/compute/kernel.hpp>
+#include <boost/compute/command_queue.hpp>
+#include "matrix_size.h"
+
+using namespace std;
+using namespace boost;
+
+#define KERNEL_NAME(name) \
 struct name \
 { \
     static const char* to_s() \
@@ -10,73 +18,77 @@ struct name \
     } \
 }; \
 
-template<typename T, typename NAME>
-class kernel
+namespace mozart
 {
-public:
-    static kernel& instance()
+    template<typename T>
+    class kernel_base
     {
-        static kernel _instance;
-        _instance.compile();
-        return _instance;
-    }
+    protected:
+        compute::kernel _kernel;
+        compute::command_queue _queue;
+        bool _compiled = false;
+        size_t _position;
 
-    kernel() { }
-
-    void compile()
-    {
-        if(!this->_compiled)
+    public:
+        template<typename A1, typename... Args>
+        void run_(A1 arg, Args ...args)
         {
-            // auto &program = ocl::current_context().add_program(this->code(), NAME::to_s());
-            // this->_kernel = program.get_kernel(NAME::to_s());
-            // this->_compiled = true;
+            this->_kernel.set_arg(this->_position++, arg);
+            run(args...);
         }
-    }
 
-    template<typename T1>
-    void operator()(T1 const &t1)
-    {
-        // auto _kernel = this(t1);
-        // ocl::enqueue(_kernel);
-        // finish();
-    }
-    
-    template<typename T1, typename T2>
-    void operator()(T1 const &t1, T2 const &t2)
-    {
-        // auto _kernel = this(t1, t2);
-        // ocl::enqueue(_kernel);
-        // finish();
-    }
-    
-    template<typename T1, typename T2, typename T3>
-    void operator()(T1 const &t1, T2 const &t2, T3 const &t3)
-    {
-        // auto _kernel = this(t1, t2, t3);
-        // ocl::enqueue(_kernel);
-        // finish();
-    }
-    
-    template<typename T1, typename T2, typename T3, typename T4>
-    void operator()(T1 const &t1, T2 const &t2, T3 const &t3, T4 const &t4)
-    {
-        // auto _kernel = this(t1, t2, t3, t4);
-        // ocl::enqueue(_kernel);
-        // finish();
-    }
-    
-    template<typename T1, typename T2, typename T3, typename T4, typename T5>
-    void operator()(T1 const &t1, T2 const &t2, T3 const &t3, T4 const &t4, T5 const &t5)
-    {
-        // auto _kernel = this(t1, t2, t3, t4, t5);
-        // ocl::enqueue(_kernel);
-        // finish();
-    }
-private:
-    // ocl::kernel _kernel;
-    bool _compiled = false; 
+        template<typename A1>
+        void run_(A1 arg)
+        {
+            this->_kernel.set_arg(this->_position++, arg);
+        }
 
-    inline const char * code();
-};
+        template<typename... Args>
+        void run(Args ...args)
+        {
+            this->_position = 0;
+            run_(args...);
+        }
+
+        void compile()
+        {
+            if(!this->_compiled)
+            {
+                //auto &program = ocl::current_context().add_program(this->code(), NAME::to_s());
+                //this->_kernel = program.get_kernel(NAME::to_s());
+                //this->_compiled = true;
+            }
+        }
+    };
+
+    template<typename T, typename NAME>
+    class kernel : public kernel_base<T>
+    {
+    public:
+        const char * code();
+
+        kernel() { }
+    };
+}
+
+#define KERNEL(name, source) \
+    KERNEL_NAME(name); \
+    template<typename T> \
+    class kernel<T, name> : public kernel_base<T> \
+    { \
+    public: \
+        const char * code() \
+        { \
+            return BOOST_COMPUTE_STRINGIZE_SOURCE( \
+                source \
+            ); \
+        } \
+        static kernel& instance() \
+        { \
+            static kernel _instance; \
+            _instance.compile(); \
+            return _instance; \
+        } \
+    }; \
 
 #endif
