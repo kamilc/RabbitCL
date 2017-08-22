@@ -6,6 +6,9 @@
 #include <cstddef>
 #include <boost/compute/kernel.hpp>
 #include <boost/compute/command_queue.hpp>
+#include <boost/compute/buffer.hpp>
+#include "matrix.h"
+#include "scalar.h"
 #include "matrix_size.h"
 
 using namespace std;
@@ -37,38 +40,82 @@ namespace mozart
         void run_(A1 arg, Args ...args)
         {
             this->_kernel.set_arg(this->_position++, arg);
-            run(args...);
+            run_(args...);
         }
 
         template<typename... Args>
         void run_(matrix_size arg, Args ...args)
         {
             this->_kernel.set_arg(this->_position++, sizeof(arg), &arg);
-            run(args...);
+            run_(args...);
         }
 
         void run_(matrix_size arg)
         {
             this->_kernel.set_arg(this->_position++, sizeof(arg), &arg);
+            this->run();
         }
 
+        template<typename... Args>
+        void run_(matrix<T>& arg, Args ...args)
+        {
+            this->_kernel.set_arg(this->_position++, arg.data());
+            run_(args...);
+        }
+
+        void run_(matrix<T> &arg)
+        {
+            this->_kernel.set_arg(this->_position++, arg.data());
+            this->run();
+        }
+
+        template<typename... Args>
+        void run_(scalar<T>& arg, Args ...args)
+        {
+            this->_kernel.set_arg(this->_position++, arg.data());
+            run_(args...);
+        }
+
+        void run_(scalar<T> &arg)
+        {
+            this->_kernel.set_arg(this->_position++, arg.data());
+            this->run();
+        }
+        
         template<typename A1>
         void run_(A1 arg)
         {
             this->_kernel.set_arg(this->_position++, arg);
+            this->run();
         }
 
         template<typename... Args>
         void run(Args ...args)
         {
             this->_position = 0;
+            compute::system::default_queue().finish();
             run_(args...);
         }
 
-        compute::context context()
+        void run()
         {
-            // todo: implement me
-            return compute::context(compute::system::default_device());
+            std::cout << "run()" << std::endl;
+
+            auto queue = context_manager::instance().new_queue();
+
+            std::cout << "About to run with " << this->_position << " arguments" << std::endl;
+
+            // todo: implement me properly
+            queue.enqueue_1d_range_kernel(
+                this->_kernel,
+                0,
+                16,
+                16
+            );
+
+            std::cout << "Enqueued" << std::endl;
+
+            queue.finish();
         }
 
         virtual const char * code() = 0;
@@ -78,7 +125,7 @@ namespace mozart
             if(!this->_compiled)
             {
                 compute::program _program =
-                    compute::program::create_with_source(this->code(), this->context());
+                    compute::program::create_with_source(this->code(), context_manager::instance().context());
                 try {
                     _program.build();
                     this->_kernel = compute::kernel(_program, this->_name);
@@ -98,11 +145,6 @@ namespace mozart
     {
     public:
         const char * code();
-
-        kernel() {
-            std::cout << "Setting name to " << NAME::to_s() << std::endl;
-            this->_name = NAME::to_s();
-        }
     };
 }
 
@@ -129,7 +171,6 @@ namespace mozart
             ); \
         } \
         kernel<T, name>() { \
-            std::cout << "Setting name to " << name::to_s() << std::endl; \
             this->_name = name::to_s(); \
         } \
         static kernel& instance() \

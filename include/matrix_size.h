@@ -24,6 +24,4 @@ namespace mozart
     };
 }
 
-BOOST_COMPUTE_ADAPT_STRUCT(mozart::matrix_size, matrix_size, (size1, size2, start1, start2, internal_size1, internal_size2, transposed))
-
 #endif

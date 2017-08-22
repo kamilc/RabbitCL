@@ -11,7 +11,7 @@ namespace mozart {
 
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
-                                                    
+
             if(global_id < total_size)                
             {                                         
                 unsigned int local_id = get_local_id(0);
@@ -61,7 +61,7 @@ namespace mozart {
         {
             scalar<T> out(0);
 
-            kernel<T, reduce_avg_kernel>::instance().run(in.data(), out.data(), in.size());
+            kernel<T, reduce_avg_kernel>::instance().run(in, out, in.size());
 
             return out;
         }

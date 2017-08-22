@@ -2,7 +2,9 @@
 #define Scalar_h
 
 #include <boost/compute/container.hpp>
+#include <memory>
 #include "utilities.h"
+#include "context_manager.h"
 
 using namespace std;
 using namespace boost;
@@ -21,7 +23,7 @@ namespace mozart
         void operator=(T value);
         operator T();
     private:
-        compute::array<T, 1> _data;
+        std::shared_ptr<compute::array<T, 1>> _data;
     };
 }
 

@@ -16,6 +16,7 @@ namespace mozart {
             rows++;
         }
 
+        std::vector<T> data(rows * cols);
         auto mat = matrix<T>(rows, cols);
 
         size_t rindex = 0;
@@ -23,11 +24,13 @@ namespace mozart {
         for(auto r  = values.begin(); r < values.end(); r++) {
             cindex = 0;
             for(auto c = (*r).begin(); c < (*r).end(); c++) {
-                mat.set(rindex, cindex, *c);
+                data[rindex * cols + cindex] = *c;
                 cindex++;
             }
             rindex++;
         }
+
+        mat.set_data(data);
         
         return mat;
     }

@@ -70,19 +70,19 @@ namespace mozart
             activation<T> result(in, derive);
 
             kernel<T, relu_kernel>::instance().run(
-                in.data(),
-                result.out.data(),
-                in.ocl_size(),
-                result.out.ocl_size()
+                in,
+                result.out,
+                in.size(),
+                result.out.size()
             );
 
             if(derive)
             {
                 kernel<T, relu_deriv_kernel>::instance().run(
-                    result.out.data(),
-                    result.deriv.data(),
-                    result.out.ocl_size(),
-                    result.deriv.ocl_size()
+                    result.out,
+                    result.deriv,
+                    result.out.size(),
+                    result.deriv.size()
                 );
             }
 

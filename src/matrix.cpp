@@ -9,18 +9,10 @@ namespace mozart
     }
 
     template<typename T>
-    matrix<T>::matrix(size_t size1, size_t size2)
-        : matrix(size1, size2, matrix<T>::default_context())
-    {
-        // no-op
-    }
-
-    template<typename T>
-    matrix<T>::matrix(size_t size1, size_t size2, compute::context context) :
-    matrix(std::make_shared<compute::vector<T>>(size1 * size2, context),
+    matrix<T>::matrix(size_t size1, size_t size2) :
+    matrix(std::make_shared<compute::vector<T>>(size1 * size2, context_manager::instance().context()),
           0, size1, size1,
-          0, size2, size2,
-          context)
+          0, size2, size2)
     {
         // no-op
     }
@@ -29,8 +21,7 @@ namespace mozart
     matrix<T>::matrix(matrix<T> source, size_t start1, size_t size1, size_t start2, size_t size2) :
       matrix(source._data,
              start1, size1, source._internal_size1,
-             start2, size2, source._internal_size2, 
-             source._context)
+             start2, size2, source._internal_size2)
     {
         // no-op
     }
@@ -38,8 +29,7 @@ namespace mozart
     template<typename T>
     matrix<T>::matrix(std::shared_ptr<compute::vector<T>> data,
                       size_t start1, size_t size1, size_t internal_size1,
-                      size_t start2, size_t size2, size_t internal_size2,
-                      compute::context context)
+                      size_t start2, size_t size2, size_t internal_size2)
     {
         this->_start1 = start1;
         this->_start2 = start2;
@@ -47,22 +37,7 @@ namespace mozart
         this->_size2 = size2;
         this->_internal_size1 = internal_size1;
         this->_internal_size2 = internal_size2;
-        this->_context = context;
         this->_data = data;
-    }
-
-    template<typename T>
-    compute::context matrix<T>::default_context()
-    {
-        // todo: implement me
-        return compute::context(compute::system::default_device());
-    }
-
-    template<typename T>
-    compute::command_queue matrix<T>::default_queue()
-    {
-        // todo" implement me
-        return compute::system::default_queue();
     }
 
     template<typename T>
@@ -78,11 +53,11 @@ namespace mozart
     }
 
     template<typename T>
-    size_t matrix<T>::index(size_t at1, size_t at2)
+    size_t matrix<T>::index(size_t at1, size_t at2) const
     {
         // todo: make this work when transposed and when it's a
         // view into a larger matrix:
-        return at1 * this->_size2 + at1;
+        return at1 * this->_size2 + at2;
     }
 
     template<typename T>
@@ -92,7 +67,7 @@ namespace mozart
     }
 
     template<typename T>
-    compute::vector<T>& matrix<T>::data()
+    compute::vector<T>& matrix<T>::data() const
     {
         return *this->_data;
     }
@@ -100,10 +75,13 @@ namespace mozart
     template<typename T>
     void matrix<T>::fill_randn(T mean, T stddev)
     {
-        compute::command_queue queue = matrix<T>::default_queue();
+        auto queue = context_manager::instance().new_queue();
+
         compute::default_random_engine engine(queue);
         compute::normal_distribution<float> distribution(mean, stddev);
         distribution.generate(this->_data->begin(), this->_data->end(), engine, queue);
+
+        queue.finish();
     }
 
     template<typename T>
@@ -140,7 +118,44 @@ namespace mozart
     }
 
     template<typename T>
-    matrix_size matrix<T>::size()
+    void matrix<T>::set_data(std::vector<T>& data)
+    {
+        auto queue = context_manager::instance().new_queue();
+
+        compute::copy(
+            data.begin(),
+            data.end(),
+            this->_data->begin(),
+        queue);
+
+        queue.finish();
+    }
+
+    template<typename T>
+    ostream& operator<<(ostream& os, const matrix<T>& mat)
+    {
+        matrix_size size = mat.size();
+        compute::vector<T>& data = mat.data();
+
+        os << "matrix " << size.size1 << "x" << size.size2 << endl;
+
+        for(auto x = size.start1; x < size.start1 + size.size1; x++)
+        {
+            for(auto y = size.start2; y < size.start2 + size.size2; y++)
+            {
+                os << data[mat.index(x, y)] << " ";
+                if(y == size.size2 - 1)
+                {
+                    os << endl;
+                }
+            }
+        }
+
+        return os;
+    }
+
+    template<typename T>
+    matrix_size matrix<T>::size() const
     {
         matrix_size _size;
 
@@ -155,15 +170,8 @@ namespace mozart
         return _size;
     }
 
-    template<typename T>
-    compute::array<matrix_size, 1> matrix<T>::ocl_size()
-    {
-        compute::array<matrix_size, 1> out;
-
-        out[0] = this->size();
-
-        return out;
-    }
+    template ostream& operator<<(ostream& os, const matrix<float>& mat);
+    template ostream& operator<<(ostream& os, const matrix<double>& mat);
 
     template matrix<float> dot(matrix<float>& lhs, matrix<float>& rhs);
     template matrix<double> dot(matrix<double>& lhs, matrix<double>& rhs);
