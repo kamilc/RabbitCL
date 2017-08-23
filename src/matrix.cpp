@@ -155,6 +155,12 @@ namespace mozart
     }
 
     template<typename T>
+    size_t matrix<T>::total_size() const
+    {
+        return this->_size1 * this->_size2;
+    }
+
+    template<typename T>
     matrix_size matrix<T>::size() const
     {
         matrix_size _size;

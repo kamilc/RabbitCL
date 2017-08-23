@@ -10,6 +10,7 @@
 #include "matrix.h"
 #include "scalar.h"
 #include "matrix_size.h"
+#include "local.h"
 
 using namespace std;
 using namespace boost;
@@ -30,10 +31,20 @@ namespace mozart
     {
     protected:
         compute::kernel _kernel;
+        compute::program _program;
         compute::command_queue _queue;
         bool _compiled = false;
-        size_t _position;
+        size_t _position = 0;
+        size_t _global_work_size = 0;
+        size_t _local_work_size = 0;
         const char * _name;
+
+        void clean()
+        {
+            this->_position = 0;
+            this->_global_work_size = 0;
+            this->_local_work_size = 0;
+        }
 
     public:
         template<typename A1, typename... Args>
@@ -47,6 +58,19 @@ namespace mozart
         void run_(matrix_size arg, Args ...args)
         {
             this->_kernel.set_arg(this->_position++, sizeof(arg), &arg);
+            run_(args...);
+        }
+
+        void run_(local<T> arg)
+        {
+            this->_kernel.set_arg(this->_position++, arg.memory_size(), NULL);
+            this->run();
+        }
+
+        template<typename... Args>
+        void run_(local<T> arg, Args ...args)
+        {
+            this->_kernel.set_arg(this->_position++, arg.memory_size(), NULL);
             run_(args...);
         }
 
@@ -93,29 +117,49 @@ namespace mozart
         void run(Args ...args)
         {
             this->_position = 0;
-            compute::system::default_queue().finish();
             run_(args...);
         }
 
         void run()
         {
-            std::cout << "run()" << std::endl;
-
             auto queue = context_manager::instance().new_queue();
 
-            std::cout << "About to run with " << this->_position << " arguments" << std::endl;
+            queue.finish();
 
-            // todo: implement me properly
+            if(this->_global_work_size == 0 || this->_local_work_size == 0)
+            {
+                this->infer_work_sizes();
+            }
+
             queue.enqueue_1d_range_kernel(
                 this->_kernel,
                 0,
-                16,
-                16
+                this->_global_work_size,
+                this->_local_work_size
             );
 
-            std::cout << "Enqueued" << std::endl;
-
             queue.finish();
+        }
+
+        void infer_work_sizes()
+        {
+            // todo: implement me in a smart way
+            this->_global_work_size = 128;
+            this->_local_work_size = 128;
+        }
+
+        kernel_base& with_global_size(size_t size)
+        {
+            this->_global_work_size = size;
+
+            return *this;
+        }
+
+        kernel_base& with_local_size(size_t size)
+        {
+            this->_local_work_size = size;
+
+            return *this;
         }
 
         virtual const char * code() = 0;
@@ -124,16 +168,19 @@ namespace mozart
         {
             if(!this->_compiled)
             {
-                compute::program _program =
-                    compute::program::create_with_source(this->code(), context_manager::instance().context());
+                this->_program =
+                    compute::program::create_with_source(
+                        this->code(),
+                        context_manager::instance().context()
+                    );
                 try {
-                    _program.build();
-                    this->_kernel = compute::kernel(_program, this->_name);
+                    this->_program.build();
+                    this->_kernel = compute::kernel(this->_program, this->_name);
                     this->_compiled = true;
                 }
                 catch(boost::compute::opencl_error &e){
                     std::cout << e.error_string() << std::endl;
-                    std::cout << _program.build_log() << std::endl;
+                    std::cout << this->_program.build_log() << std::endl;
                 }
                 
             }
@@ -176,6 +223,7 @@ namespace mozart
         static kernel& instance() \
         { \
             static kernel _instance; \
+            _instance.clean(); \
             _instance.compile(); \
             return _instance; \
         } \

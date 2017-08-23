@@ -33,6 +33,7 @@ namespace mozart
         void fill_randn(T mean, T stddev);
 
         matrix_size size() const;
+        size_t total_size() const;
         compute::vector<T>& data() const;
 
         T operator()(size_t at1, size_t at2);

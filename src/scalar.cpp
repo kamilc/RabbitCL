@@ -28,7 +28,7 @@ namespace mozart
     }
 
     template<typename T>
-    compute::array<T, 1> scalar<T>::data()
+    compute::array<T, 1>& scalar<T>::data()
     {
         return *this->_data;
     }

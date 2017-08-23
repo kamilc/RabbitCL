@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "scalar.h"
 #include "utilities.h"
+#include "local.h"
 #include "kernel.h"
 
 using namespace std;
