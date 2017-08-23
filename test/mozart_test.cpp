@@ -26,9 +26,13 @@ TEST(reduce_avg_test_case, reduce_avg_test)
         { 6, 7, 9.5 }
     });
 
+    auto view = matrix<float>::view(data, 1, 1, 1, 2);
+
     float result = reduce_avg<float>(data);
+    float result_from_view = reduce_avg<float>(view);
 
     EXPECT_NEAR(result, 4.75, 0.0001);
+    EXPECT_NEAR(result_from_view, 8.25, 0.0001);
 }
 
 TEST(squared_error_test_case, squared_error_test)

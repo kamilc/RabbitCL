@@ -93,8 +93,8 @@ namespace mozart
     template<typename T>
     matrix<T> matrix<T>::view(matrix<T> source, size_t start1, size_t end1, size_t start2, size_t end2)
     {
-        auto size1 = end1 - start1;
-        auto size2 = end2 - start2;
+        auto size1 = end1 + 1 - start1;
+        auto size2 = end2 + 1 - start2;
 
         return matrix<T>(source, start1, size1, start2, size2);
     }

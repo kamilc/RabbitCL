@@ -197,8 +197,10 @@ namespace mozart
                     _processed_name
                 );
 
+                #ifdef MOZART_DEBUG
                 std::cout << _processed_name << std::endl;
                 std::cout << _processed_code << std::endl;
+                #endif
 
                 this->_program =
                     compute::program::create_with_source(
