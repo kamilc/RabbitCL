@@ -16,15 +16,8 @@ namespace mozart {
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_id = get_group_id(0);
                 unsigned int group_size = get_global_size(0) / get_local_size(0);
-                unsigned int row = global_id / in_size.size2;   
-                unsigned int pad = in_size.internal_size2 - in_size.size2;
-
-                local_buffer[local_id] = in[
-                    global_id + 
-                    row * pad + 
-                    in_size.start1*in_size.internal_size2 +
-                    in_size.start2
-                ];
+                
+                local_buffer[local_id] = in[id_to_internal_id(global_id, &in_size)];
                 barrier(CLK_LOCAL_MEM_FENCE);
                                                     
                 for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)

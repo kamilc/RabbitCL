@@ -18,12 +18,12 @@ namespace mozart
     }
 
     template<typename T>
-    matrix<T>::matrix(matrix<T> source, size_t start1, size_t size1, size_t start2, size_t size2) :
+    matrix<T>::matrix(matrix<T>& source, size_t start1, size_t size1, size_t start2, size_t size2) :
       matrix(source._data,
              start1, size1, source._internal_size1,
              start2, size2, source._internal_size2)
     {
-        // no-op
+        this->_transposed = source._transposed;
     }
 
     template<typename T>
@@ -55,9 +55,12 @@ namespace mozart
     template<typename T>
     size_t matrix<T>::index(size_t at1, size_t at2) const
     {
-        // todo: make this work when transposed and when it's a
-        // view into a larger matrix:
-        return at1 * this->_size2 + at2;
+        // treating at1 and at2 as starting from 0 and not from start1 and start2
+        // returns an internal index within the underlying gpu vector
+        auto x = this->_transposed ? at2 : at1;
+        auto y = this->_transposed ? at1 : at2;
+
+        return (x + this->_start1) * this->_internal_size2 + y + this->_start2;
     }
 
     template<typename T>
@@ -91,12 +94,46 @@ namespace mozart
     }
 
     template<typename T>
-    matrix<T> matrix<T>::view(matrix<T> source, size_t start1, size_t end1, size_t start2, size_t end2)
+    matrix<T> matrix<T>::view(matrix<T>& source, size_t start1, size_t end1, size_t start2, size_t end2)
     {
-        auto size1 = end1 + 1 - start1;
-        auto size2 = end2 + 1 - start2;
+        auto _size1 = end1 + 1 - start1;
+        auto _size2 = end2 + 1 - start2;
+        auto _start1 = source._start1 + (source._transposed ? start2 : start1);
+        auto _start2 = source._start2 + (source._transposed ? start1 : start2);
 
-        return matrix<T>(source, start1, size1, start2, size2);
+        return matrix<T>(source, _start1, _size1, _start2, _size2);
+    }
+
+    template<typename T>
+    matrix<T> matrix<T>::transpose(matrix<T>& source)
+    {
+        matrix<T> _cloned = source.clone();
+        _cloned.transpose();
+
+        return _cloned;
+    }
+
+    template<typename T>
+    matrix<T>& matrix<T>::transpose()
+    {
+        auto size1 = this->_size1;
+        auto size2 = this->_size2;
+
+        this->_transposed = true;
+        this->_size1 = size2;
+        this->_size2 = size1;
+
+        return *this;
+    }
+
+    template<typename T>
+    matrix<T> matrix<T>::clone()
+    {
+        return matrix<T>(
+            std::make_shared<compute::vector<T>>(*(this->_data)),
+            this->_start1, this->_size1, this->_internal_size1,
+            this->_start2, this->_size2, this->_internal_size2
+        );
     }
 
     template<typename T>
@@ -139,11 +176,12 @@ namespace mozart
 
         os << "matrix " << size.size1 << "x" << size.size2 << endl;
 
-        for(auto x = size.start1; x < size.start1 + size.size1; x++)
+        for(auto x = 0; x < size.size1; x++)
         {
-            for(auto y = size.start2; y < size.start2 + size.size2; y++)
+            for(auto y = 0; y < size.size2; y++)
             {
-                os << data[mat.index(x, y)] << " ";
+                auto _index = mat.index(x, y);
+                os <<  data[_index] << " ";
                 if(y == size.size2 - 1)
                 {
                     os << endl;

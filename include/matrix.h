@@ -20,10 +20,14 @@ namespace mozart
     public:
         matrix();
         matrix(size_t size1, size_t size2);
-        matrix(matrix source, size_t start1, size_t size1, size_t start2, size_t size2);
+        matrix(matrix& source, size_t start1, size_t size1, size_t start2, size_t size2);
         matrix(std::shared_ptr<compute::vector<T>> data, size_t start1, size_t size1, size_t isize1, size_t start2, size_t size2, size_t isize2);
 
-        static matrix view(matrix source, size_t start1, size_t end1, size_t start2, size_t end2);
+        static matrix view(matrix& source, size_t start1, size_t end1, size_t start2, size_t end2);
+        static matrix transpose(matrix& source);
+
+        matrix& transpose();
+        matrix clone();
 
         size_t size1() const;
         size_t size2() const;

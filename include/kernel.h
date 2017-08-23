@@ -197,6 +197,42 @@ namespace mozart
                     _processed_name
                 );
 
+                _processed_code = std::string(BOOST_COMPUTE_STRINGIZE_SOURCE(
+                    struct matrix_size
+                    {
+                        unsigned int size1;
+                        unsigned int size2;
+                        unsigned int start1;
+                        unsigned int start2;
+                        unsigned int internal_size1;
+                        unsigned int internal_size2;
+                        unsigned int transposed;
+                    };
+
+                    inline unsigned int id_to_internal_id(
+                        unsigned int global_id,
+                        struct matrix_size * size)
+                    {
+                        if(!size->transposed)
+                        {
+                            unsigned int row = global_id / size->size2;
+                            unsigned int pad = size->internal_size2 - size->size2;
+                    
+                            return global_id + row * pad +
+                                size->start1 * size->internal_size2 +
+                                size->start2;
+                        }
+                        else
+                        {
+                            unsigned int row = global_id % size->size2;
+                            unsigned int col = global_id / size->size2;
+                            
+                            return (row + size->start1) * size->internal_size2 +
+                                size->start2 + col;
+                        }
+                    }
+                )) + _processed_code;
+
                 #ifdef MOZART_DEBUG
                 std::cout << _processed_name << std::endl;
                 std::cout << _processed_code << std::endl;
@@ -238,16 +274,6 @@ namespace mozart
         const char * code() \
         { \
             return BOOST_COMPUTE_STRINGIZE_SOURCE( \
-                struct matrix_size \
-                { \
-                    unsigned int size1; \
-                    unsigned int size2; \
-                    unsigned int start1; \
-                    unsigned int start2; \
-                    unsigned int internal_size1; \
-                    unsigned int internal_size2; \
-                    unsigned int transposed; \
-                }; \
                 source \
             ); \
         } \
