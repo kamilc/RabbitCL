@@ -3,9 +3,9 @@
 namespace mozart {
     KERNEL(reduce_avg_kernel,
         __kernel void reduce_avg_kernel(              
-                    __global float * in,
-                    __global float * out,
-                     __local float * local_buffer,
+                    __global TYPE * in,
+                    __global TYPE * out,
+                     __local TYPE * local_buffer,
                   struct matrix_size in_size)
         {
             unsigned int global_id  = get_global_id(0);

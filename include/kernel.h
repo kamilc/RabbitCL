@@ -7,6 +7,8 @@
 #include <boost/compute/kernel.hpp>
 #include <boost/compute/command_queue.hpp>
 #include <boost/compute/buffer.hpp>
+#include <string>
+#include <regex>
 #include "matrix.h"
 #include "scalar.h"
 #include "matrix_size.h"
@@ -162,20 +164,50 @@ namespace mozart
             return *this;
         }
 
+        std::string type_string(float param)
+        {
+            return "float";
+        }
+
+        std::string type_string(double param)
+        {
+            return "double";
+        }
+
         virtual const char * code() = 0;
 
         void compile()
         {
             if(!this->_compiled)
             {
+                std::regex type_regex("TYPE");
+                std::regex kernel_name_regex(this->_name);
+                std::string _processed_name =
+                    std::string(this->_name) + "_" + this->type_string(T{0});
+
+                std::string _processed_code = std::regex_replace(
+                    this->code(),
+                    type_regex,
+                    this->type_string(T{0})
+                );
+
+                _processed_code = std::regex_replace(
+                    _processed_code,
+                    kernel_name_regex,
+                    _processed_name
+                );
+
+                std::cout << _processed_name << std::endl;
+                std::cout << _processed_code << std::endl;
+
                 this->_program =
                     compute::program::create_with_source(
-                        this->code(),
+                        _processed_code,
                         context_manager::instance().context()
                     );
                 try {
                     this->_program.build();
-                    this->_kernel = compute::kernel(this->_program, this->_name);
+                    this->_kernel = compute::kernel(this->_program, _processed_name);
                     this->_compiled = true;
                 }
                 catch(boost::compute::opencl_error &e){
