@@ -5,61 +5,29 @@ using namespace boost;
 namespace mozart
 {
     KERNEL(relu_kernel,
-        template<typename T>
         __kernel void relu_kernel(
-                    __global T * in,
-                    __global T * out,
-                   matrix_size * in_size,
-                   matrix_size * out_size)
+                    __global TYPE * in,
+                    __global TYPE * out,
+                   struct matrix_size in_size)
         {
-            unsigned int gid = get_global_id(0);
-            unsigned int padded = in_size.internal_size1 - in_size.size1;
-            unsigned int row = gid / in_size.size2;
-            unsigned int idx = gid + row * padded;
+            unsigned int global_id = get_global_id(0);
+            unsigned int idx = id_to_internal_id(global_id, &in_size);
 
-            out[idx] = fmax(0.0f, in[idx]);
+            out[idx] = fmax((TYPE)0.0, in[idx]);
         };
-
-        template __attribute__((mangled_name(relu_kernel)))
-        __kernel void relu_kernel(__global float * in,
-                                  __global float * out,
-                                     matrix_size * in_size,
-                                     matrix_size * out_size);
-
-        template __attribute__((mangled_name(relu_kernel)))
-        __kernel void relu_kernel(__global double * in,
-                                  __global double * out,
-                                    matrix_size * in_size,
-                                    matrix_size * out_size);
     );
 
     KERNEL(relu_deriv_kernel,
-        template<typename T>
         __kernel void relu_deriv_kernel(
-                  __global T * in,
-                  __global T * out,
-                 matrix_size * in_size,
-                 matrix_size * out_size)
+                  __global TYPE * in,
+                  __global TYPE * out,
+                 struct matrix_size in_size)
         {
-            unsigned int gid = get_global_id(0);
-            unsigned int padded = in_size.internal_size1 - in_size.size1;
-            unsigned int row = gid / in_size.size2;
-            unsigned int idx = gid + row * padded;
+            unsigned int global_id = get_global_id(0);
+            unsigned int idx = id_to_internal_id(global_id, &in_size);
 
-            out[idx] = fmin(1.0f, floor(in[idx]));
+            out[idx] = fmin((TYPE)1.0, floor(in[idx]));
         };
-
-        template __attribute__((mangled_name(relu_deriv_kernel)))
-        __kernel void relu_deriv_kernel(__global float * in,
-                                  __global float * out,
-                                     matrix_size * in_size,
-                                     matrix_size * out_size);
-
-        template __attribute__((mangled_name(relu_deriv_kernel)))
-        __kernel void relu_deriv_kernel(__global double * in,
-                                  __global double * out,
-                                    matrix_size * in_size,
-                                    matrix_size * out_size);
     );
 
     namespace function
@@ -69,21 +37,27 @@ namespace mozart
         {
             activation<T> result(in, derive);
 
-            kernel<T, relu_kernel>::instance().run(
-                in,
-                result.out,
-                in.size(),
-                result.out.size()
-            );
+            kernel<T, relu_kernel>::instance()
+                .with_global_size(in.total_size())
+                // todo: infer as large of a localsize as possible
+                .with_local_size(in.size2())
+                .run(
+                    in,
+                    result.out,
+                    in.size()
+                );
 
             if(derive)
             {
-                kernel<T, relu_deriv_kernel>::instance().run(
-                    result.out,
-                    result.deriv,
-                    result.out.size(),
-                    result.deriv.size()
-                );
+                kernel<T, relu_deriv_kernel>::instance()
+                    .with_global_size(in.total_size())
+                    // todo: infer as large of a localsize as possible
+                    .with_local_size(in.size2())
+                    .run(
+                        result.out,
+                        result.deriv,
+                        result.out.size()
+                    );
             }
 
             return result;

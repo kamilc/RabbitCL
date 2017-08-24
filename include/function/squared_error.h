@@ -2,15 +2,11 @@
 #define CostSquaredError_h
 
 #include "matrix.h"
-
-
 #include "utilities.h"
 #include "cost.h"
 #include "kernel.h"
 
 using namespace std;
-
-
 
 namespace mozart
 {
