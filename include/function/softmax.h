@@ -2,15 +2,11 @@
 #define Softmax_h
 
 #include "matrix.h"
-
 #include "utilities.h"
 #include "activation.h"
 #include "kernel.h"
 
 using namespace std;
-
-
-
 
 namespace mozart
 {
