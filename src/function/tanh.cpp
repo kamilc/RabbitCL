@@ -2,97 +2,63 @@
 
 namespace mozart
 {
+    KERNEL(tanh_kernel,
+        __kernel void tanh_kernel(
+                    __global TYPE * in,
+                    __global TYPE * out,
+                   struct matrix_size in_size)
+        {
+            unsigned int global_id = get_global_id(0);
+            unsigned int idx = id_to_internal_id(global_id, &in_size);
+
+            out[idx] = tanh(in[idx]);
+        };
+    );
+
+    KERNEL(tanh_deriv_kernel,
+        __kernel void tanh_deriv_kernel(
+                  __global TYPE * in,
+                  __global TYPE * out,
+                 struct matrix_size in_size)
+        {
+            unsigned int global_id = get_global_id(0);
+            unsigned int idx = id_to_internal_id(global_id, &in_size);
+
+            out[idx] = 1 - in[idx] * in[idx];
+        };
+    );
+    
     namespace function
     {
-        // template<typename T>
-        // inline const char * tanh_kernel<T>::name()
-        // {
-        //     return "tanh_kernel";
-        // }
-
-        // template<typename T>
-        // inline const char * tanh_kernel<T>::code()
-        // {
-        //     return  "__kernel void tanh_kernel(\n"
-        //             "          __global float * in,\n"
-        //             "          __global float * out,\n"
-        //             "              unsigned int size1,\n"
-        //             "              unsigned int size2,\n"
-        //             "              unsigned int isize1)\n"
-        //             "{ \n"
-        //             "  unsigned int gid = get_global_id(0);\n"
-        //             "  unsigned int padded = isize1 - size1;\n"
-        //             "  unsigned int row = gid / size2;\n"
-        //             "  unsigned int idx = gid + row*padded;\n"
-        //             "  out[idx] = tanh(in[idx]);\n"
-        //             "};\n";
-        // }
-
-        // template<typename T>
-        // void tanh_kernel<T>::compute_matrix(matrix<T>& in, matrix<T>& out)
-        // {
-        //     ocl::enqueue(this->_kernel( in,
-        //                                 out,
-        //                                 cl_uint(out.size1()),
-        //                                 cl_uint(out.size2()),
-        //                                 cl_uint(out.internal_size1())));
-        //     finish();
-        // }
-
-        // template<typename T>
-        // inline const char * tanh_deriv_kernel<T>::name()
-        // {
-        //     return "tanh_deriv_kernel";
-        // }
-
-        // template<typename T>
-        // inline const char * tanh_deriv_kernel<T>::code()
-        // {
-        //     return  "__kernel void tanh_deriv_kernel(\n"
-        //             "          __global float * in,\n"
-        //             "          __global float * out,\n"
-        //             "              unsigned int size1,\n"
-        //             "              unsigned int size2,\n"
-        //             "              unsigned int isize1)\n"
-        //             "{ \n"
-        //             "  unsigned int gid = get_global_id(0);\n"
-        //             "  unsigned int padded = isize1 - size1;\n"
-        //             "  unsigned int row = gid / size2;\n"
-        //             "  unsigned int idx = gid + row*padded;\n"
-        //             "  out[idx] = 1.0 - in[idx] * in[idx];\n"
-        //             "};\n";
-        // }
-
-        // template<typename T>
-        // void tanh_deriv_kernel<T>::compute_matrix(matrix<T>& in, matrix<T>& out)
-        // {
-        //     ocl::enqueue(this->_kernel( in,
-        //                                 out,
-        //                                 cl_uint(out.size1()),
-        //                                 cl_uint(out.size2()),
-        //                                 cl_uint(out.internal_size1())));
-        //     finish();
-        // }
-
-        // todo: provide the activation function also for the
-        // speedy native_ variants
-
         template<typename T>
         activation<T> tanh(matrix<T>& in, bool derive)
         {
             activation<T> result(in, derive);
 
-            //tanh_kernel<T>::run_matrix(in, result.out, in.size1(), in.size2() * in.size1());
+            kernel<T, tanh_kernel>::instance()
+                .with_global_size(in.total_size())
+                // todo: infer as large of a localsize as possible
+                .with_local_size(in.size2())
+                .run(
+                    in,
+                    result.out,
+                    in.size()
+                );
 
             if(derive) {
-                //tanh_deriv_kernel<T>::run_matrix(result.out, result.deriv, in.size1(), in.size2() * in.size1());
+                kernel<T, tanh_deriv_kernel>::instance()
+                    .with_global_size(in.total_size())
+                    // todo: infer as large of a localsize as possible
+                    .with_local_size(in.size2())
+                    .run(
+                        result.out,
+                        result.deriv,
+                        result.out.size()
+                    );
             }
 
             return result;
         }
-
-        // INSTANTIATE(tanh_kernel);
-        // INSTANTIATE(tanh_deriv_kernel);
 
         template activation<float> tanh(matrix<float>& in, bool derive);
         template activation<double> tanh(matrix<double>& in, bool derive);
