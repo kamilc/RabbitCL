@@ -56,7 +56,8 @@ TEST(squared_error_test_case, squared_error_test)
 
     auto result = squared_error<float>(predicted, targets, false);
 
-    EXPECT_NEAR(result.out, -0.15, 0.0001);
+    EXPECT_NEAR(result.out(0, 0), 6.125, 0.0001);
+    EXPECT_NEAR(result.out(1, 0), 0.01, 0.0001);
 }
 
 TEST(squared_error_test_case, squared_error_deriv_test)
@@ -71,14 +72,10 @@ TEST(squared_error_test_case, squared_error_deriv_test)
         { 2.1,  1.1, -10 }
     });
 
-    auto result = squared_error<float>(predicted, targets, false);
+    auto result = squared_error<float>(predicted, targets, true);
 
-    EXPECT_NEAR(result.deriv(0, 0), 0 - 1.5, 0.0001);
-    EXPECT_NEAR(result.deriv(0, 1), 1 + 2, 0.0001);
-    EXPECT_NEAR(result.deriv(0, 2), -1 - 0, 0.0001);
-    EXPECT_NEAR(result.deriv(1, 0), 2 - 2.1, 0.0001);
-    EXPECT_NEAR(result.deriv(1, 1), 1 - 1.1, 0.0001);
-    EXPECT_NEAR(result.deriv(1, 2), -10 + 10, 0.0001);
+    EXPECT_NEAR(result.deriv(0, 0), 0.5, 0.0001);
+    EXPECT_NEAR(result.deriv(1, 0), -0.2, 0.0001);
 }
 
 TEST(relu_test_case, relu_test)

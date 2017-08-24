@@ -2,84 +2,119 @@
 
 namespace mozart
 {
+    KERNEL(squared_error_kernel,
+        __kernel void squared_error_kernel(              
+                    __global TYPE * in,
+                    __global TYPE * targets,
+                    __local TYPE * local_buffer,
+                    __global TYPE * out,
+                  struct matrix_size in_size)
+        {
+            unsigned int global_id  = get_global_id(0);
+            unsigned int total_size = in_size.size1 * in_size.size2;
+
+            if(global_id < total_size)                
+            {                                         
+                unsigned int local_id = get_local_id(0);
+                unsigned int group_id = get_group_id(0);
+                unsigned int group_size = get_local_size(0);
+                unsigned int internal_id = id_to_internal_id(global_id, &in_size);
+
+                TYPE diff = targets[internal_id] - in[internal_id];
+                
+                local_buffer[local_id] = (diff * diff) / 2;
+
+                barrier(CLK_LOCAL_MEM_FENCE);
+
+                for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
+                {
+                    if(local_id < i)
+                    {
+                        local_buffer[local_id] += local_buffer[local_id + i];
+                    }
+                    barrier(CLK_LOCAL_MEM_FENCE);
+                }
+
+                if(local_id == 0)
+                {
+                    out[group_id] = local_buffer[0];
+                }
+            }                                         
+        }
+    )
+
+    KERNEL(squared_error_deriv_kernel,
+                __kernel void squared_error_deriv_kernel(              
+                    __global TYPE * in,
+                    __global TYPE * targets,
+                    __local TYPE * local_buffer,
+                    __global TYPE * out,
+                struct matrix_size in_size)
+        {
+            unsigned int global_id  = get_global_id(0);
+            unsigned int total_size = in_size.size1 * in_size.size2;
+
+            if(global_id < total_size)                
+            {                                         
+                unsigned int local_id = get_local_id(0);
+                unsigned int group_id = get_group_id(0);
+                unsigned int group_size = get_local_size(0);
+                unsigned int internal_id = id_to_internal_id(global_id, &in_size);
+
+                TYPE diff = in[internal_id] - targets[internal_id];
+
+                local_buffer[local_id] = diff;
+                barrier(CLK_LOCAL_MEM_FENCE);
+
+                for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
+                {
+                    if(local_id < i)
+                    {
+                        local_buffer[local_id] += local_buffer[local_id + i];
+                    }
+                    barrier(CLK_LOCAL_MEM_FENCE);
+                }
+
+                if(local_id == 0)
+                {
+                    out[group_id] = local_buffer[0];
+                }
+            }                                         
+        }
+    )
+
     namespace function
     {
-        // template<typename T>
-        // inline const char * kernel<T, "squared_error">::code()
-        // {
-        //     return  "__kernel void squared_error(                       \n"
-        //             "          __global float * yhat,                   \n"
-        //             "          __global float * targets,                \n"
-        //             "          __global float * out,                    \n"
-        //             "              unsigned int size1,                  \n"
-        //             "              unsigned int size2,                  \n"
-        //             "              unsigned int isize2)                 \n"
-        //             "{                                                  \n"
-        //             "  unsigned int global_id = get_global_id(0);       \n"
-        //             "  unsigned int pad = isize2 - size2;               \n"
-        //             "  unsigned int row = global_id / size2;            \n"
-        //             "  unsigned int idx = gid + row * pad;              \n"
-        //             "                                                   \n"
-        //             "  float diff = targets[idx] - yhat[idx];           \n"
-        //             "  out[idx] = 0.5*diff*diff;                        \n"
-        //             "}";
-        // }
-
-        // template<typename T>
-        // void squared_error_kernel<T>::compute_matrix(matrix<T>& in, matrix<T>& targets, scalar<T>& out)
-        // {
-        //     ocl::enqueue(this->_kernel(in,
-        //                                targets,
-        //                                out,
-        //                                cl_uint(out.size1()),
-        //                                cl_uint(out.size2()),
-        //                                cl_uint(out.internal_size2())));
-        //     finish();
-        // }
-
-        // template<typename T>
-        // inline const char * squared_error_deriv_kernel<T>::name()
-        // {
-        //     return "squared_error_deriv_kernel";
-        // }
-
-        // template<typename T>
-        // inline const char * squared_error_deriv_kernel<T>::code()
-        // {
-        //     // todo: add tests!
-        //     return  "__kernel void squared_error_deriv_kernel(\n"
-        //             "          __global float * yhat, \n"
-        //             "          __global float * targets, \n"
-        //             "          __global float * out,\n"
-        //             "              unsigned int size1,\n"
-        //             "              unsigned int size2,\n"
-        //             "              unsigned int isize1)\n"
-        //             "{ \n"
-        //             "  unsigned int gid = get_global_id(0);\n"
-        //             "  unsigned int padded = isize1 - size1;\n"
-        //             "  unsigned int row = gid / size2;\n"
-        //             "  unsigned int idx = gid + row*padded;\n"
-        //             "  out[idx] = targets[idx] - yhat[idx];"
-        //             "};\n";
-        // }
 
         template<typename T>
         cost<T> squared_error(matrix<T>& in, matrix<T>& targets, bool derive)
         {
             cost<T> result(in, derive);
 
-            // kernel<T, "squared_error">::instance()(in,
-            //                                     targets,
-            //                                     in.size1(),
-            //                                     in.size2(),
-            //                                     in.internal_size2());
+            kernel<T, squared_error_kernel>::instance()
+                .with_global_size(in.total_size())
+                .with_local_size(in.size2())
+                .run(
+                    in,
+                    targets,
+                    local<T>(in.size2()),
+                    result.out,
+                    in.size()
+                );
 
-            //squared_error_kernel<T>::run_matrix(in, targets, result.out, in.size1(), in.size2() * in.size1());
-
-            // if(derive)
-            // {
-            //     squared_error_deriv_kernel<T>::run_matrix(in, targets, result.deriv, in.size1(), in.size2() * in.size1());
-            // }
+            if(derive)
+            {
+                kernel<T, squared_error_deriv_kernel>::instance()
+                    .with_global_size(in.total_size())
+                    .with_local_size(in.size2())
+                    .run(
+                        in,
+                        targets,
+                        local<T>(in.size2()),
+                        result.deriv,
+                        in.size()
+                    );
+            }
 
             return result;
         }

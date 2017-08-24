@@ -67,7 +67,7 @@ namespace mozart
         }
 
         // 5. return the error
-        return network_error.out;
+        return network_error.avg();
     }
 
     template<typename T>

@@ -5,7 +5,6 @@
 #include <tuple>
 #include "boost/optional.hpp"
 #include "matrix.h"
-#include "scalar.h"
 #include "utilities.h"
 #include "function/reduce_avg.h"
 
@@ -22,7 +21,7 @@ namespace mozart {
     public:
         typedef cost<T> (*function)(matrix<T>&, matrix<T>&, bool);
 
-        scalar<T> out;
+        matrix<T> out;
         matrix<T> deriv;
 
         cost(matrix<T> &in, bool derive);

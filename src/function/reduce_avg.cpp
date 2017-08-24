@@ -2,7 +2,7 @@
 
 namespace mozart {
     KERNEL(reduce_avg_kernel,
-        __kernel void reduce_avg_kernel(              
+        __kernel void reduce_avg_kernel(
                     __global TYPE * in,
                     __global TYPE * out,
                      __local TYPE * local_buffer,
@@ -11,43 +11,43 @@ namespace mozart {
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
 
-            if(global_id < total_size)                
-            {                                         
+            if(global_id < total_size)
+            {
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_id = get_group_id(0);
                 unsigned int group_size = get_global_size(0) / get_local_size(0);
-                
+
                 local_buffer[local_id] = in[id_to_internal_id(global_id, &in_size)];
                 barrier(CLK_LOCAL_MEM_FENCE);
-                                                    
+
                 for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
                 {
-                    if(local_id < i)                      
-                    {                                     
+                    if(local_id < i)
+                    {
                         local_buffer[local_id] += local_buffer[local_id + i];
                     }
                     barrier(CLK_LOCAL_MEM_FENCE);
-                }                                       
+                }
 
-                if(local_id == 0)                       
-                {                                       
+                if(local_id == 0)
+                {
                     out[group_id + 1] = local_buffer[0];
-                }                                       
-                                                    
+                }
+
                 barrier(CLK_LOCAL_MEM_FENCE);
                 barrier(CLK_GLOBAL_MEM_FENCE);
 
-                if(global_id == 0)                      
-                {                                       
+                if(global_id == 0)
+                {
                     unsigned int group_len = get_num_groups(0);
-                                                        
-                    for(int i = 1; i <= group_len; i++)   
-                    {                                     
+
+                    for(int i = 1; i <= group_len; i++)
+                    {
                         out[0] += out[i];
                     }
                     out[0] /= total_size;
                 }
-            }                                         
+            }
         }
     )
 
