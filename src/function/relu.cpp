@@ -8,7 +8,7 @@ namespace mozart
         __kernel void relu_kernel(
                     __global TYPE * in,
                     __global TYPE * out,
-                   struct matrix_size in_size)
+                   const struct matrix_size in_size)
         {
             unsigned int global_id = get_global_id(0);
             unsigned int idx = id_to_internal_id(global_id, &in_size);
@@ -21,7 +21,7 @@ namespace mozart
         __kernel void relu_deriv_kernel(
                   __global TYPE * in,
                   __global TYPE * out,
-                 struct matrix_size in_size)
+                 const struct matrix_size in_size)
         {
             unsigned int global_id = get_global_id(0);
             unsigned int idx = id_to_internal_id(global_id, &in_size);

@@ -13,9 +13,53 @@
 #include "gradient_descent.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
+#include "function/dot.h"
 
 using namespace mozart;
 using namespace mozart::function;
+
+TEST(dot_test_case, dot_test)
+{
+    auto data1 = make_matrix<float>({
+        { 1, 2, 3.0 },
+        { 6, 7, 9.5 }
+    });
+
+    auto data2 = make_matrix<float>({
+        { 1, },
+        { 6, },
+        { 5 }
+    });
+
+    matrix<float> result = dot<float>(data1, data2);
+
+    EXPECT_NEAR(result(0, 0), 28.0, 0.0001);
+    EXPECT_NEAR(result(1, 0), 95.5, 0.0001);
+}
+
+TEST(dot_test_case, dot_view_test)
+{
+    auto data1 = make_matrix<float>({
+        { 7, 2, 8.0, 4 },
+        { 1, 2, 3.0, 2 },
+        { 6, 7, 9.5, 3 },
+        { 1, 2, 3.0, 4 },
+        { 4, 5, 6.0, 5 }
+    });
+
+    auto data_view = matrix<float>::view(data1, 1, 2, 0, 2);
+
+    auto data2 = make_matrix<float>({
+        { 1, },
+        { 6, },
+        { 5 }
+    });
+
+    matrix<float> result = dot<float>(data_view, data2);
+
+    EXPECT_NEAR(result(0, 0), 28.0, 0.0001);
+    EXPECT_NEAR(result(1, 0), 95.5, 0.0001);
+}
 
 TEST(reduce_avg_test_case, reduce_avg_test)
 {
@@ -25,21 +69,12 @@ TEST(reduce_avg_test_case, reduce_avg_test)
     });
 
     auto view = matrix<float>::view(data, 1, 1, 1, 2);
-    auto transposed1 = matrix<float>::transpose(data);
-    auto transposed2 = matrix<float>::transpose(view);
-    auto transposed_view = matrix<float>::view(transposed1, 1, 2, 0, 1);
 
     float result = reduce_avg<float>(data);
     float result_from_view = reduce_avg<float>(view);
-    float result_transposed1 = reduce_avg<float>(transposed1);
-    float result_transposed2 = reduce_avg<float>(transposed2);
-    float result_transposed_view = reduce_avg<float>(transposed_view);
 
     EXPECT_NEAR(result, 4.75, 0.0001);
     EXPECT_NEAR(result_from_view, 8.25, 0.0001);
-    EXPECT_NEAR(result_transposed1, 4.75, 0.0001);
-    EXPECT_NEAR(result_transposed2, 8.25, 0.0001);
-    EXPECT_NEAR(result_transposed_view, 5.375, 0.0001);
 }
 
 TEST(squared_error_test_case, squared_error_test)

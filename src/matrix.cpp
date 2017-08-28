@@ -23,7 +23,7 @@ namespace mozart
              start1, size1, source._internal_size1,
              start2, size2, source._internal_size2)
     {
-        this->_transposed = source._transposed;
+        // no-op
     }
 
     template<typename T>
@@ -43,13 +43,19 @@ namespace mozart
     template<typename T>
     size_t matrix<T>::size1() const
     {
-        return this->_transposed ? this->_size2 : this->_size1;
+        return this->_size1;
     }
 
     template<typename T>
     size_t matrix<T>::size2() const
     {
-        return this->_transposed ? this->_size1 : this->_size2;
+        return this->_size2;
+    }
+
+    template<typename T>
+    size_t matrix<T>::offset() const
+    {
+        return this->_start2 + this->_start1 * this->_internal_size2;
     }
 
     template<typename T>
@@ -57,8 +63,8 @@ namespace mozart
     {
         // treating at1 and at2 as starting from 0 and not from start1 and start2
         // returns an internal index within the underlying gpu vector
-        auto x = this->_transposed ? at2 : at1;
-        auto y = this->_transposed ? at1 : at2;
+        auto x = at1;
+        auto y = at2;
 
         return (x + this->_start1) * this->_internal_size2 + y + this->_start2;
     }
@@ -98,32 +104,10 @@ namespace mozart
     {
         auto _size1 = end1 + 1 - start1;
         auto _size2 = end2 + 1 - start2;
-        auto _start1 = source._start1 + (source._transposed ? start2 : start1);
-        auto _start2 = source._start2 + (source._transposed ? start1 : start2);
+        auto _start1 = source._start1 + start1;
+        auto _start2 = source._start2 + start2;
 
         return matrix<T>(source, _start1, _size1, _start2, _size2);
-    }
-
-    template<typename T>
-    matrix<T> matrix<T>::transpose(matrix<T>& source)
-    {
-        matrix<T> _cloned = source.clone();
-        _cloned.transpose();
-
-        return _cloned;
-    }
-
-    template<typename T>
-    matrix<T>& matrix<T>::transpose()
-    {
-        auto size1 = this->_size1;
-        auto size2 = this->_size2;
-
-        this->_transposed = true;
-        this->_size1 = size2;
-        this->_size2 = size1;
-
-        return *this;
     }
 
     template<typename T>
@@ -134,17 +118,6 @@ namespace mozart
             this->_start1, this->_size1, this->_internal_size1,
             this->_start2, this->_size2, this->_internal_size2
         );
-    }
-
-    template<typename T>
-    matrix<T> dot(matrix<T>& lhs, matrix<T>& rhs)
-    {
-        // todo: implement me
-        matrix<T> out(lhs.size1(), rhs.size2());
-
-        // run<T>(kernel<dot<T>>::instance(), lhs, rhs, out);
-
-        return out;
     }
 
     template<typename T>
@@ -174,7 +147,10 @@ namespace mozart
         matrix_size size = mat.size();
         compute::vector<T>& data = mat.data();
 
-        os << "matrix " << size.size1 << "x" << size.size2 << endl;
+        auto title = (size.internal_size1 != size.size1 || size.internal_size2 != size.size2) ?
+            "matrix (view) " : "matrix ";
+
+        os << title << size.size1 << "x" << size.size2 << endl;
 
         for(auto x = 0; x < size.size1; x++)
         {
@@ -209,16 +185,12 @@ namespace mozart
         _size.internal_size2 = this->_internal_size2;
         _size.start1 = this->_start1;
         _size.start2 = this->_start2;
-        _size.transposed = this->_transposed;
 
         return _size;
     }
 
     template ostream& operator<<(ostream& os, const matrix<float>& mat);
     template ostream& operator<<(ostream& os, const matrix<double>& mat);
-
-    template matrix<float> dot(matrix<float>& lhs, matrix<float>& rhs);
-    template matrix<double> dot(matrix<double>& lhs, matrix<double>& rhs);
 
     template matrix<float> operator*(float lhs, const matrix<float>& rhs);
     template matrix<double> operator*(double lhs, const matrix<double>& rhs);

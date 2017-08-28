@@ -20,7 +20,6 @@ namespace mozart
         unsigned int start2;
         unsigned int internal_size1;
         unsigned int internal_size2;
-        unsigned int transposed;
     };
 }
 

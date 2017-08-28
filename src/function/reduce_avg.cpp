@@ -6,7 +6,7 @@ namespace mozart {
                     __global TYPE * in,
                     __global TYPE * out,
                      __local TYPE * local_buffer,
-                  struct matrix_size in_size)
+                  const struct matrix_size in_size)
         {
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;

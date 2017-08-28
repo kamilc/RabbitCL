@@ -206,30 +206,18 @@ namespace mozart
                         unsigned int start2;
                         unsigned int internal_size1;
                         unsigned int internal_size2;
-                        unsigned int transposed;
                     };
 
                     inline unsigned int id_to_internal_id(
                         unsigned int global_id,
                         struct matrix_size * size)
                     {
-                        if(!size->transposed)
-                        {
-                            unsigned int row = global_id / size->size2;
-                            unsigned int pad = size->internal_size2 - size->size2;
-                    
-                            return global_id + row * pad +
-                                size->start1 * size->internal_size2 +
-                                size->start2;
-                        }
-                        else
-                        {
-                            unsigned int row = global_id % size->size2;
-                            unsigned int col = global_id / size->size2;
-                            
-                            return (row + size->start1) * size->internal_size2 +
-                                size->start2 + col;
-                        }
+                        unsigned int row = global_id / size->size2;
+                        unsigned int pad = size->internal_size2 - size->size2;
+                
+                        return global_id + row * pad +
+                            size->start1 * size->internal_size2 +
+                            size->start2;
                     }
                 )) + _processed_code;
 

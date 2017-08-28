@@ -23,6 +23,18 @@ ExternalProject_Add(googletest
   TEST_COMMAND      ""
 )
 
+# include(ExternalProject)
+# ExternalProject_Add(clblast
+#   GIT_REPOSITORY    https://github.com/CNugteren/CLBlast.git
+#   GIT_TAG           master
+#   SOURCE_DIR        "${CMAKE_BINARY_DIR}/clblast-src"
+#   BINARY_DIR        "${CMAKE_BINARY_DIR}/clblast-build"
+#   CONFIGURE_COMMAND "mkdir -p ${CMAKE_BINARY_DIR}/clblast-src/build && cd ${CMAKE_BINARY_DIR}/clblast-src/build && cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/clblast-build .."
+#   BUILD_COMMAND     "cd ${CMAKE_BINARY_DIR}/clblast-src/build && make"
+#   INSTALL_COMMAND   "cd ${CMAKE_BINARY_DIR}/clblast-src/build && make install"
+#   TEST_COMMAND      ""
+# )
+
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
                  ${CMAKE_BINARY_DIR}/googletest-build)
 
@@ -42,6 +54,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/dense.cpp
                           src/activation.cpp
                           src/cost.cpp
+                          src/function/dot.cpp
                           src/function/squared_error.cpp
                           src/function/reduce_avg.cpp
                           src/function/tanh.cpp
@@ -55,7 +68,8 @@ add_executable(mozart_test test/mozart_test.cpp)
 message(status "Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message(status "Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
-target_link_libraries(mozart_test mozart gtest_main pthread ${OPENCL_LIBRARIES})
+# todo: add the clblast resolution
+target_link_libraries(mozart_test mozart gtest_main /opt/local/lib/libclBLAS.dylib pthread ${OPENCL_LIBRARIES})
 
 add_test(NAME mozart_test COMMAND mozart_test)
 

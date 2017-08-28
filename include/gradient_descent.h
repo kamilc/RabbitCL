@@ -6,6 +6,7 @@
 #include "optimizer.h"
 #include "sequence.h"
 #include "cost.h"
+#include "function/dot.h"
 
 using namespace std;
 

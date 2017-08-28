@@ -6,7 +6,7 @@ namespace mozart
         __kernel void tanh_kernel(
                     __global TYPE * in,
                     __global TYPE * out,
-                   struct matrix_size in_size)
+                   const struct matrix_size in_size)
         {
             unsigned int global_id = get_global_id(0);
             unsigned int idx = id_to_internal_id(global_id, &in_size);
@@ -19,7 +19,7 @@ namespace mozart
         __kernel void tanh_deriv_kernel(
                   __global TYPE * in,
                   __global TYPE * out,
-                 struct matrix_size in_size)
+                 const struct matrix_size in_size)
         {
             unsigned int global_id = get_global_id(0);
             unsigned int idx = id_to_internal_id(global_id, &in_size);
@@ -27,7 +27,7 @@ namespace mozart
             out[idx] = 1 - in[idx] * in[idx];
         };
     );
-    
+
     namespace function
     {
         template<typename T>

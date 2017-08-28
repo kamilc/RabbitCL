@@ -8,7 +8,7 @@ namespace mozart
                     __global TYPE * targets,
                     __local TYPE * local_buffer,
                     __global TYPE * out,
-                  struct matrix_size in_size)
+                  const struct matrix_size in_size)
         {
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
@@ -49,7 +49,7 @@ namespace mozart
                     __global TYPE * targets,
                     __local TYPE * local_buffer,
                     __global TYPE * out,
-                struct matrix_size in_size)
+                const struct matrix_size in_size)
         {
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
