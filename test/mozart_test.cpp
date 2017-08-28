@@ -18,6 +18,31 @@
 using namespace mozart;
 using namespace mozart::function;
 
+TEST(scale_test_case, scale_view_test)
+{
+    auto data1 = make_matrix<float>({
+        { 7, 2, 8.0, 4 },
+        { 1, 2, 3.0, 2 },
+        { 6, 7, 9.5, 3 },
+        { 1, 2, 3.0, 4 },
+        { 4, 5, 6.0, 5 }
+    });
+
+    auto data_view = matrix<float>::view(data1, 1, 2, 0, 2);
+
+    auto factor = scalar<float>(0.5);
+
+    matrix<float> result = scale<float>(data_view, factor);
+
+    EXPECT_NEAR(result(0, 0), 0.5, 0.0001);
+    EXPECT_NEAR(result(0, 1), 1.0, 0.0001);
+    EXPECT_NEAR(result(0, 2), 1.5, 0.0001);
+    EXPECT_NEAR(result(1, 0), 3.0, 0.0001);
+    EXPECT_NEAR(result(1, 1), 3.5, 0.0001);
+    EXPECT_NEAR(result(1, 2), 4.75, 0.0001);
+}
+
+
 TEST(dot_test_case, dot_test)
 {
     auto data1 = make_matrix<float>({

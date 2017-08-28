@@ -9,8 +9,6 @@
 #include <boost/compute/buffer.hpp>
 #include <string>
 #include <regex>
-#include "matrix.h"
-#include "scalar.h"
 #include "matrix_size.h"
 #include "local.h"
 
@@ -28,6 +26,12 @@ struct name \
 
 namespace mozart
 {
+    template<typename T>
+    class matrix;
+
+    template<typename T>
+    class scalar;
+
     template<typename T>
     class kernel_base
     {

@@ -123,8 +123,7 @@ namespace mozart
     template<typename T>
     matrix<T> operator*(T lhs, const matrix<T>& rhs)
     {
-        // todo: implement me
-        return matrix<T>(rhs.size1(), rhs.size2());
+        return mozart::function::scale<T>(rhs, lhs);
     }
 
     template<typename T>

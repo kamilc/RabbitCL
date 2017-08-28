@@ -11,7 +11,7 @@ namespace mozart
 
             matrix<T> out(lhs.size1(), rhs.size2());
 
-            // todo: implement me in a clean way:
+            // improve: implement me in a clean way:
             compute::event _event;
             compute::command_queue queue = context_manager::instance().new_queue();
 

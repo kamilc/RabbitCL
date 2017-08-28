@@ -8,6 +8,8 @@
 #include "utilities.h"
 #include "matrix_size.h"
 #include "context_manager.h"
+#include "scalar.h"
+#include "function/scale.h"
 
 using namespace std;
 using namespace boost;
