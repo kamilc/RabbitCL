@@ -2,17 +2,16 @@
 #define Layer_h
 
 #include <stdio.h>
-#include <boost/optional.hpp>
 #include "matrix.h"
-
 #include "utilities.h"
 
-
 using namespace std;
-using namespace boost;
 
 namespace mozart
 {
+    template<typename T>
+    class activation;
+
     template<typename T>
     class layer
     {
@@ -21,7 +20,8 @@ namespace mozart
     public:
         size_t size();
 
-        virtual matrix<T> forward(matrix<T> &data) = 0;
+        virtual activation<T> forward(matrix<T> &data) = 0;
+        virtual activation<T> train_forward(matrix<T> &data) = 0;
         virtual void update_weights(matrix<T>& deltas) = 0;
     };
 }

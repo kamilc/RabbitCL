@@ -4,8 +4,7 @@
 #include "matrix.h"
 #include "utilities.h"
 #include "layer.h"
-
-
+#include "activation.h"
 
 namespace mozart 
 {
@@ -17,7 +16,8 @@ namespace mozart
     {
         friend class input_config<T>;
     public:
-        matrix<T> forward(matrix<T> &data);
+        activation<T> forward(matrix<T> &data);
+        activation<T> train_forward(matrix<T> &data);
         void update_weights(matrix<T>& deltas);
     };
 }

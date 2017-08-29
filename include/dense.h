@@ -4,6 +4,7 @@
 #include "utilities.h"
 #include "layer.h"
 #include "activation.h"
+#include "function/dot.h"
 
 namespace mozart
 {
@@ -15,7 +16,8 @@ namespace mozart
     {
         friend class dense_config<T>;
     public:
-        matrix<T> forward(matrix<T> &data);
+        activation<T> forward(matrix<T> &data);
+        activation<T> train_forward(matrix<T> &data);
         void update_weights(matrix<T>& deltas);
     private:
         typename activation<T>::function _fun;

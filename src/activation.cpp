@@ -13,5 +13,11 @@ namespace mozart {
         }
     }
 
+    template<typename T>
+    activation<T>::activation()
+    {
+        // no-op
+    }
+
     INSTANTIATE(activation);
 }

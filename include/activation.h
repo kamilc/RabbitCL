@@ -3,13 +3,10 @@
 
 #include <functional>
 #include <tuple>
-#include "boost/optional.hpp"
 #include "matrix.h"
 #include "utilities.h"
 
 using namespace std;
-using namespace boost;
-
 
 namespace mozart {
 
@@ -23,6 +20,7 @@ namespace mozart {
         matrix<T> deriv;
 
         activation(matrix<T> &in, bool derive);
+        activation();
     };
 }
 

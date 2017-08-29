@@ -18,9 +18,9 @@ namespace mozart
     public:
         gradient_descent(typename cost<T>::function func);
 
-        gradient_descent& setEpochs(unsigned long epochs);
-        gradient_descent& setBatches(unsigned long batches);
-        gradient_descent& setEta(T eta);
+        gradient_descent& epochs(unsigned long epochs);
+        gradient_descent& batches(unsigned long batches);
+        gradient_descent& eta(T eta);
 
         void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
         T run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
@@ -30,8 +30,7 @@ namespace mozart
         unsigned long  _batches;
         typename cost<T>::function _cost;
 
-        inline matrix<T> compute_last_deltas(matrix<T>& outputs);
-        inline matrix<T> compute_deltas(matrix<T>& outputs);
+        inline matrix<T> compute_deltas(activation<T>& outputs);
     };
 }
 

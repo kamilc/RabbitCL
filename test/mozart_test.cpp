@@ -299,8 +299,8 @@ TEST(learn_binary_test_case, learn_binary_test)
      });
 
     auto optimizer = gradient_descent<float>(squared_error<float>)
-                        .setEpochs(8*10)
-                        .setBatches(1);
+                        .epochs(8*10)
+                        .batches(1);
 
     optimizer.run(network, data, ys);
 

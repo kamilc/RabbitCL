@@ -6,7 +6,7 @@ namespace mozart
     sequence<T>& sequence<T>::add(const layer_config<T> &config)
     {
         auto layer = config.construct(this->_last_layer_size);
-        this->_layers.push_front(layer);
+        this->_layers.push_back(layer);
 
         this->_last_layer_size = config.size();
 
@@ -21,15 +21,15 @@ namespace mozart
     }
 
     template<typename T>
-    std::vector<matrix<T>> sequence<T>::train_forward(matrix<T> &data)
+    std::vector<activation<T>> sequence<T>::train_forward(matrix<T> &data)
     {
-        std::vector<matrix<T>> out(this->size());
+        std::vector<activation<T>> out(this->size());
 
-        out[0] = matrix<T>(data);
+        out[0] = this->_layers[0]->train_forward(data);
 
         for(auto index = 1; index < this->size(); index++)
         {
-            out[index] = this->_layers[index]->forward(out[index - 1]);
+            out[index] = this->_layers[index]->train_forward(out[index - 1].out);
         }
 
         return out;

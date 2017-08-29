@@ -3,18 +3,18 @@
 namespace mozart
 {
     template<typename T>
-    matrix<T> dense<T>::forward(matrix<T> &data)
+    activation<T> dense<T>::forward(matrix<T> &data)
     {
-        // // first get the computed data from layers below:
-        // auto in = this->_input->forward(data);
-
-        // // next multiply in place by the weights:
-        // auto out = in.dot(*(this->_weights));
-
-        // normally hold this matrix as it will be needed but for now return it:
-
         // todo: implement me
-        return data;
+        return activation<T>(data, false);
+    }
+
+    template<typename T>
+    activation<T> dense<T>::train_forward(matrix<T> &data)
+    {
+        matrix<T> _inter = mozart::function::dot(data, this->_weights);
+        
+        return this->_fun(_inter, true);
     }
 
     template<typename T>

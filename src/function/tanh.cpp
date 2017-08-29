@@ -24,7 +24,7 @@ namespace mozart
             unsigned int global_id = get_global_id(0);
             unsigned int idx = id_to_internal_id(global_id, &in_size);
 
-            out[idx] = 1 - in[idx] * in[idx];
+            out[global_id] = 1 - in[idx] * in[idx];
         };
     );
 

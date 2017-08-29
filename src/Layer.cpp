@@ -1,7 +1,5 @@
 #include "layer.h"
 
-
-
 namespace mozart
 {
     template<typename T>
