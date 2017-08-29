@@ -21,24 +21,26 @@ namespace mozart
                 unsigned int internal_id = id_to_internal_id(global_id, &in_size);
 
                 TYPE diff = targets[internal_id] - in[internal_id];
+
+                out[global_id] = diff*diff*0.5;
                 
-                local_buffer[local_id] = (diff * diff) / 2;
+                // local_buffer[local_id] = (diff * diff) / 2;
 
-                barrier(CLK_LOCAL_MEM_FENCE);
+                // barrier(CLK_LOCAL_MEM_FENCE);
 
-                for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
-                {
-                    if(local_id < i)
-                    {
-                        local_buffer[local_id] += local_buffer[local_id + i];
-                    }
-                    barrier(CLK_LOCAL_MEM_FENCE);
-                }
+                // for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
+                // {
+                //     if(local_id < i)
+                //     {
+                //         local_buffer[local_id] += local_buffer[local_id + i];
+                //     }
+                //     barrier(CLK_LOCAL_MEM_FENCE);
+                // }
 
-                if(local_id == 0)
-                {
-                    out[group_id] = local_buffer[0];
-                }
+                // if(local_id == 0)
+                // {
+                //     out[group_id] = local_buffer[0];
+                // }
             }                                         
         }
     )
@@ -63,22 +65,24 @@ namespace mozart
 
                 TYPE diff = in[internal_id] - targets[internal_id];
 
-                local_buffer[local_id] = diff;
-                barrier(CLK_LOCAL_MEM_FENCE);
+                out[global_id] = diff;
 
-                for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
-                {
-                    if(local_id < i)
-                    {
-                        local_buffer[local_id] += local_buffer[local_id + i];
-                    }
-                    barrier(CLK_LOCAL_MEM_FENCE);
-                }
+                // local_buffer[local_id] = diff;
+                // barrier(CLK_LOCAL_MEM_FENCE);
 
-                if(local_id == 0)
-                {
-                    out[group_id] = local_buffer[0];
-                }
+                // for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
+                // {
+                //     if(local_id < i)
+                //     {
+                //         local_buffer[local_id] += local_buffer[local_id + i];
+                //     }
+                //     barrier(CLK_LOCAL_MEM_FENCE);
+                // }
+
+                // if(local_id == 0)
+                // {
+                //     out[group_id] = local_buffer[0];
+                // }
             }                                         
         }
     )

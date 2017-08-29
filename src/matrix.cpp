@@ -127,6 +127,13 @@ namespace mozart
     }
 
     template<typename T>
+    matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs)
+    {
+        // todo: implement me
+        return lhs;
+    }
+
+    template<typename T>
     void matrix<T>::set_data(std::vector<T>& data)
     {
         auto queue = context_manager::instance().new_queue();
@@ -193,6 +200,9 @@ namespace mozart
 
     template matrix<float> operator*(float lhs, const matrix<float>& rhs);
     template matrix<double> operator*(double lhs, const matrix<double>& rhs);
+
+    template matrix<float> operator*(const matrix<float>& lhs, const matrix<float>& rhs);
+    template matrix<double> operator*(const matrix<double>& lhs, const matrix<double>& rhs);
 
     INSTANTIATE(matrix);
 }

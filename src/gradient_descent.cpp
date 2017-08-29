@@ -49,7 +49,7 @@ namespace mozart
         std::vector<matrix<T>> deltas(outputs.size());
 
         std::cout << "About to compute deltas" << std::endl;
-        deltas[outputs.size() - 1] = dot(network_error.deriv, last_output.deriv);
+        deltas[outputs.size() - 1] = network_error.deriv * last_output.deriv;
         std::cout << "Computed last deltas " << std::endl;
         for(auto layer_index = outputs.size() - 2; layer_index > 0; layer_index--)
         {

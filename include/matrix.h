@@ -57,6 +57,9 @@ namespace mozart
 
     template<typename T>
     matrix<T> operator*(T lhs, const matrix<T>& rhs);
+
+    template<typename T>
+    matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs);
 }
 
 #endif
