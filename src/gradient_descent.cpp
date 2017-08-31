@@ -48,9 +48,8 @@ namespace mozart
         // 3. compute little deltas
         std::vector<matrix<T>> deltas(outputs.size());
 
-        std::cout << "About to compute deltas" << std::endl;
         deltas[outputs.size() - 1] = network_error.deriv * last_output.deriv;
-        std::cout << "Computed last deltas " << std::endl;
+
         for(auto layer_index = outputs.size() - 2; layer_index > 0; layer_index--)
         {
             deltas[layer_index] = this->compute_deltas(outputs[layer_index]);
@@ -64,7 +63,7 @@ namespace mozart
             matrix<T>& delta = deltas[layer_index];
             matrix<T>& layer_input = outputs[layer_index - 1].out;
 
-            auto weight_delta = matrix<T>(-1 * this->_eta * dot(delta, layer_input));
+            auto weight_delta = matrix<T>(-1 * this->_eta * dot(layer_input, delta, true, false));
             network[layer_index]->update_weights(weight_delta);
         }
 

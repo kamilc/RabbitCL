@@ -129,8 +129,7 @@ namespace mozart
     template<typename T>
     matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs)
     {
-        // todo: implement me
-        return lhs;
+        return mozart::function::element_mul<T>(lhs, rhs);
     }
 
     template<typename T>

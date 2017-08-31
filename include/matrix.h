@@ -10,6 +10,7 @@
 #include "context_manager.h"
 #include "scalar.h"
 #include "function/scale.h"
+#include "function/element_mul.h"
 
 using namespace std;
 using namespace boost;

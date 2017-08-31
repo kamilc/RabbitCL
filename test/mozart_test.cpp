@@ -14,9 +14,44 @@
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"
+#include "function/element_mul.h"
 
 using namespace mozart;
 using namespace mozart::function;
+
+TEST(element_mul_test, element_mul_test)
+{
+    auto data1 = make_matrix<float>({
+        { 7, 2, 8.0, 4 },
+        { 1, 2, 3.0, 2 },
+        { 6, 7, 9.5, 3 },
+        { 1, 2, 3.0, 4 },
+        { 4, 5, 6.0, 5 }
+    });
+
+    auto data2 = make_matrix<float>({
+        { 1, 2, 3.0, 2 },
+        { 1, 2, 3.0, 4 },
+        { 7, 2, 8.0, 4 },
+        { 4, 5, 6.0, 5 },
+        { 6, 7, 9.5, 3 }
+    });
+
+    auto view1 = matrix<float>::view(data1, 1, 3, 1, 3);
+    auto view2 = matrix<float>::view(data2, 1, 3, 1, 3);
+
+    auto result = element_mul(view1, view2);
+
+    EXPECT_NEAR(result(0, 0), 4, 0.0001);
+    EXPECT_NEAR(result(0, 1), 9, 0.0001);
+    EXPECT_NEAR(result(0, 2), 8, 0.0001);
+    EXPECT_NEAR(result(1, 0), 14, 0.0001);
+    EXPECT_NEAR(result(1, 1), 76, 0.0001);
+    EXPECT_NEAR(result(1, 2), 12, 0.0001);
+    EXPECT_NEAR(result(2, 0), 10, 0.0001);
+    EXPECT_NEAR(result(2, 1), 18, 0.0001);
+    EXPECT_NEAR(result(2, 2), 20, 0.0001);
+}
 
 TEST(scale_test_case, scale_view_test)
 {
@@ -84,6 +119,30 @@ TEST(dot_test_case, dot_view_test)
 
     EXPECT_NEAR(result(0, 0), 28.0, 0.0001);
     EXPECT_NEAR(result(1, 0), 95.5, 0.0001);
+}
+
+TEST(dot_test_case, dot_transpose_test)
+{
+    auto lhs = make_matrix<float>({ // 3x2
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    });
+
+    auto rhs = make_matrix<float>({ // 3x2
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    });
+
+    // we really need 2x3 X 3x2
+
+    matrix<float> result = dot<float>(lhs, rhs, true, false);
+
+    EXPECT_NEAR(result(0, 0), 35.0, 0.0001);
+    EXPECT_NEAR(result(0, 1), 44.0, 0.0001);
+    EXPECT_NEAR(result(1, 0), 44.0, 0.0001);
+    EXPECT_NEAR(result(1, 1), 56.0, 0.0001);
 }
 
 TEST(reduce_avg_test_case, reduce_avg_test)

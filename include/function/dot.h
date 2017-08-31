@@ -13,7 +13,7 @@ namespace mozart
     namespace function
     {
         template<typename T>
-        matrix<T> dot(matrix<T>& lhs, matrix<T>& rhs);
+        matrix<T> dot(matrix<T>& lhs, matrix<T>& rhs, bool lhs_transpose = false, bool rhs_transpose = false);
     }
 }
 

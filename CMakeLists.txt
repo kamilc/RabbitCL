@@ -56,6 +56,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/cost.cpp
                           src/function/dot.cpp
                           src/function/scale.cpp
+                          src/function/element_mul.cpp
                           src/function/squared_error.cpp
                           src/function/reduce_avg.cpp
                           src/function/tanh.cpp
