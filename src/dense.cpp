@@ -13,7 +13,7 @@ namespace mozart
     activation<T> dense<T>::train_forward(matrix<T> &data)
     {
         matrix<T> _inter = mozart::function::dot(data, this->_weights);
-        
+
         return this->_fun(_inter, true);
     }
 
@@ -21,6 +21,12 @@ namespace mozart
     void dense<T>::update_weights(matrix<T>& deltas)
     {
         // todo: implement me
+    }
+
+    template<typename T>
+    matrix<T>& dense<T>::weights()
+    {
+        return this->_weights;
     }
 
     INSTANTIATE(dense);

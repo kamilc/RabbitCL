@@ -29,8 +29,6 @@ namespace mozart
         unsigned long  _epochs;
         unsigned long  _batches;
         typename cost<T>::function _cost;
-
-        inline matrix<T> compute_deltas(activation<T>& outputs);
     };
 }
 

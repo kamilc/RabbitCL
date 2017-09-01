@@ -52,7 +52,8 @@ namespace mozart
 
         for(auto layer_index = outputs.size() - 2; layer_index > 0; layer_index--)
         {
-            deltas[layer_index] = this->compute_deltas(outputs[layer_index]);
+            auto pullback = dot(deltas[layer_index + 1], network[layer_index + 1]->weights(), false, true);
+            deltas[layer_index] = dot(pullback, outputs[layer_index].deriv);
         }
 
         // 4. compute Δw and update the weights on the fly
@@ -69,13 +70,6 @@ namespace mozart
 
         // 5. return the error
         return network_error.avg();
-    }
-
-    template<typename T>
-    inline matrix<T> gradient_descent<T>::compute_deltas(activation<T>& outputs)
-    {
-        // todo: implement me
-        return matrix<T>(1, 1);
     }
 
     template<typename T>

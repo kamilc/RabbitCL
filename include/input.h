@@ -19,6 +19,7 @@ namespace mozart
         activation<T> forward(matrix<T> &data);
         activation<T> train_forward(matrix<T> &data);
         void update_weights(matrix<T>& deltas);
+        virtual matrix<T>& weights();
     };
 }
 

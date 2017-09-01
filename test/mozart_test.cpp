@@ -145,6 +145,63 @@ TEST(dot_test_case, dot_transpose_test)
     EXPECT_NEAR(result(1, 1), 56.0, 0.0001);
 }
 
+TEST(dot_test_case, dot_transpose2_test)
+{
+    auto lhs = make_matrix<float>({ // 3x2
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    });
+
+    auto rhs = make_matrix<float>({ // 3x2
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    });
+
+    // we really need 3x2 X 2x3
+
+    matrix<float> result = dot<float>(lhs, rhs, false, true);
+
+    EXPECT_NEAR(result(0, 0), 5.0, 0.0001);
+    EXPECT_NEAR(result(0, 1), 11.0, 0.0001);
+    EXPECT_NEAR(result(0, 2), 17.0, 0.0001);
+    EXPECT_NEAR(result(1, 0), 11.0, 0.0001);
+    EXPECT_NEAR(result(1, 1), 25.0, 0.0001);
+    EXPECT_NEAR(result(1, 2), 39.0, 0.0001);
+    EXPECT_NEAR(result(2, 0), 17.0, 0.0001);
+    EXPECT_NEAR(result(2, 1), 39.0, 0.0001);
+    EXPECT_NEAR(result(2, 2), 61.0, 0.0001);
+}
+
+TEST(dot_test_case, dot_transpose3_test)
+{
+    auto lhs = make_matrix<float>({ // 2x3
+        {1, 2, 3},
+        {4, 5, 6}
+    });
+
+    auto rhs = make_matrix<float>({ // 3x2
+        {1, 2},
+        {3, 4},
+        {5, 6}
+    });
+
+    // we really need 3x2 X 2x3
+
+    matrix<float> result = dot<float>(lhs, rhs, true, true);
+
+    EXPECT_NEAR(result(0, 0), 9.0, 0.0001);
+    EXPECT_NEAR(result(0, 1), 19.0, 0.0001);
+    EXPECT_NEAR(result(0, 2), 29.0, 0.0001);
+    EXPECT_NEAR(result(1, 0), 12.0, 0.0001);
+    EXPECT_NEAR(result(1, 1), 26.0, 0.0001);
+    EXPECT_NEAR(result(1, 2), 40.0, 0.0001);
+    EXPECT_NEAR(result(2, 0), 15.0, 0.0001);
+    EXPECT_NEAR(result(2, 1), 33.0, 0.0001);
+    EXPECT_NEAR(result(2, 2), 51.0, 0.0001);
+}
+
 TEST(reduce_avg_test_case, reduce_avg_test)
 {
     auto data = make_matrix<float>({

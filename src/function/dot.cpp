@@ -36,7 +36,7 @@ namespace mozart
             auto ldb = rhs_size.internal_size2;
             auto beta = 1;
             auto bufC = out.data().get_buffer().get();
-            auto ldc = rhs_size.internal_size2;
+            auto ldc = rhs_transpose ? rhs_size.internal_size1 : rhs_size.internal_size2;
             auto ltrans = lhs_transpose ? clblasTrans : clblasNoTrans;
             auto rtrans = rhs_transpose ? clblasTrans : clblasNoTrans;
 

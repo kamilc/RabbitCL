@@ -20,5 +20,11 @@ namespace mozart
         // no-op
     }
 
+    template<typename T>
+    matrix<T>& input<T>::weights()
+    {
+        throw std::domain_error("Asking for weights on the input layer");
+    }
+
     INSTANTIATE(input);
 }
