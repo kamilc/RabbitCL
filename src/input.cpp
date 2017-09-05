@@ -5,13 +5,13 @@ namespace mozart
     template<typename T>
     activation<T> input<T>::forward(matrix<T> &data)
     {
-        return activation<T>(data, false);
+        return activation<T>::with(data);
     }
 
     template<typename T>
     activation<T> input<T>::train_forward(matrix<T> &data)
     {
-        return activation<T>(data, true);
+        return activation<T>::with(data);
     }
 
     template<typename T>

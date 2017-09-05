@@ -23,7 +23,7 @@ namespace mozart
             for(auto batch = 0; batch < batches_len; batch++)
             {
                 auto start = batch * this->_batches;
-                auto end = start + this->_batches;
+                auto end = start + this->_batches - 1;
     
                 auto batch_data = matrix<T>::view(data, start, end, 0, columns_length - 1);
                 auto batch_targets = matrix<T>::view(targets, start, end, 0, columns_length - 1);
@@ -38,9 +38,16 @@ namespace mozart
     template<typename T>
     T gradient_descent<T>::run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
+        // std::cout << "Input: " << data << std::endl;
+        // std::cout << "Targets: " << targets << std::endl;
+
         // 1. get outputs of layers
         std::vector<activation<T>> outputs = network.train_forward(data);
         activation<T>& last_output = outputs[outputs.size() - 1];
+
+        // std::cout << "Output[0]: " << outputs[0].out << std::endl;
+        // std::cout << "Output[1]: " << outputs[1].out << std::endl;
+        // std::cout << "Output[2]: " << outputs[2].out << std::endl;
 
         // 2. compute the network error
         cost<T> network_error = this->_cost(last_output.out, targets, true);
@@ -53,7 +60,7 @@ namespace mozart
         for(auto layer_index = outputs.size() - 2; layer_index > 0; layer_index--)
         {
             auto pullback = dot(deltas[layer_index + 1], network[layer_index + 1]->weights(), false, true);
-            deltas[layer_index] = dot(pullback, outputs[layer_index].deriv);
+            deltas[layer_index] = pullback * outputs[layer_index].deriv; //dot(pullback, outputs[layer_index].deriv);
         }
 
         // 4. compute Δw and update the weights on the fly
@@ -63,6 +70,8 @@ namespace mozart
         {
             matrix<T>& delta = deltas[layer_index];
             matrix<T>& layer_input = outputs[layer_index - 1].out;
+
+            // std::cout << "Before updates, layer input: " << layer_input << " and delta: " << delta << std::endl;
 
             auto weight_delta = matrix<T>(-1 * this->_eta * dot(layer_input, delta, true, false));
             network[layer_index]->update_weights(weight_delta);

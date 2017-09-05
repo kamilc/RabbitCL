@@ -85,10 +85,17 @@ namespace mozart
     void matrix<T>::fill_randn(T mean, T stddev)
     {
         auto queue = context_manager::instance().new_queue();
+        vector<T> host_data(this->total_size());
 
-        compute::default_random_engine engine(queue);
-        compute::normal_distribution<float> distribution(mean, stddev);
-        distribution.generate(this->_data->begin(), this->_data->end(), engine, queue);
+        random_device rnd_device;
+        mt19937 mersenne_engine(rnd_device());
+        normal_distribution<T> dist(mean, stddev);
+        auto gen = std::bind(dist, mersenne_engine);
+        generate(host_data.begin(), host_data.end(), gen);
+
+        compute::copy(
+            host_data.begin(), host_data.end(), this->_data->begin(), queue
+        );
 
         queue.finish();
     }
@@ -106,6 +113,12 @@ namespace mozart
         auto _size2 = end2 + 1 - start2;
         auto _start1 = source._start1 + start1;
         auto _start2 = source._start2 + start2;
+
+        assert(start1 <= end1 && start2 <= end2);
+        assert(_start1 < source._internal_size1);
+        assert(_start2 < source._internal_size2);
+        assert(end1 < source._internal_size1);
+        assert(end2 < source._internal_size2);
 
         return matrix<T>(source, _start1, _size1, _start2, _size2);
     }
@@ -130,6 +143,12 @@ namespace mozart
     matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs)
     {
         return mozart::function::element_mul<T>(lhs, rhs);
+    }
+
+    template<typename T>
+    void operator+=(const matrix<T>& lhs, const matrix<T>& rhs)
+    {
+        mozart::function::element_add_assign<T>(lhs, rhs);
     }
 
     template<typename T>
@@ -202,6 +221,9 @@ namespace mozart
 
     template matrix<float> operator*(const matrix<float>& lhs, const matrix<float>& rhs);
     template matrix<double> operator*(const matrix<double>& lhs, const matrix<double>& rhs);
+
+    template void operator+=(const matrix<float>& lhs, const matrix<float>& rhs);
+    template void operator+=(const matrix<double>& lhs, const matrix<double>& rhs);
 
     INSTANTIATE(matrix);
 }

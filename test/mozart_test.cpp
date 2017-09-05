@@ -382,6 +382,18 @@ TEST(softmax_test_case, softmax_deriv_test)
     EXPECT_NEAR(result.deriv(2, 2), 0.12961034, 0.0001);
 }
 
+TEST(matrix_view_test, matrix_view_test)
+{
+    auto data = make_matrix<float>({
+        { 11, 12, 13, 14, 15, 16, 17, 18},
+        { 21, 22, 23, 24, 25, 26, 27, 28},
+        { 31, 32, 33, 34, 35, 36, 37, 38},
+    });
+
+    EXPECT_DEATH(matrix<float>::view(data, 2, 3, 0, 7), "Assertion failed.*");
+    EXPECT_DEATH(matrix<float>::view(data, 3, 4, 0, 7), "Assertion failed.*");
+}
+
 TEST(learn_binary_test_case, learn_binary_test)
 {
     sequence<float> network;
@@ -415,13 +427,16 @@ TEST(learn_binary_test_case, learn_binary_test)
      });
 
     auto optimizer = gradient_descent<float>(squared_error<float>)
-                        .epochs(8*10)
+                        .epochs(100)
+                        .eta(0.1)
                         .batches(1);
 
     optimizer.run(network, data, ys);
 
     auto test = make_matrix<float>({{ 0, 1, 0 }});
     auto predicted = network.forward(test);
+
+    std::cout << "Predicted: " << predicted << std::endl;
 
     EXPECT_EQ(predicted(0, 0), 0);
     EXPECT_EQ(predicted(0, 1), 0);

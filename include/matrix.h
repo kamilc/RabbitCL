@@ -5,12 +5,14 @@
 #include <memory>
 #include <boost/compute.hpp>
 #include <boost/compute/algorithm.hpp>
+#include <random>
 #include "utilities.h"
 #include "matrix_size.h"
 #include "context_manager.h"
 #include "scalar.h"
 #include "function/scale.h"
 #include "function/element_mul.h"
+#include "function/element_add_assign.h"
 
 using namespace std;
 using namespace boost;
@@ -61,6 +63,9 @@ namespace mozart
 
     template<typename T>
     matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs);
+
+    template<typename T>
+    void operator+=(const matrix<T>& lhs, const matrix<T>& rhs);
 }
 
 #endif

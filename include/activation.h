@@ -21,6 +21,8 @@ namespace mozart {
 
         activation(matrix<T> &in, bool derive);
         activation();
+
+        static activation with(matrix<T>& data);
     };
 }
 

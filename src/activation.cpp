@@ -19,5 +19,15 @@ namespace mozart {
         // no-op
     }
 
+    template<typename T>
+    activation<T> activation<T>::with(matrix<T>& data)
+    {
+        activation<T> out(data, false);
+
+        out.out = data;
+
+        return out;
+    }
+
     INSTANTIATE(activation);
 }

@@ -16,8 +16,17 @@ namespace mozart
     template<typename T>
     matrix<T> sequence<T>::forward(matrix<T> &data)
     {
-        // todo: implement me
-        return data;
+        // todo: provide proper non train version
+        std::vector<activation<T>> out(this->size());
+        
+        out[0] = this->_layers[0]->train_forward(data);
+
+        for(auto index = 1; index < this->size(); index++)
+        {
+            out[index] = this->_layers[index]->train_forward(out[index - 1].out);
+        }
+
+        return out[this->size() - 1].out;
     }
 
     template<typename T>
