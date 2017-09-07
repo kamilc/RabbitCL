@@ -4,3 +4,7 @@ build/
 .cproject
 .project
 CMakeCache.txt
+CMakeFiles/
+*.swp
+*.swo
+*.pc

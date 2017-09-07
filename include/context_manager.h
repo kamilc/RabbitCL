@@ -17,7 +17,7 @@ namespace mozart
             static context_manager _instance;
             if(!_instance._initialized)
             {
-                _instance._context = compute::context(compute::system::default_device());
+                _instance._context = compute::context(boost::compute::system::devices()[2]);
                 _instance._initialized = true;
             }
             return _instance;
@@ -34,7 +34,17 @@ namespace mozart
 
         compute::device device()
         {
-            return compute::system::default_device();
+            // todo: make it choosable:
+
+            auto device = boost::compute::system::devices()[2];
+
+            //std::cout << "Choosing " << device.name() << std::endl;
+
+            //return boost::compute::system::find_device("AMD Radeon Pro 455 Compute Engine");
+
+            //return compute::system::default_device();
+
+            return device;
         }
 
         compute::command_queue new_queue()

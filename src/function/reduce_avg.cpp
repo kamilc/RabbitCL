@@ -15,12 +15,16 @@ namespace mozart {
             {
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_id = get_group_id(0);
-                unsigned int group_size = get_global_size(0) / get_local_size(0);
+                unsigned int local_size = get_local_size(0);
+                unsigned int group_size = get_global_size(0) / local_size;
 
                 local_buffer[local_id] = in[id_to_internal_id(global_id, &in_size)];
+
                 barrier(CLK_LOCAL_MEM_FENCE);
 
-                for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
+                unsigned int goes = local_size / 2;
+
+                for(int i = goes; local_size > 1 && i > 0; i >>= 1)
                 {
                     if(local_id < i)
                     {
@@ -31,10 +35,13 @@ namespace mozart {
 
                 if(local_id == 0)
                 {
+                    if(local_size % 2 != 0)
+                    {
+                      local_buffer[0] += local_buffer[local_size - 1];
+                    }
                     out[group_id + 1] = local_buffer[0];
                 }
 
-                barrier(CLK_LOCAL_MEM_FENCE);
                 barrier(CLK_GLOBAL_MEM_FENCE);
 
                 if(global_id == 0)
@@ -45,7 +52,7 @@ namespace mozart {
                     {
                         out[0] += out[i];
                     }
-                    out[0] /= total_size;
+                    out[0] /= 1.0 * total_size;
                 }
             }
         }
@@ -60,7 +67,7 @@ namespace mozart {
 
             kernel<T, reduce_avg_kernel>::instance()
                 .with_global_size(in.total_size())
-                .with_local_size(in.size1())
+                .with_local_size(in.size2())
                 .run(in,
                     out,
                     // todo: figure out best dim for local buffer here:

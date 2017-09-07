@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 
 project(librabbit)
 
+set(CMAKE_BINARY_DIR "${CMAKE_SOURCE_DIR}/build")
+
 set (CMAKE_CXX_STANDARD 14)
 add_compile_options(-std=c++14)
-add_definitions(-DVIENNACL_WITH_OPENCL)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package( OpenCL )
@@ -12,16 +13,29 @@ find_package( OpenCL )
 enable_testing()
 
 include(ExternalProject)
-ExternalProject_Add(googletest
-  GIT_REPOSITORY    https://github.com/google/googletest.git
-  GIT_TAG           master
-  SOURCE_DIR        "${CMAKE_BINARY_DIR}/googletest-src"
-  BINARY_DIR        "${CMAKE_BINARY_DIR}/googletest-build"
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND     ""
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
-)
+
+# ExternalProject_Add(clBLAS
+#   GIT_REPOSITORY    https://github.com/clMathLibraries/clBLAS.git
+#   GIT_TAG           develop
+#   SOURCE_DIR        "${CMAKE_BINARY_DIR}/clBLAS-src"
+#   BINARY_DIR        "${CMAKE_BINARY_DIR}/clBLAS-build"
+#   CONFIGURE_COMMAND ""
+#   BUILD_COMMAND     "cd ${CMAKE_BINARY_DIR}/clBLAS-src && mkdir ${CMAKE_BINARY_DIR}/clBLAS-src/build && cd ${CMAKE_BINARY_DIR}/clBLAS-src/build && cmake .. && make"
+#   INSTALL_COMMAND   ""
+#   TEST_COMMAND      ""
+# )
+
+# include(ExternalProject)
+# ExternalProject_Add(googletest
+#   GIT_REPOSITORY    https://github.com/google/googletest.git
+#   GIT_TAG           rollback_808
+#   SOURCE_DIR        "${CMAKE_BINARY_DIR}/googletest-src"
+#   BINARY_DIR        "${CMAKE_BINARY_DIR}/googletest-build"
+#   CONFIGURE_COMMAND ""
+#   BUILD_COMMAND     ""
+#   INSTALL_COMMAND   ""
+#   TEST_COMMAND      ""
+# )
 
 # include(ExternalProject)
 # ExternalProject_Add(clblast
@@ -35,12 +49,15 @@ ExternalProject_Add(googletest
 #   TEST_COMMAND      ""
 # )
 
-add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-                 ${CMAKE_BINARY_DIR}/googletest-build)
+# add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+#                 ${CMAKE_BINARY_DIR}/googletest-build)
 
 include(BuildBoostCompute)
+include(BuildClBLAS)
 
-include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR} ${BoostCompute_INCLUDE_DIRS})
+message("Found Boost Compute includes: ${BoostCompute_INCLUDE_DIRS}")
+
+include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR} ${BoostCompute_INCLUDE_DIRS} build/clBLAS/src)
 
 add_library(mozart STATIC src/sequence.cpp
                           src/matrix.cpp
@@ -60,6 +77,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/element_add.cpp
                           src/function/element_add_assign.cpp
                           src/function/squared_error.cpp
+                          src/function/categorical_cross_entropy.cpp
                           src/function/reduce_avg.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
@@ -67,13 +85,14 @@ add_library(mozart STATIC src/sequence.cpp
                           src/random_matrix_generator.cpp
                           src/gradient_descent.cpp)
 
+
 add_executable(mozart_test test/mozart_test.cpp)
 
-message(status "Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
-message(status "Found OpenCL libs: ${OPENCL_LIBRARIES}")
+message("Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
+message("Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
 # todo: add the clblast resolution
-target_link_libraries(mozart_test mozart gtest_main /opt/local/lib/libclBLAS.dylib pthread ${OPENCL_LIBRARIES})
+target_link_libraries(mozart_test mozart ${CMAKE_SOURCE_DIR}/build/clBLAS/src/build/library/libclBLAS.dylib /opt/local/lib/libgtest_main.a /opt/local/lib/libgtest.a pthread ${OPENCL_LIBRARIES})
 
 add_test(NAME mozart_test COMMAND mozart_test)
 

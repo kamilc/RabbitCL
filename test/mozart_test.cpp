@@ -2,6 +2,8 @@
 
 #define BOOST_COMPUTE_DEBUG_KERNEL_COMPILATION 1
 
+#include <boost/compute.hpp>
+
 #include "gtest/gtest.h"
 #include "sequence.h"
 #include "input_config.h"
@@ -10,6 +12,7 @@
 #include "function/relu.h"
 #include "function/softmax.h"
 #include "function/squared_error.h"
+#include "function/categorical_cross_entropy.h"
 #include "gradient_descent.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
@@ -209,12 +212,31 @@ TEST(reduce_avg_test_case, reduce_avg_test)
         { 6, 7, 9.5 }
     });
 
+    auto data2 = make_matrix<float>({
+        { 1, 2, 3, 4 },
+        { 5, 6, 7, 8 },
+        { 9, 10, 11, 12 },
+        { 13, 14, 15, 16 },
+        { 17, 18, 19, 20 },
+    });
+
+    auto data3 = make_matrix<float>({
+        { 0, 1, 2, 3, 4 },
+        { 0, 5, 6, 7, 8 },
+        { 0, 9, 10, 11, 12 },
+        { 0, 13, 14, 15, 16 },
+    });
+
     auto view = matrix<float>::view(data, 1, 1, 1, 2);
 
     float result = reduce_avg<float>(data);
+    float result2 = reduce_avg<float>(data2);
+    float result3 = reduce_avg<float>(data3);
     float result_from_view = reduce_avg<float>(view);
 
     EXPECT_NEAR(result, 4.75, 0.0001);
+    EXPECT_NEAR(result2, 10.5, 0.0001);
+    EXPECT_NEAR(result3, 6.8, 0.0001);
     EXPECT_NEAR(result_from_view, 8.25, 0.0001);
 }
 
@@ -396,6 +418,13 @@ TEST(matrix_view_test, matrix_view_test)
 
 TEST(learn_binary_test_case, learn_binary_test)
 {
+    auto devices = boost::compute::system::devices();
+
+    for(auto device : devices)
+    {
+        std::cout << device.name() << std::endl;
+    }
+
     sequence<float> network;
 
     network.add(input_config<float>(3))
@@ -423,13 +452,13 @@ TEST(learn_binary_test_case, learn_binary_test)
         {0, 0, 0, 0, 1, 0, 0, 0}, /* 4 */
         {0, 0, 0, 0, 0, 1, 0, 0}, /* 5 */
         {0, 0, 0, 0, 0, 0, 1, 0}, /* 6 */
-        {0, 0, 0, 0, 0, 0, 0, 1} /* 7 */                    
+        {0, 0, 0, 0, 0, 0, 0, 1} /* 7 */
      });
 
-    auto optimizer = gradient_descent<float>(squared_error<float>)
-                        .epochs(100)
+    auto optimizer = gradient_descent<float>(categorical_cross_entropy<float>)
+                        .epochs(1000)
                         .eta(0.1)
-                        .batches(1);
+                        .batches(4);
 
     optimizer.run(network, data, ys);
 
@@ -438,12 +467,12 @@ TEST(learn_binary_test_case, learn_binary_test)
 
     std::cout << "Predicted: " << predicted << std::endl;
 
-    EXPECT_EQ(predicted(0, 0), 0);
-    EXPECT_EQ(predicted(0, 1), 0);
-    EXPECT_EQ(predicted(0, 2), 1);
-    EXPECT_EQ(predicted(0, 3), 0);
-    EXPECT_EQ(predicted(0, 4), 0);
-    EXPECT_EQ(predicted(0, 5), 0);
-    EXPECT_EQ(predicted(0, 6), 0);
-    EXPECT_EQ(predicted(0, 7), 0);
+    EXPECT_NEAR(predicted(0, 0), 0, 0.01);
+    EXPECT_NEAR(predicted(0, 1), 0, 0.01);
+    EXPECT_NEAR(predicted(0, 2), 1, 0.01);
+    EXPECT_NEAR(predicted(0, 3), 0, 0.01);
+    EXPECT_NEAR(predicted(0, 4), 0, 0.01);
+    EXPECT_NEAR(predicted(0, 5), 0, 0.01);
+    EXPECT_NEAR(predicted(0, 6), 0, 0.01);
+    EXPECT_NEAR(predicted(0, 7), 0, 0.01);
 }

@@ -111,7 +111,7 @@ namespace mozart
             this->_kernel.set_arg(this->_position++, arg.data());
             this->run();
         }
-        
+
         template<typename A1>
         void run_(A1 arg)
         {
@@ -137,13 +137,14 @@ namespace mozart
                 this->infer_work_sizes();
             }
 
-            queue.enqueue_1d_range_kernel(
+            auto _event = queue.enqueue_1d_range_kernel(
                 this->_kernel,
                 0,
                 this->_global_work_size,
                 this->_local_work_size
             );
 
+            _event.wait();
             queue.finish();
         }
 
@@ -218,7 +219,7 @@ namespace mozart
                     {
                         unsigned int row = global_id / size->size2;
                         unsigned int pad = size->internal_size2 - size->size2;
-                
+
                         return global_id + row * pad +
                             size->start1 * size->internal_size2 +
                             size->start2;
@@ -244,7 +245,6 @@ namespace mozart
                     std::cout << e.error_string() << std::endl;
                     std::cout << this->_program.build_log() << std::endl;
                 }
-                
             }
         }
     };

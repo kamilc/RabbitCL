@@ -1,7 +1,7 @@
 #ifndef Dot_h
 #define Dot_h
 
-#include <clBLAS.h>
+#include "clBLAS.h"
 #include "matrix.h"
 #include "kernel.h"
 

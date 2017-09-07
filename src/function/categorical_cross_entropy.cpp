@@ -1,9 +1,9 @@
-#include "function/squared_error.h"
+#include "function/categorical_cross_entropy.h"
 
 namespace mozart
 {
-    KERNEL(squared_error_kernel,
-        __kernel void squared_error_kernel(              
+    KERNEL(categorical_cross_entropy_kernel,
+        __kernel void categorical_cross_entropy_kernel(              
                     __global TYPE * in,
                     __global TYPE * targets,
                     __local TYPE * local_buffer,
@@ -22,13 +22,13 @@ namespace mozart
 
                 TYPE diff = targets[internal_id] - in[internal_id];
 
-                out[global_id] = diff*diff*0.5;
+                out[global_id] = targets[internal_id]*log(in[internal_id]);
             }                                         
         }
     )
 
-    KERNEL(squared_error_deriv_kernel,
-                __kernel void squared_error_deriv_kernel(              
+    KERNEL(categorical_cross_entropy_deriv_kernel,
+                __kernel void categorical_cross_entropy_deriv_kernel(              
                     __global TYPE * in,
                     __global TYPE * targets,
                     __local TYPE * local_buffer,
@@ -56,11 +56,11 @@ namespace mozart
     {
 
         template<typename T>
-        cost<T> squared_error(matrix<T>& in, matrix<T>& targets, bool derive)
+        cost<T> categorical_cross_entropy(matrix<T>& in, matrix<T>& targets, bool derive)
         {
             cost<T> result(in, derive);
 
-            kernel<T, squared_error_kernel>::instance()
+            kernel<T, categorical_cross_entropy_kernel>::instance()
                 .with_global_size(in.total_size())
                 .with_local_size(in.size2())
                 .run(
@@ -73,7 +73,7 @@ namespace mozart
 
             if(derive)
             {
-                kernel<T, squared_error_deriv_kernel>::instance()
+                kernel<T, categorical_cross_entropy_deriv_kernel>::instance()
                     .with_global_size(in.total_size())
                     .with_local_size(in.size2())
                     .run(
@@ -88,7 +88,7 @@ namespace mozart
             return result;
         }
 
-        template cost<float> squared_error(matrix<float>& in, matrix<float>& targets, bool derive);
-        template cost<double> squared_error(matrix<double>& in, matrix<double>& targets, bool derive);
+        template cost<float> categorical_cross_entropy(matrix<float>& in, matrix<float>& targets, bool derive);
+        template cost<double> categorical_cross_entropy(matrix<double>& in, matrix<double>& targets, bool derive);
     }
 }
