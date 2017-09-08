@@ -4,9 +4,9 @@ namespace mozart
 {
     KERNEL(softmax_kernel,
         __kernel void softmax_kernel(
-                    __global TYPE * in,
-                    __global TYPE * out,
-                    __local TYPE * local_buffer,
+                   const __global TYPE * in,
+                   __global TYPE * out,
+                   __local TYPE * local_buffer,
                    const struct matrix_size in_size)
         {
             unsigned int global_id  = get_global_id(0);
@@ -16,14 +16,15 @@ namespace mozart
             {
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_id = get_group_id(0);
-                unsigned int group_size = get_local_size(0);
+                unsigned int local_size = get_local_size(0);
                 unsigned int internal_id = id_to_internal_id(global_id, &in_size);
 
                 local_buffer[local_id] = exp(in[internal_id]);
 
                 barrier(CLK_LOCAL_MEM_FENCE);
 
-                for(int i = ( group_size + 1 ) / 2; i > 0; i >>= 1)
+                unsigned int goes = local_size / 2;
+                for(int i = goes; i > 0; i >>= 1)
                 {
                     if(local_id < i)
                     {
@@ -32,7 +33,16 @@ namespace mozart
                     barrier(CLK_LOCAL_MEM_FENCE);
                 }
 
-                out[internal_id] = exp(in[internal_id]) / local_buffer[0];
+                if(local_id == 0)
+                {
+                    if(local_size % 2 != 0)
+                    {
+                      local_buffer[0] += local_buffer[local_size - 1];
+                    }
+                }
+                barrier(CLK_LOCAL_MEM_FENCE);
+
+                out[global_id] = exp(in[internal_id]) / local_buffer[0];
             }
         };
     );
@@ -46,7 +56,7 @@ namespace mozart
             unsigned int global_id = get_global_id(0);
             unsigned int idx = id_to_internal_id(global_id, &in_size);
 
-            out[idx] = in[idx] * (1 - in[idx]);
+            out[global_id] = in[idx] * (1 - in[idx]);
         };
     );
 

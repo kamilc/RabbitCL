@@ -10,9 +10,6 @@ namespace mozart
             auto lhs_size2 = lhs_transpose ? lhs.size1() : lhs.size2();
             auto rhs_size1 = rhs_transpose ? rhs.size2() : rhs.size1();
 
-            std::cout << "In dot product: " << lhs << std::endl;
-            std::cout << "In dot product: " << rhs << std::endl;
-
             assert(lhs_size2 == rhs_size1);
 
             auto lhs_size1 = lhs_transpose ? lhs.size2() : lhs.size1();
@@ -57,8 +54,6 @@ namespace mozart
 
             _event.wait();
             queue.finish();
-
-            std::cout << "Result: " << out << std::endl;
 
             return out;
         }

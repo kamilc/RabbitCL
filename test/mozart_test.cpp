@@ -368,9 +368,10 @@ TEST(softmax_test_case, softmax_test)
         { -3.0, 1.5, -0.2 },
     });
 
-    auto result = softmax<float>(data, false);
+    auto view = matrix<float>::view(data, 1, 2, 1, 2);
 
-    viennacl::backend::finish();
+    auto result = softmax<float>(data, false);
+    auto result_view = softmax<float>(view, false);
 
     EXPECT_NEAR(result.out(0, 0), 0.8360188, 0.0001);
     EXPECT_NEAR(result.out(0, 1), 0.11314284, 0.0001);
@@ -381,6 +382,11 @@ TEST(softmax_test_case, softmax_test)
     EXPECT_NEAR(result.out(2, 0), 0.00930563, 0.0001);
     EXPECT_NEAR(result.out(2, 1), 0.8376665, 0.0001);
     EXPECT_NEAR(result.out(2, 2), 0.15302787, 0.0001);
+
+    EXPECT_NEAR(result_view.out(0, 0), 0.8455347, 0.0001);
+    EXPECT_NEAR(result_view.out(0, 1), 0.1544653, 0.0001);
+    EXPECT_NEAR(result_view.out(1, 0), 0.8455347, 0.0001);
+    EXPECT_NEAR(result_view.out(1, 1), 0.1544653, 0.0001);
 }
 
 TEST(softmax_test_case, softmax_deriv_test)
