@@ -26,7 +26,7 @@ namespace mozart
         matrix();
         matrix(size_t size1, size_t size2);
         matrix(matrix& source, size_t start1, size_t size1, size_t start2, size_t size2);
-        matrix(std::shared_ptr<compute::vector<T>> data, size_t start1, size_t size1, size_t isize1, size_t start2, size_t size2, size_t isize2);
+        matrix(std::shared_ptr<compute::vector<T>> data, size_t start1, size_t size1, size_t isize1, size_t start2, size_t size2, size_t isize2, bool initialize = true);
 
         static matrix view(matrix& source, size_t start1, size_t end1, size_t start2, size_t end2);
         matrix clone();
@@ -37,6 +37,7 @@ namespace mozart
         void set(size_t at1, size_t at2, T value);
         void set_data(std::vector<T>& data);
         void fill_randn(T mean, T stddev);
+        void fill_zeros();
 
         matrix_size size() const;
         size_t total_size() const;

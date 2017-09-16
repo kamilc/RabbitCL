@@ -111,6 +111,7 @@ TEST(dot_test_case, dot_view_test)
     });
 
     auto data_view = matrix<float>::view(data1, 1, 2, 0, 2);
+    auto data_view2 = matrix<float>::view(data1, 2, 4, 1, 3);
 
     auto data2 = make_matrix<float>({
         { 1, },
@@ -119,9 +120,14 @@ TEST(dot_test_case, dot_view_test)
     });
 
     matrix<float> result = dot<float>(data_view, data2);
+    matrix<float> result2 = dot<float>(data_view2, data2);
 
     EXPECT_NEAR(result(0, 0), 28.0, 0.0001);
     EXPECT_NEAR(result(1, 0), 95.5, 0.0001);
+
+    EXPECT_NEAR(result2(0, 0), 79.0, 0.0001);
+    EXPECT_NEAR(result2(1, 0), 40.0, 0.0001);
+    EXPECT_NEAR(result2(2, 0), 66.0, 0.0001);
 }
 
 TEST(dot_test_case, dot_transpose_test)

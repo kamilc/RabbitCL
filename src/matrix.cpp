@@ -21,7 +21,7 @@ namespace mozart
     matrix<T>::matrix(matrix<T>& source, size_t start1, size_t size1, size_t start2, size_t size2) :
       matrix(source._data,
              start1, size1, source._internal_size1,
-             start2, size2, source._internal_size2)
+             start2, size2, source._internal_size2, false)
     {
         // no-op
     }
@@ -29,7 +29,8 @@ namespace mozart
     template<typename T>
     matrix<T>::matrix(std::shared_ptr<compute::vector<T>> data,
                       size_t start1, size_t size1, size_t internal_size1,
-                      size_t start2, size_t size2, size_t internal_size2)
+                      size_t start2, size_t size2, size_t internal_size2,
+                      bool initialize)
     {
         this->_start1 = start1;
         this->_start2 = start2;
@@ -38,6 +39,11 @@ namespace mozart
         this->_internal_size1 = internal_size1;
         this->_internal_size2 = internal_size2;
         this->_data = data;
+
+        if(initialize)
+        {
+          this->fill_zeros();
+        }
     }
 
     template<typename T>
@@ -92,6 +98,26 @@ namespace mozart
         normal_distribution<T> dist(mean, stddev);
         auto gen = std::bind(dist, mersenne_engine);
         generate(host_data.begin(), host_data.end(), gen);
+
+        compute::copy(
+            host_data.begin(), host_data.end(), this->_data->begin(), queue
+        );
+
+        queue.finish();
+    }
+
+    template<typename T>
+    void matrix<T>::fill_zeros()
+    {
+        auto queue = context_manager::instance().new_queue();
+        auto total_size = this->total_size();
+
+        vector<T> host_data(total_size);
+
+        for(size_t i = 0; i < total_size; i++)
+        {
+          host_data[i] = 0;
+        }
 
         compute::copy(
             host_data.begin(), host_data.end(), this->_data->begin(), queue

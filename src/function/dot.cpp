@@ -17,11 +17,8 @@ namespace mozart
 
             matrix<T> out(lhs_size1, rhs_size2);
 
-            // improve: implement me in a clean way:
             compute::event _event;
             compute::command_queue queue = context_manager::instance().new_queue();
-
-            auto err = clblasSetup( );
 
             auto lhs_size = lhs.size();
             auto rhs_size = rhs.size();
@@ -37,17 +34,19 @@ namespace mozart
             auto beta = 1;
             auto bufC = out.data().get_buffer().get();
             auto ldc = rhs_transpose ? rhs_size.internal_size1 : rhs_size.internal_size2;
-            auto ltrans = lhs_transpose ? clblasTrans : clblasNoTrans;
-            auto rtrans = rhs_transpose ? clblasTrans : clblasNoTrans;
+            auto ltrans = lhs_transpose ? clblast::Transpose::kYes : clblast::Transpose::kNo;
+            auto rtrans = rhs_transpose ? clblast::Transpose::kYes : clblast::Transpose::kNo;
 
-            err = clblasSgemm( clblasRowMajor, ltrans, rtrans,
+            auto err = clblast::Gemm<T>(clblast::Layout::kRowMajor, ltrans, rtrans,
                 M, N, K,
-                alpha, bufA, lhs.offset(), lda,
-                bufB, rhs.offset(), ldb, beta,
+                alpha,
+                bufA, lhs.offset(), lda,
+                bufB, rhs.offset(), ldb,
+                beta,
                 bufC, 0, ldc,
-                1, &queue.get(), 0, NULL, &_event.get() );
+                &queue.get(), &_event.get());
 
-            if(err != 0)
+            if((int)err != 0)
             {
                 std::cout << "dot result code: " << (int)err << std::endl;
             }
