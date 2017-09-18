@@ -58,6 +58,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/tanh.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp
+                          src/function/squashmax.cpp
                           src/random_matrix_generator.cpp
                           src/gradient_descent.cpp)
 

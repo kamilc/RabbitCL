@@ -3,7 +3,7 @@
 namespace mozart
 {
     KERNEL(categorical_cross_entropy_kernel,
-        __kernel void categorical_cross_entropy_kernel(              
+        __kernel void categorical_cross_entropy_kernel(
                     __global TYPE * in,
                     __global TYPE * targets,
                     __local TYPE * local_buffer,
@@ -13,8 +13,8 @@ namespace mozart
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
 
-            if(global_id < total_size)                
-            {                                         
+            if(global_id < total_size)
+            {
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_id = get_group_id(0);
                 unsigned int group_size = get_local_size(0);
@@ -23,12 +23,12 @@ namespace mozart
                 TYPE diff = targets[internal_id] - in[internal_id];
 
                 out[global_id] = targets[internal_id]*log(in[internal_id]);
-            }                                         
+            }
         }
     )
 
     KERNEL(categorical_cross_entropy_deriv_kernel,
-                __kernel void categorical_cross_entropy_deriv_kernel(              
+                __kernel void categorical_cross_entropy_deriv_kernel(
                     __global TYPE * in,
                     __global TYPE * targets,
                     __local TYPE * local_buffer,
@@ -38,8 +38,8 @@ namespace mozart
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
 
-            if(global_id < total_size)                
-            {                                         
+            if(global_id < total_size)
+            {
                 unsigned int local_id = get_local_id(0);
                 unsigned int group_id = get_group_id(0);
                 unsigned int group_size = get_local_size(0);
@@ -48,7 +48,7 @@ namespace mozart
                 TYPE diff = in[internal_id] - targets[internal_id];
 
                 out[global_id] = diff;
-            }                                         
+            }
         }
     )
 

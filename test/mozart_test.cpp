@@ -18,6 +18,7 @@
 #include "function/reduce_avg.h"
 #include "function/dot.h"
 #include "function/element_mul.h"
+#include "function/squashmax.h"
 
 using namespace mozart;
 using namespace mozart::function;
@@ -428,15 +429,24 @@ TEST(matrix_view_test, matrix_view_test)
     EXPECT_DEATH(matrix<float>::view(data, 3, 4, 0, 7), "Assertion failed.*");
 }
 
+TEST(squashmax_test_case, squashmax_test)
+{
+    auto data = make_matrix<float>({
+        { 0.1, 0.2, 0.3, 0.21, 0.11, 0.03 }
+    });
+
+    matrix<float> squashed = squashmax<float>(data);
+
+    EXPECT_NEAR(squashed(0, 0), 0, 0.01);
+    EXPECT_NEAR(squashed(0, 1), 0, 0.01);
+    EXPECT_NEAR(squashed(0, 2), 1, 0.01);
+    EXPECT_NEAR(squashed(0, 3), 0, 0.01);
+    EXPECT_NEAR(squashed(0, 4), 0, 0.01);
+    EXPECT_NEAR(squashed(0, 5), 0, 0.01);
+}
+
 TEST(learn_binary_test_case, learn_binary_test)
 {
-    auto devices = boost::compute::system::devices();
-
-    for(auto device : devices)
-    {
-        std::cout << device.name() << std::endl;
-    }
-
     sequence<float> network;
 
     network.add(input_config<float>(3))
@@ -468,16 +478,15 @@ TEST(learn_binary_test_case, learn_binary_test)
      });
 
     auto optimizer = gradient_descent<float>(categorical_cross_entropy<float>)
-                        .epochs(1000)
-                        .eta(0.1)
+                        .epochs(5000)
+                        .eta(0.01)
                         .batches(4);
 
     optimizer.run(network, data, ys);
 
     auto test = make_matrix<float>({{ 0, 1, 0 }});
-    auto predicted = network.forward(test);
-
-    std::cout << "Predicted: " << predicted << std::endl;
+    auto output = network.forward(test);
+    auto predicted = squashmax<float>(output);
 
     EXPECT_NEAR(predicted(0, 0), 0, 0.01);
     EXPECT_NEAR(predicted(0, 1), 0, 0.01);
