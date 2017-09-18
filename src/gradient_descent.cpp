@@ -24,14 +24,14 @@ namespace mozart
             {
                 auto start = batch * this->_batches;
                 auto end = start + this->_batches - 1;
-    
+
                 auto batch_data = matrix<T>::view(data, start, end, 0, columns_length - 1);
                 auto batch_targets = matrix<T>::view(targets, start, end, 0, columns_length - 1);
-    
+
                 error = run_batch(network, batch_data, batch_targets);
             }
 
-            std::cout << "Epoch \t[ " << epoch << " ] \t- " << error << std::endl;
+            std::cout << "Epoch #" << epoch << " cost: " << error << std::endl;
         }
     }
 
