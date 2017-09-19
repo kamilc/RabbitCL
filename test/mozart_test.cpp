@@ -19,9 +19,14 @@
 #include "function/dot.h"
 #include "function/element_mul.h"
 #include "function/squashmax.h"
+#include "reporter.h"
+#include "reporter/timed.h"
+#include "stats/accuracy.h"
 
 using namespace mozart;
 using namespace mozart::function;
+using namespace mozart::stats;
+using namespace mozart::reporter;
 
 TEST(element_mul_test, element_mul_test)
 {
@@ -477,10 +482,16 @@ TEST(learn_binary_test_case, learn_binary_test)
         {0, 0, 0, 0, 0, 0, 0, 1} /* 7 */
      });
 
-    auto optimizer = gradient_descent<float>(categorical_cross_entropy<float>)
-                        .epochs(5000)
-                        .eta(0.01)
-                        .batches(4);
+    gradient_descent<float> optimizer(categorical_cross_entropy<float>);
+
+    optimizer.epochs(5000)
+             .eta(0.01)
+             .batches(4)
+             .reporter(
+                 timed<float>(10.0)
+                     .stats(accuracy<float>)
+                     .epoch_timing(true)
+             );
 
     optimizer.run(network, data, ys);
 

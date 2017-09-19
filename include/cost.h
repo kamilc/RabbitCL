@@ -5,6 +5,7 @@
 #include <tuple>
 #include "boost/optional.hpp"
 #include "matrix.h"
+#include "scalar.h"
 #include "utilities.h"
 #include "function/reduce_avg.h"
 
@@ -26,7 +27,7 @@ namespace mozart {
 
         cost(matrix<T> &in, bool derive);
 
-        T avg();
+        scalar<T> avg();
     };
 }
 

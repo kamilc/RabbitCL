@@ -15,7 +15,7 @@ namespace mozart {
     }
 
     template<typename T>
-    T cost<T>::avg()
+    scalar<T> cost<T>::avg()
     {
         return reduce_avg<T>(this->out);
     }

@@ -47,6 +47,10 @@ add_library(mozart STATIC src/sequence.cpp
                           src/dense.cpp
                           src/activation.cpp
                           src/cost.cpp
+                          src/stat.cpp
+                          src/reporter.cpp
+                          src/reporter/timed.cpp
+                          src/stats/accuracy.cpp
                           src/function/dot.cpp
                           src/function/scale.cpp
                           src/function/element_mul.cpp
