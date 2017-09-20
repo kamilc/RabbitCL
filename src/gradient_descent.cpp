@@ -10,11 +10,11 @@ namespace mozart
         this->_cost = func;
     }
 
-    template<typename T>
-    gradient_descent<T>::gradient_descent(gradient_descent&& other) : _reporter(std::move(other._reporter))
-    {
-      // no-op
-    }
+   //template<typename T>
+   //gradient_descent<T>::gradient_descent(gradient_descent&& other) : _reporter(std::move(other._reporter))
+   //{
+   //  // no-op
+   //}
 
     template<typename T>
     void gradient_descent<T>::run(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
@@ -24,11 +24,17 @@ namespace mozart
 
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
-            this->_reporter->start_epoch(epoch, this->_epochs);
+            for(auto i = 0; i < this->_reporters.size(); i++)
+            {
+                this->_reporters[i]->start_epoch(epoch, this->_epochs);
+            }
 
             for(auto batch = 0; batch < batches_len; batch++)
             {
-                this->_reporter->start_batch(batch, batches_len);
+                for(auto i = 0; i < this->_reporters.size(); i++)
+                {
+                  this->_reporters[i]->start_batch(batch, batches_len);
+                }
 
                 auto start = batch * this->_batches;
                 auto end = start + this->_batches - 1;
@@ -38,10 +44,16 @@ namespace mozart
 
                 run_batch(network, batch_data, batch_targets);
 
-                this->_reporter->end_batch();
+                for(auto i = 0; i < this->_reporters.size(); i++)
+                {
+                  this->_reporters[i]->end_batch();
+                }
             }
 
-            this->_reporter->end_epoch(network);
+            for(auto i = 0; i < this->_reporters.size(); i++)
+            {
+              this->_reporters[i]->end_epoch(network);
+            }
         }
     }
 
@@ -78,8 +90,11 @@ namespace mozart
             network[layer_index]->update_weights(weight_delta);
         }
 
-        this->_reporter->push_outputs(last_output, targets);
-        this->_reporter->push_error(network_error);
+        for(auto i = 0; i < this->_reporters.size(); i++)
+        {
+            this->_reporters[i]->push_outputs(last_output, targets);
+            this->_reporters[i]->push_error(network_error);
+        }
     }
 
     template<typename T>
@@ -99,9 +114,9 @@ namespace mozart
     }
 
     template<typename T>
-    gradient_descent<T>& gradient_descent<T>::reporter(mozart::reporter::config<T>& config)
+    gradient_descent<T>& gradient_descent<T>::push_reporter(mozart::reporter::config<T>& config)
     {
-        this->_reporter = std::move(config.construct());
+        this->_reporters.push_back(std::move(config.construct()));
 
         return *this;
     }

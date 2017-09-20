@@ -40,6 +40,13 @@ namespace mozart
             this->_epoch_timing = config._epoch_timing;
         }
 
+        template<typename T>
+        void timed_reporter<T>::push_error(cost<T>& error)
+        {
+            // todo: implement me properly
+            std::cout << error.avg() << std::endl;
+        }
+
         INSTANTIATE(timed);
     }
 }

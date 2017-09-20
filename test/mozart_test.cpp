@@ -487,7 +487,7 @@ TEST(learn_binary_test_case, learn_binary_test)
     optimizer.epochs(5000)
              .eta(0.01)
              .batches(4)
-             .reporter(
+             .push_reporter(
                  timed<float>(10.0)
                      .stats(accuracy<float>)
                      .epoch_timing(true)

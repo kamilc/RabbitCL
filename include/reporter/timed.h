@@ -5,6 +5,7 @@
 #include "utilities.h"
 #include "stat.h"
 #include "reporter.h"
+#include "cost.h"
 
 namespace mozart
 {
@@ -35,6 +36,7 @@ namespace mozart
         {
         public:
             timed_reporter(timed<T>& config);
+            void push_error(cost<T>&);
         private:
             double _interval;
             typename stat<T>::function _function;
