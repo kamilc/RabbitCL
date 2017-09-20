@@ -4,6 +4,7 @@
 
 #include <boost/compute.hpp>
 
+#include <chrono>
 #include "gtest/gtest.h"
 #include "sequence.h"
 #include "input_config.h"
@@ -488,7 +489,7 @@ TEST(learn_binary_test_case, learn_binary_test)
              .eta(0.01)
              .batches(4)
              .push_reporter(
-                 timed<float>(10.0)
+                 timed<float>(std::chrono::seconds(10))
                      .stats(accuracy<float>)
                      .epoch_timing(true)
              );

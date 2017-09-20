@@ -25,12 +25,22 @@ namespace mozart
                 // no-op
             }
 
+            virtual void start()
+            {
+                // no-op
+            }
+
             virtual void start_batch(unsigned int, unsigned int)
             {
                 // no-op
             }
 
             virtual void start_epoch(unsigned int, unsigned int)
+            {
+                // no-op
+            }
+
+            virtual void end()
             {
                 // no-op
             }

@@ -10,49 +10,64 @@ namespace mozart
         this->_cost = func;
     }
 
-   //template<typename T>
-   //gradient_descent<T>::gradient_descent(gradient_descent&& other) : _reporter(std::move(other._reporter))
-   //{
-   //  // no-op
-   //}
-
     template<typename T>
     void gradient_descent<T>::run(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
-        auto batches_len = data.size1() / this->_batches;
-        auto columns_length = data.size2();
-
-        for(auto epoch = 0; epoch < this->_epochs; epoch++)
+        try
         {
             for(auto i = 0; i < this->_reporters.size(); i++)
             {
-                this->_reporters[i]->start_epoch(epoch, this->_epochs);
+                this->_reporters[i]->start();
             }
 
-            for(auto batch = 0; batch < batches_len; batch++)
+            auto batches_len = data.size1() / this->_batches;
+            auto columns_length = data.size2();
+
+            for(auto epoch = 0; epoch < this->_epochs; epoch++)
             {
                 for(auto i = 0; i < this->_reporters.size(); i++)
                 {
-                  this->_reporters[i]->start_batch(batch, batches_len);
+                    this->_reporters[i]->start_epoch(epoch, this->_epochs);
                 }
 
-                auto start = batch * this->_batches;
-                auto end = start + this->_batches - 1;
+                for(auto batch = 0; batch < batches_len; batch++)
+                {
+                    for(auto i = 0; i < this->_reporters.size(); i++)
+                    {
+                      this->_reporters[i]->start_batch(batch, batches_len);
+                    }
 
-                auto batch_data = matrix<T>::view(data, start, end, 0, columns_length - 1);
-                auto batch_targets = matrix<T>::view(targets, start, end, 0, columns_length - 1);
+                    auto start = batch * this->_batches;
+                    auto end = start + this->_batches - 1;
 
-                run_batch(network, batch_data, batch_targets);
+                    auto batch_data = matrix<T>::view(data, start, end, 0, columns_length - 1);
+                    auto batch_targets = matrix<T>::view(targets, start, end, 0, columns_length - 1);
+
+                    run_batch(network, batch_data, batch_targets);
+
+                    for(auto i = 0; i < this->_reporters.size(); i++)
+                    {
+                      this->_reporters[i]->end_batch();
+                    }
+                }
 
                 for(auto i = 0; i < this->_reporters.size(); i++)
                 {
-                  this->_reporters[i]->end_batch();
+                  this->_reporters[i]->end_epoch(network);
                 }
             }
 
             for(auto i = 0; i < this->_reporters.size(); i++)
             {
-              this->_reporters[i]->end_epoch(network);
+                this->_reporters[i]->end();
+            }
+
+        }
+        catch(std::exception e)
+        {
+            for(auto i = 0; i < this->_reporters.size(); i++)
+            {
+                this->_reporters[i]->end();
             }
         }
     }

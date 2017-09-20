@@ -5,9 +5,9 @@ namespace mozart
     namespace reporter
     {
         template<typename T>
-        timed<T>::timed(double ms)
+        timed<T>::timed(std::chrono::duration<int> duration)
         {
-            this->_interval = ms;
+            this->_interval = duration;
         }
 
         template<typename T>
@@ -43,8 +43,13 @@ namespace mozart
         template<typename T>
         void timed_reporter<T>::push_error(cost<T>& error)
         {
-            // todo: implement me properly
-            std::cout << error.avg() << std::endl;
+            this->_last_error = error.avg();
+        }
+
+        template<typename T>
+        void timed_reporter<T>::start_epoch(unsigned int epoch, unsigned int count_all)
+        {
+            this->_last_epoch_start = std::chrono::system_clock::now();
         }
 
         INSTANTIATE(timed);

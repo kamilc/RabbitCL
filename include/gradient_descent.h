@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <exception>
 #include "matrix.h"
 #include "utilities.h"
 #include "optimizer.h"
@@ -20,7 +21,6 @@ namespace mozart
     {
     public:
         gradient_descent(typename cost<T>::function func);
-        //gradient_descent(gradient_descent&& other);
 
         gradient_descent& epochs(unsigned long epochs);
         gradient_descent& batches(unsigned long batches);
