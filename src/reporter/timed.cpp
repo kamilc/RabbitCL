@@ -33,6 +33,33 @@ namespace mozart
         }
 
         template<typename T>
+        void timed_reporter<T>::main()
+        {
+            while(!this->_should_end)
+            {
+                auto now = std::chrono::system_clock::now();
+
+                if(std::chrono::duration<double, std::milli>(now - this->_last_report) > this->_interval)
+                {
+                    std::cout << "Report!" << std::endl;
+                    this->_last_report = std::chrono::system_clock::now();
+                }
+            }
+        }
+
+        template<typename T>
+        void timed_reporter<T>::start()
+        {
+            this->_thread = std::thread(&timed_reporter<T>::main, this);
+        }
+
+        template<typename T>
+        void timed_reporter<T>::end()
+        {
+            this->_should_end = true;
+        }
+
+        template<typename T>
         timed_reporter<T>::timed_reporter(timed<T>& config)
         {
             this->_interval = config._interval;
@@ -50,6 +77,16 @@ namespace mozart
         void timed_reporter<T>::start_epoch(unsigned int epoch, unsigned int count_all)
         {
             this->_last_epoch_start = std::chrono::system_clock::now();
+        }
+
+        template<typename T>
+        void timed_reporter<T>::end_epoch(sequence<T>& network)
+        {
+            if(this->_epoch_timing)
+            {
+                auto now = std::chrono::system_clock::now();
+                this->_last_epoch_timing = std::chrono::duration<double, std::milli>(now - this->_last_epoch_start);
+            }
         }
 
         INSTANTIATE(timed);
