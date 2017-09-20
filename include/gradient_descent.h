@@ -24,16 +24,16 @@ namespace mozart
         gradient_descent& epochs(unsigned long epochs);
         gradient_descent& batches(unsigned long batches);
         gradient_descent& eta(T eta);
-        gradient_descent& reporter(mozart::reporter::config& config);
+        gradient_descent& reporter(mozart::reporter::config<T>& config);
 
         void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
-        scalar<T> run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
+        void run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
     private:
         T _eta;
         unsigned long  _epochs;
         unsigned long  _batches;
         typename cost<T>::function _cost;
-        unique_ptr<mozart::reporter::base> _reporter;
+        unique_ptr<mozart::reporter::base<T>> _reporter;
     };
 }
 

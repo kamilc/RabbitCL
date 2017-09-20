@@ -27,9 +27,9 @@ namespace mozart
         }
 
         template<typename T>
-        std::unique_ptr<base> timed<T>::construct()
+        std::unique_ptr<base<T>> timed<T>::construct()
         {
-            return std::unique_ptr<base>(new timed_reporter<T>(*this));
+            return std::unique_ptr<base<T>>(new timed_reporter<T>(*this));
         }
 
         template<typename T>

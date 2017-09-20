@@ -14,7 +14,7 @@ namespace mozart
         class timed_reporter;
 
         template<typename T>
-        class timed : public config
+        class timed : public config<T>
         {
           friend class timed_reporter<T>;
         public:
@@ -23,7 +23,7 @@ namespace mozart
             timed& stats(typename stat<T>::function);
             timed& epoch_timing(bool);
 
-            std::unique_ptr<base> construct();
+            std::unique_ptr<base<T>> construct();
         private:
             double _interval;
             typename stat<T>::function _function;
@@ -31,7 +31,7 @@ namespace mozart
         };
 
         template<typename T>
-        class timed_reporter : public base
+        class timed_reporter : public base<T>
         {
         public:
             timed_reporter(timed<T>& config);

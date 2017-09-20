@@ -24,28 +24,29 @@ namespace mozart
 
         for(auto epoch = 0; epoch < this->_epochs; epoch++)
         {
-            T error = 0;
+            this->_reporter->start_epoch(epoch, this->_epochs);
 
             for(auto batch = 0; batch < batches_len; batch++)
             {
+                this->_reporter->start_batch(batch, batches_len);
+
                 auto start = batch * this->_batches;
                 auto end = start + this->_batches - 1;
 
                 auto batch_data = matrix<T>::view(data, start, end, 0, columns_length - 1);
                 auto batch_targets = matrix<T>::view(targets, start, end, 0, columns_length - 1);
 
-                error = run_batch(network, batch_data, batch_targets);
+                run_batch(network, batch_data, batch_targets);
+
+                this->_reporter->end_batch();
             }
 
-            if(epoch % 100 == 0)
-            {
-              std::cout << "Epoch #" << epoch << " cost: " << error << std::endl;
-            }
+            this->_reporter->end_epoch(network);
         }
     }
 
     template<typename T>
-    scalar<T> gradient_descent<T>::run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
+    void gradient_descent<T>::run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
     {
         // 1. get outputs of layers
         std::vector<activation<T>> outputs = network.train_forward(data);
@@ -77,8 +78,8 @@ namespace mozart
             network[layer_index]->update_weights(weight_delta);
         }
 
-        // 5. return the error
-        return network_error.avg();
+        this->_reporter->push_outputs(last_output, targets);
+        this->_reporter->push_error(network_error);
     }
 
     template<typename T>
@@ -98,7 +99,7 @@ namespace mozart
     }
 
     template<typename T>
-    gradient_descent<T>& gradient_descent<T>::reporter(mozart::reporter::config& config)
+    gradient_descent<T>& gradient_descent<T>::reporter(mozart::reporter::config<T>& config)
     {
         this->_reporter = std::move(config.construct());
 
