@@ -39,9 +39,18 @@ namespace mozart
             {
                 auto now = std::chrono::system_clock::now();
 
-                if(std::chrono::duration<double, std::milli>(now - this->_last_report) > this->_interval)
+                if(this->_last_epoch_number > 0 &&
+                   std::chrono::duration<double, std::milli>(now - this->_last_report) > this->_interval)
                 {
-                    std::cout << "Report!" << std::endl;
+                    std::cout << "Epoch " << this->_last_epoch_number << "/" << this->_count_all_epochs;
+
+                    if(this->_epoch_timing)
+                    {
+                        std::cout << " [ took: " << this->_last_epoch_timing.count() << "ms ]";
+                    }
+
+                    std::cout << std::endl;
+
                     this->_last_report = std::chrono::system_clock::now();
                 }
             }
@@ -76,6 +85,8 @@ namespace mozart
         template<typename T>
         void timed_reporter<T>::start_epoch(unsigned int epoch, unsigned int count_all)
         {
+            this->_last_epoch_number = epoch;
+            this->_count_all_epochs = count_all;
             this->_last_epoch_start = std::chrono::system_clock::now();
         }
 

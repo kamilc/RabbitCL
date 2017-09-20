@@ -54,6 +54,8 @@ namespace mozart
             std::chrono::system_clock::time_point _last_report;
             typename stat<T>::function _function;
             bool _epoch_timing;
+            unsigned int _last_epoch_number;
+            unsigned int _count_all_epochs;
             T _last_error;
             std::thread _thread;
             bool _should_end;
