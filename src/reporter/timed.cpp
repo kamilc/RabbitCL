@@ -44,9 +44,14 @@ namespace mozart
                 {
                     std::cout << "Epoch " << this->_last_epoch_number << "/" << this->_count_all_epochs;
 
+                    std::cout << " " << this->_last_error;
+
                     if(this->_epoch_timing)
                     {
-                        std::cout << " [ took: " << this->_last_epoch_timing.count() << "ms ]";
+                        std::cout << " [ took: " << this->_last_epoch_timing.count() * 1000 << "ms ]";
+
+                        auto epochs_left = this->_count_all_epochs - this->_last_epoch_number;
+                        std::cout << " [ approx ETA: " << this->_last_epoch_timing.count() * epochs_left / 60 << " minutes ]";
                     }
 
                     std::cout << std::endl;
@@ -59,6 +64,8 @@ namespace mozart
         template<typename T>
         void timed_reporter<T>::start()
         {
+            std::cout << "Beginning optimization reported by the timed reporter (showing approximations)" << std::endl;
+
             this->_thread = std::thread(&timed_reporter<T>::main, this);
         }
 
