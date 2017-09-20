@@ -2,6 +2,8 @@
 #define ContextManager_h
 
 #include <boost/compute/core.hpp>
+#include <cstdlib>
+#include <string>
 
 using namespace boost;
 
@@ -34,15 +36,10 @@ namespace mozart
 
         compute::device device()
         {
-            // todo: make it choosable:
+            auto string_number = std::getenv("OPENCL_DEVICE");
+            int number = std::stoi(string_number == nullptr ? std::string{ "0" } : std::string{string_number});
 
-            auto device = boost::compute::system::devices()[2];
-
-            //std::cout << "Choosing " << device.name() << std::endl;
-
-            //return boost::compute::system::find_device("AMD Radeon Pro 455 Compute Engine");
-
-            //return compute::system::default_device();
+            auto device = boost::compute::system::devices()[number];
 
             return device;
         }
