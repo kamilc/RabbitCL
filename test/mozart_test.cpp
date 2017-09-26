@@ -558,9 +558,9 @@ TEST(learn_binary_test_case, learn_binary_test)
 
     gradient_descent<float> optimizer(categorical_cross_entropy<float>);
 
-    optimizer.epochs(1500)
-             .eta(0.1)
-             .batches(8)
+    optimizer.epochs(2000)
+             .eta(0.05)
+             .batches(4)
              .push_reporter(
                  timed<float>(std::chrono::seconds(1))
                      .stats(accuracy<float>)

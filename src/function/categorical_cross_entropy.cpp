@@ -25,7 +25,7 @@ namespace mozart
 
                 TYPE diff = left - right;
 
-                out[global_id] = left*log(right ? right : 0.0000000001);
+                out[global_id] = left*log(right ? right : 0.00001);
 
                //if(isnan(out[global_id]))
                //{
