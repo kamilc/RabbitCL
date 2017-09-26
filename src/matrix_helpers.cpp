@@ -20,9 +20,8 @@ namespace mozart {
         auto mat = matrix<T>(rows, cols);
 
         size_t rindex = 0;
-        size_t cindex = 0;
         for(auto r  = values.begin(); r < values.end(); r++) {
-            cindex = 0;
+            size_t cindex = 0;
             for(auto c = (*r).begin(); c < (*r).end(); c++) {
                 data[rindex * cols + cindex] = *c;
                 cindex++;
@@ -31,7 +30,7 @@ namespace mozart {
         }
 
         mat.set_data(data);
-        
+
         return mat;
     }
 

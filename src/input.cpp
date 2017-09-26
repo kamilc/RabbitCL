@@ -21,6 +21,12 @@ namespace mozart
     }
 
     template<typename T>
+    void input<T>::update_bias(matrix<T>& deltas)
+    {
+        // no-op
+    }
+
+    template<typename T>
     matrix<T>& input<T>::weights()
     {
         throw std::domain_error("Asking for weights on the input layer");

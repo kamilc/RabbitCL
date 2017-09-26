@@ -3,7 +3,7 @@
 namespace mozart
 {
     KERNEL(element_add_kernel,
-        __kernel void element_add_kernel(              
+        __kernel void element_add_kernel(
                     __global TYPE * lhs,
                     __global TYPE * rhs,
                     __global TYPE * out,
@@ -13,13 +13,13 @@ namespace mozart
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = lhs_size.size1 * lhs_size.size2;
 
-            if(global_id < total_size)                
+            if(global_id < total_size)
             {
                 unsigned int lhs_id = id_to_internal_id(global_id, &lhs_size);
                 unsigned int rhs_id = id_to_internal_id(global_id, &rhs_size);
 
                 out[global_id] = lhs[lhs_id] + rhs[rhs_id];
-            }                                         
+            }
         }
     )
 

@@ -11,8 +11,12 @@
 #include "context_manager.h"
 #include "scalar.h"
 #include "function/scale.h"
+#include "function/scalar_translate.h"
 #include "function/element_mul.h"
+#include "function/element_add.h"
 #include "function/element_add_assign.h"
+#include "function/inplace_columnwise_add.h"
+#include "function/inplace_reduce_column_sum.h"
 
 using namespace std;
 using namespace boost;
@@ -38,6 +42,8 @@ namespace mozart
         void set_data(std::vector<T>& data);
         void fill_randn(T mean, T stddev);
         void fill_zeros();
+        matrix reduce_column_sum();
+        void columnwise_add(matrix<T>& other);
 
         matrix_size size() const;
         size_t total_size() const;
@@ -61,6 +67,12 @@ namespace mozart
 
     template<typename T>
     matrix<T> operator*(T lhs, const matrix<T>& rhs);
+
+    template<typename T>
+    matrix<T> operator+(T lhs, const matrix<T>& rhs);
+
+    template<typename T>
+    matrix<T> operator+(const matrix<T>& lhs, const matrix<T>& rhs);
 
     template<typename T>
     matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs);

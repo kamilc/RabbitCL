@@ -5,15 +5,19 @@ namespace mozart
     template<typename T>
     activation<T> dense<T>::forward(matrix<T> &data)
     {
-        // todo: implement me
-        return activation<T>(data, false);
+        matrix<T> _inter = mozart::function::dot(data, this->_weights);
+
+        _inter.columnwise_add(this->_biases);
+
+        return this->_fun(_inter, false);
     }
 
     template<typename T>
     activation<T> dense<T>::train_forward(matrix<T> &data)
     {
-        // std::cout << "Dot with weights: " << this->_weights << std::endl;
         matrix<T> _inter = mozart::function::dot(data, this->_weights);
+
+        _inter.columnwise_add(this->_biases);
 
         return this->_fun(_inter, true);
     }
@@ -22,9 +26,12 @@ namespace mozart
     void dense<T>::update_weights(matrix<T>& deltas)
     {
         this->_weights += deltas;
+    }
 
-        // std::cout << "Updating with: " << deltas << std::endl;
-        // std::cout << "After updating weights: " << this->_weights << std::endl;
+    template<typename T>
+    void dense<T>::update_bias(matrix<T>& deltas)
+    {
+        this->_biases += deltas.reduce_column_sum();
     }
 
     template<typename T>

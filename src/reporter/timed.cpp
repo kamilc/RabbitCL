@@ -48,7 +48,7 @@ namespace mozart
 
                     if(this->_epoch_timing)
                     {
-                        std::cout << " [ took: " << this->_last_epoch_timing.count() * 1000 << "ms ]";
+                        std::cout << " [ last epoch: " << this->_last_epoch_timing.count() * 1000 << "ms ]";
 
                         auto epochs_left = this->_count_all_epochs - this->_last_epoch_number;
                         std::cout << " [ approx ETA: " << this->_last_epoch_timing.count() * epochs_left / 60 << " minutes ]";

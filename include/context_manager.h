@@ -19,7 +19,7 @@ namespace mozart
             static context_manager _instance;
             if(!_instance._initialized)
             {
-                _instance._context = compute::context(boost::compute::system::devices()[2]);
+                _instance._context = compute::context(_instance.device());
                 _instance._initialized = true;
             }
             return _instance;

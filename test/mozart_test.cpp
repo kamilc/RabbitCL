@@ -451,6 +451,79 @@ TEST(squashmax_test_case, squashmax_test)
     EXPECT_NEAR(squashed(0, 5), 0, 0.01);
 }
 
+TEST(reduce_column_sum, simple_reduce_column_sum)
+{
+    auto data = make_matrix<float>({
+        {0, 0, 0},
+        {0, 0, 1}, /* 1 */
+        {0, 1, 0}, /* 2 */
+        {0, 1, 1}, /* 3 */
+        {1, 0, 0}, /* 4 */
+        {1, 0, 1}, /* 5 */
+        {1, 1, 0}, /* 6 */
+        {1, 1, 1}  /* 7 */
+    });
+
+    auto data2 = data.reduce_column_sum();
+
+    std::cout << data2 << std::endl;
+
+    EXPECT_EQ(data2.size1(), 1);
+    EXPECT_EQ(data2.size2(), 3);
+
+    EXPECT_NEAR(data2(0, 0), 4, 0.01);
+    EXPECT_NEAR(data2(0, 1), 4, 0.01);
+    EXPECT_NEAR(data2(0, 2), 4, 0.01);
+}
+
+// TEST(columnwise_add_test, columnwise_basic_test)
+// {
+//     auto data = make_matrix<float>({
+//         {0, 0, 0},
+//         {0, 0, 1}, /* 1 */
+//         {0, 1, 0}, /* 2 */
+//         {0, 1, 1}, /* 3 */
+//         {1, 0, 0}, /* 4 */
+//         {1, 0, 1}, /* 5 */
+//         {1, 1, 0}, /* 6 */
+//         {1, 1, 1}  /* 7 */
+//     });
+//
+//     auto to_add = make_matrix<float>({
+//         { 1, 2, 3 },
+//         { 4, 5, 6 }
+//     });
+//
+//     data.columnwise_add(to_add);
+//
+//     EXPECT_NEAR(data(0, 0), 1, 0.01);
+//     EXPECT_NEAR(data(1, 0), 1, 0.01);
+//     EXPECT_NEAR(data(2, 0), 1, 0.01);
+//     EXPECT_NEAR(data(3, 0), 1, 0.01);
+//     EXPECT_NEAR(data(4, 0), 2, 0.01);
+//     EXPECT_NEAR(data(5, 0), 2, 0.01);
+//     EXPECT_NEAR(data(6, 0), 2, 0.01);
+//     EXPECT_NEAR(data(7, 0), 2, 0.01);
+//
+//     EXPECT_NEAR(data(0, 1), 2, 0.01);
+//     EXPECT_NEAR(data(1, 1), 2, 0.01);
+//     EXPECT_NEAR(data(2, 1), 3, 0.01);
+//     EXPECT_NEAR(data(3, 1), 3, 0.01);
+//     EXPECT_NEAR(data(4, 1), 2, 0.01);
+//     EXPECT_NEAR(data(5, 1), 2, 0.01);
+//     EXPECT_NEAR(data(6, 1), 3, 0.01);
+//     EXPECT_NEAR(data(7, 1), 3, 0.01);
+//
+//     EXPECT_NEAR(data(0, 2), 3, 0.01);
+//     EXPECT_NEAR(data(1, 2), 4, 0.01);
+//     EXPECT_NEAR(data(2, 2), 3, 0.01);
+//     EXPECT_NEAR(data(3, 2), 4, 0.01);
+//     EXPECT_NEAR(data(4, 2), 3, 0.01);
+//     EXPECT_NEAR(data(5, 2), 4, 0.01);
+//     EXPECT_NEAR(data(6, 2), 3, 0.01);
+//     EXPECT_NEAR(data(7, 2), 4, 0.01);
+// }
+
 TEST(learn_binary_test_case, learn_binary_test)
 {
     sequence<float> network;
@@ -485,11 +558,11 @@ TEST(learn_binary_test_case, learn_binary_test)
 
     gradient_descent<float> optimizer(categorical_cross_entropy<float>);
 
-    optimizer.epochs(5000)
-             .eta(0.01)
-             .batches(4)
+    optimizer.epochs(1500)
+             .eta(0.1)
+             .batches(8)
              .push_reporter(
-                 timed<float>(std::chrono::seconds(10))
+                 timed<float>(std::chrono::seconds(1))
                      .stats(accuracy<float>)
                      .epoch_timing(true)
              );
@@ -499,6 +572,9 @@ TEST(learn_binary_test_case, learn_binary_test)
     auto test = make_matrix<float>({{ 0, 1, 0 }});
     auto output = network.forward(test);
     auto predicted = squashmax<float>(output);
+
+    std::cout << output << std::endl;
+    std::cout << predicted << std::endl;
 
     EXPECT_NEAR(predicted(0, 0), 0, 0.01);
     EXPECT_NEAR(predicted(0, 1), 0, 0.01);

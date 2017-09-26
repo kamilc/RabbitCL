@@ -107,6 +107,20 @@ namespace mozart
     }
 
     template<typename T>
+    matrix<T> matrix<T>::reduce_column_sum()
+    {
+        mozart::function::inplace_reduce_column_sum<T>(*this);
+
+        return matrix<T>::view(*this, 0, 0, 0, this->size2() - 1);
+    }
+
+    template<typename T>
+    void matrix<T>::columnwise_add(matrix<T>& other)
+    {
+      mozart::function::inplace_columnwise_add<T>(*this, other);
+    }
+
+    template<typename T>
     void matrix<T>::fill_zeros()
     {
         auto queue = context_manager::instance().new_queue();
@@ -163,6 +177,18 @@ namespace mozart
     matrix<T> operator*(T lhs, const matrix<T>& rhs)
     {
         return mozart::function::scale<T>(rhs, lhs);
+    }
+
+    template<typename T>
+    matrix<T> operator+(T lhs, const matrix<T>& rhs)
+    {
+        return mozart::function::scalar_translate<T>(rhs, lhs);
+    }
+
+    template<typename T>
+    matrix<T> operator+(const matrix<T>& lhs, const matrix<T>& rhs)
+    {
+        return mozart::function::element_add<T>(rhs, lhs);
     }
 
     template<typename T>
@@ -244,6 +270,12 @@ namespace mozart
 
     template matrix<float> operator*(float lhs, const matrix<float>& rhs);
     template matrix<double> operator*(double lhs, const matrix<double>& rhs);
+
+    template matrix<float> operator+(float lhs, const matrix<float>& rhs);
+    template matrix<double> operator+(double lhs, const matrix<double>& rhs);
+
+    template matrix<float> operator+(const matrix<float>& lhs, const matrix<float>& rhs);
+    template matrix<double> operator+(const matrix<double>& lhs, const matrix<double>& rhs);
 
     template matrix<float> operator*(const matrix<float>& lhs, const matrix<float>& rhs);
     template matrix<double> operator*(const matrix<double>& lhs, const matrix<double>& rhs);
