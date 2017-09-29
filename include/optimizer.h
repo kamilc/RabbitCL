@@ -5,8 +5,6 @@
 #include "utilities.h"
 #include "sequence.h"
 
-
-
 namespace mozart
 {
     template<typename T>

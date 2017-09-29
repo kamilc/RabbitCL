@@ -12,28 +12,19 @@ find_package( OpenCL )
 
 enable_testing()
 
-include(ExternalProject)
-
-
-# include(ExternalProject)
-# ExternalProject_Add(clblast
-#   GIT_REPOSITORY    https://github.com/CNugteren/CLBlast.git
-#   GIT_TAG           master
-#   SOURCE_DIR        "${CMAKE_BINARY_DIR}/clblast-src"
-#   BINARY_DIR        "${CMAKE_BINARY_DIR}/clblast-build"
-#   CONFIGURE_COMMAND "mkdir -p ${CMAKE_BINARY_DIR}/clblast-src/build && cd ${CMAKE_BINARY_DIR}/clblast-src/build && cmake -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/clblast-build .."
-#   BUILD_COMMAND     "cd ${CMAKE_BINARY_DIR}/clblast-src/build && make"
-#   INSTALL_COMMAND   "cd ${CMAKE_BINARY_DIR}/clblast-src/build && make install"
-#   TEST_COMMAND      ""
-# )
-
 include(BuildBoostCompute)
-# include(BuildClBLAS)
 include(BuildClBLASt)
+include(BuildRang)
 
-message("Found Boost Compute includes: ${BoostCompute_INCLUDE_DIRS}")
+#message("Found Boost Compute includes: ${BoostCompute_INCLUDE_DIRS}")
 
-include_directories(include /opt/local/include ${OPENCL_INCLUDE_DIR} ${BoostCompute_INCLUDE_DIRS} ${ClBlast_INCLUDE})
+include_directories(include
+                    /opt/local/include
+                    ${OPENCL_INCLUDE_DIR}
+                    ${BoostCompute_INCLUDE_DIRS}
+                    ${ClBlast_INCLUDE}
+                    ${Rang_INCLUDE}
+                    )
 
 add_library(mozart STATIC src/sequence.cpp
                           src/matrix.cpp
@@ -67,7 +58,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/inplace_columnwise_subtract.cpp
                           src/function/inplace_reduce_column_sum.cpp
                           src/random_matrix_generator.cpp
-                          src/gradient_descent.cpp)
+                          src/optimizer/gradient_descent.cpp)
 
 message("Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message("Found OpenCL libs: ${OPENCL_LIBRARIES}")

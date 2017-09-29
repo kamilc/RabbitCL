@@ -7,7 +7,7 @@
 #include "function/softmax.h"
 #include "function/squared_error.h"
 #include "function/categorical_cross_entropy.h"
-#include "gradient_descent.h"
+#include "optimizer/gradient_descent.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"

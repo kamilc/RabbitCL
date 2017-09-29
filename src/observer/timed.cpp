@@ -1,4 +1,5 @@
 #include "observer/timed.h"
+#include "rang.hpp"
 
 namespace mozart
 {
@@ -42,16 +43,16 @@ namespace mozart
                 if(this->_last_epoch_number > 0 &&
                    std::chrono::duration<double, std::milli>(now - this->_last_report) > this->_interval)
                 {
-                    std::cout << "Epoch " << this->_last_epoch_number << "/" << this->_count_all_epochs;
+                    std::cout << rang::fg::gray << "Epoch:" << rang::fg::reset << std::right << std::setw(6) << this->_last_epoch_number << "/" << this->_count_all_epochs;
 
-                    std::cout << " " << this->_last_error;
+                    std::cout << " | " << rang::fg::gray << "Error:" << rang::fg::reset << std::right << std::setw(14) << this->_last_error;
 
                     if(this->_epoch_timing)
                     {
-                        std::cout << " [ last epoch: " << this->_last_epoch_timing.count() * 1000 << "ms ]";
+                        std::cout << " | " << rang::fg::gray << "Epoch timing:" << rang::fg::reset << std::right << std::setw(10) << this->_last_epoch_timing.count() * 1000 << "ms";
 
                         auto epochs_left = this->_count_all_epochs - this->_last_epoch_number;
-                        std::cout << " [ approx ETA: " << this->_last_epoch_timing.count() * epochs_left / 60 << " minutes ]";
+                        std::cout << " | " << rang::fg::gray << "ETA:" << rang::fg::reset << std::setw(12) << this->_last_epoch_timing.count() * epochs_left / 60 << " minutes";
                     }
 
                     std::cout << std::endl;
@@ -64,7 +65,7 @@ namespace mozart
         template<typename T>
         void timed_observer<T>::start()
         {
-            std::cout << "Beginning optimization reported by the timed observer (showing approximations)" << std::endl;
+            std::cout << "Beginning optimization reported by the timed observer (showing approximations)" << std::endl << std::endl;
 
             this->_thread = std::thread(&timed_observer<T>::main, this);
         }

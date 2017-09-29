@@ -15,20 +15,14 @@
 #include "function/softmax.h"
 #include "function/squared_error.h"
 #include "function/categorical_cross_entropy.h"
-#include "gradient_descent.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"
 #include "function/element_mul.h"
 #include "function/squashmax.h"
-#include "observer.h"
-#include "observer/timed.h"
-#include "stats/accuracy.h"
 
 using namespace mozart;
 using namespace mozart::function;
-using namespace mozart::stats;
-using namespace mozart::observer;
 
 TEST(element_mul_test, element_mul_test)
 {
@@ -486,8 +480,6 @@ TEST(reduce_column_sum, simple_reduce_column_sum)
     });
 
     auto data2 = data.reduce_column_sum();
-
-    std::cout << data2 << std::endl;
 
     EXPECT_EQ(data2.size1(), 1);
     EXPECT_EQ(data2.size2(), 3);
