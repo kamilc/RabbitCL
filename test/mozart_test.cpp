@@ -5,6 +5,7 @@
 #include <boost/compute.hpp>
 
 #include <chrono>
+#include <cmath>
 #include "gtest/gtest.h"
 #include "sequence.h"
 #include "input_config.h"
@@ -423,6 +424,26 @@ TEST(softmax_test_case, softmax_deriv_test)
     EXPECT_NEAR(result.deriv(2, 2), 0.12961034, 0.0001);
 }
 
+TEST(softmax_test_case, softmax_not_giving_nans)
+{
+  auto data = make_matrix<float>({
+     { 63.4369, 61.1316, 58.974, 63.1129, -8.20094, 9.65623, -0.39024, -8.97584 },
+     { 54.412, 56.657, 44.56, 51.11, -6.0202, 6.97188, 0.502755, -6.60736 },
+     { 82.9402, 74.3101, 90.0276, 88.3705, -11.8119, 15.4398, 0.127421, -13.086 },
+     { 74.3448, 68.5043, 76.3465, 77.2448, -10.2242, 12.8946, -0.100049, -11.2721 }
+  });
+
+  auto result = softmax<float>(data, true);
+
+  for(auto row = 0; row < result.out.size1(); row++)
+  {
+      for(auto col = 0; col < result.out.size2(); col++)
+      {
+          EXPECT_TRUE(!std::isnan(result.out(row, col)));
+      }
+  }
+}
+
 TEST(matrix_view_test, matrix_view_test)
 {
     auto data = make_matrix<float>({
@@ -529,10 +550,9 @@ TEST(learn_binary_test_case, learn_binary_test)
     sequence<float> network;
 
     network.add(input_config<float>(3))
-           .add(dense_config<float>(3, relu<float>))
+           .add(dense_config<float>(8, relu<float>))
+           .add(dense_config<float>(8, relu<float>))
            .add(dense_config<float>(8, softmax<float>));
-
-    EXPECT_EQ(network.size(), 3);
 
     auto data = make_matrix<float>({
         {0, 0, 0},
@@ -558,7 +578,7 @@ TEST(learn_binary_test_case, learn_binary_test)
 
     gradient_descent<float> optimizer(categorical_cross_entropy<float>);
 
-    optimizer.epochs(2000)
+    optimizer.epochs(1000)
              .eta(0.05)
              .batches(4)
              .push_reporter(

@@ -186,6 +186,7 @@ namespace mozart
             if(!this->_compiled)
             {
                 std::regex type_regex("TYPE");
+                std::regex pragma_regex("@pragma");
                 std::regex kernel_name_regex(this->_name);
                 std::string _processed_name =
                     std::string(this->_name) + "_" + this->type_string(T{0});
@@ -200,6 +201,12 @@ namespace mozart
                     _processed_code,
                     kernel_name_regex,
                     _processed_name
+                );
+
+                _processed_code = std::regex_replace(
+                    _processed_code,
+                    pragma_regex,
+                    std::string("\n\n#pragma")
                 );
 
                 _processed_code = std::string(BOOST_COMPUTE_STRINGIZE_SOURCE(

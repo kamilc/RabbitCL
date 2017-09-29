@@ -1,9 +1,9 @@
-#include "function/inplace_columnwise_add.h"
+#include "function/inplace_columnwise_subtract.h"
 
 namespace mozart
 {
-    KERNEL(inplace_columnwise_add_kernel,
-        __kernel void inplace_columnwise_add_kernel(
+    KERNEL(inplace_columnwise_subtract_kernel,
+        __kernel void inplace_columnwise_subtract_kernel(
                     __global TYPE * left,
                     const __global TYPE * right,
                    const struct matrix_size left_size,
@@ -24,11 +24,11 @@ namespace mozart
     namespace function
     {
         template<typename T>
-        void inplace_columnwise_add(matrix<T>& left, const matrix<T>& right)
+        void inplace_columnwise_subtract(matrix<T>& left, const matrix<T>& right)
         {
             // todo: implement me: add asserts
 
-            kernel<T, inplace_columnwise_add_kernel>::instance()
+            kernel<T, inplace_columnwise_subtract_kernel>::instance()
                 .with_global_size(left.total_size())
                 // todo: infer as large of a localsize as possible
                 .with_local_size(left.size1())
@@ -40,7 +40,7 @@ namespace mozart
                 );
         }
 
-        template void inplace_columnwise_add(matrix<float>& left, const matrix<float>& right);
-        template void inplace_columnwise_add(matrix<double>& left, const matrix<double>& right);
+        template void inplace_columnwise_subtract(matrix<float>& left, const matrix<float>& right);
+        template void inplace_columnwise_subtract(matrix<double>& left, const matrix<double>& right);
     }
 }

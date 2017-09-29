@@ -11,6 +11,10 @@ namespace mozart
         {
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = in_size.size1 * in_size.size2;
+            __local TYPE max_value;
+
+            max_value = 0.0;
+            barrier(CLK_LOCAL_MEM_FENCE);
 
             if(global_id < total_size)
             {
@@ -19,7 +23,22 @@ namespace mozart
                 unsigned int local_size = get_local_size(0);
                 unsigned int internal_id = id_to_internal_id(global_id, &in_size);
 
-                local_buffer[local_id] = exp(in[internal_id]);
+               local_buffer[local_id] = in[internal_id];
+               barrier(CLK_LOCAL_MEM_FENCE);
+
+                if(local_id == 0)
+                {
+                    for(unsigned int i = 0; i < local_size; i++)
+                    {
+                        if(local_buffer[i] > max_value)
+                        {
+                            max_value = local_buffer[i];
+                        }
+                    }
+                }
+                barrier(CLK_LOCAL_MEM_FENCE);
+
+                local_buffer[local_id] = exp(local_buffer[local_id] - max_value);
 
                 barrier(CLK_LOCAL_MEM_FENCE);
 
@@ -42,7 +61,8 @@ namespace mozart
                 }
                 barrier(CLK_LOCAL_MEM_FENCE);
 
-                out[global_id] = exp(in[internal_id]) / local_buffer[0];
+                TYPE exp_in = exp(in[internal_id] - max_value);
+                out[global_id] = exp_in / local_buffer[0];
             }
         };
     );

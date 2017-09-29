@@ -83,24 +83,24 @@ namespace mozart
         // 2. compute the network error
         cost<T> network_error = this->_cost(last_output.out, targets, true);
 
-        if(network_error.avg() * 0.0 != 0.0)
-        {
-            std::cout << "Got nan in network error" << std::endl;
-            std::cout << "Error matrix: " << network_error.out << std::endl;
-            std::cout << "Data matrix: " << data << std::endl;
-            std::cout << "Targets: " << targets << std::endl;
+       //if(network_error.avg() * 0.0 != 0.0)
+       //{
+       //    std::cout << "Got nan in network error" << std::endl;
+       //    std::cout << "Error matrix: " << network_error.out << std::endl;
+       //    std::cout << "Data matrix: " << data << std::endl;
+       //    std::cout << "Targets: " << targets << std::endl;
 
-            for(unsigned int i = 0; i < outputs.size(); i++)
-            {
-                std::cout << "Output #" << i << std::endl;
-                std::cout << outputs[i].out;
-                std::cout << "Deriv #" << i << std::endl;
-                std::cout << outputs[i].deriv;
-                std::cout << "Weights #" << i << std::endl;
-                std::cout << network[i]->weights() << std::endl;
-            }
-            assert(network_error.avg() * 0.0 == 0.0);
-        }
+       //    for(unsigned int i = 0; i < outputs.size(); i++)
+       //    {
+       //        std::cout << "Output #" << i << std::endl;
+       //        std::cout << outputs[i].out;
+       //        std::cout << "Deriv #" << i << std::endl;
+       //        std::cout << outputs[i].deriv;
+       //        std::cout << "Weights #" << i << std::endl;
+       //        std::cout << network[i]->weights() << std::endl;
+       //    }
+       //    assert(network_error.avg() * 0.0 == 0.0);
+       //}
 
         // 3. compute little deltas
         std::vector<matrix<T>> deltas(outputs.size());

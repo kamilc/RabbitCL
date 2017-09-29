@@ -7,7 +7,7 @@ namespace mozart
     {
         matrix<T> _inter = mozart::function::dot(data, this->_weights);
 
-        _inter.columnwise_add(this->_biases);
+        _inter.columnwise_subtract(this->_biases);
 
         return this->_fun(_inter, false);
     }
@@ -17,7 +17,7 @@ namespace mozart
     {
         matrix<T> _inter = mozart::function::dot(data, this->_weights);
 
-        _inter.columnwise_add(this->_biases);
+        _inter.columnwise_subtract(this->_biases);
 
         return this->_fun(_inter, true);
     }

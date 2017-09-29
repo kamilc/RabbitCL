@@ -15,7 +15,7 @@
 #include "function/element_mul.h"
 #include "function/element_add.h"
 #include "function/element_add_assign.h"
-#include "function/inplace_columnwise_add.h"
+#include "function/inplace_columnwise_subtract.h"
 #include "function/inplace_reduce_column_sum.h"
 
 using namespace std;
@@ -43,7 +43,7 @@ namespace mozart
         void fill_randn(T mean, T stddev);
         void fill_zeros();
         matrix reduce_column_sum();
-        void columnwise_add(matrix<T>& other);
+        void columnwise_subtract(matrix<T>& other);
 
         matrix_size size() const;
         size_t total_size() const;

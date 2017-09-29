@@ -115,9 +115,9 @@ namespace mozart
     }
 
     template<typename T>
-    void matrix<T>::columnwise_add(matrix<T>& other)
+    void matrix<T>::columnwise_subtract(matrix<T>& other)
     {
-      mozart::function::inplace_columnwise_add<T>(*this, other);
+      mozart::function::inplace_columnwise_subtract<T>(*this, other);
     }
 
     template<typename T>

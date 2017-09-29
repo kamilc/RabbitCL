@@ -64,7 +64,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/relu.cpp
                           src/function/softmax.cpp
                           src/function/squashmax.cpp
-                          src/function/inplace_columnwise_add.cpp
+                          src/function/inplace_columnwise_subtract.cpp
                           src/function/inplace_reduce_column_sum.cpp
                           src/random_matrix_generator.cpp
                           src/gradient_descent.cpp)

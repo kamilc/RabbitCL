@@ -1,5 +1,7 @@
 #include "function/categorical_cross_entropy.h"
 
+#include <cmath>
+
 namespace mozart
 {
     KERNEL(categorical_cross_entropy_kernel,
@@ -26,17 +28,6 @@ namespace mozart
                 TYPE diff = left - right;
 
                 out[global_id] = left*log(right ? right : 0.00001);
-
-               //if(isnan(out[global_id]))
-               //{
-               //  printf("NaN detected, targets[internal_id] = %f, in[internal_id] = %f, log(in[internal_id] = %f\n", targets[internal_id], in[internal_id], log(in[internal_id]));
-               //    out[global_id] = 0.0;
-               //}
-
-               //if(isinf(out[global_id]))
-               //{
-               //    out[global_id] = -1.0;
-               //}
             }
         }
     )
@@ -98,6 +89,21 @@ namespace mozart
                         in.size()
                     );
             }
+
+           //for(auto row = 0; row < result.out.size1(); row++)
+           //{
+           //  for(auto col = 0; col < result.out.size2(); col++)
+           //  {
+           //    if(std::isnan(result.out(row, col)))
+           //    {
+           //      std::cout << "NaN detected!" << std::endl;
+           //      std::cout << "Input: " << in << std::endl;
+           //      std::cout << "Targets: " << targets << std::endl;
+           //      std::cout << "Output: " << result.out << std::endl;
+           //      assert(false == true);
+           //    }
+           //  }
+           //}
 
             return result;
         }

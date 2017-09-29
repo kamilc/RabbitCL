@@ -12,7 +12,7 @@ namespace mozart
     namespace function
     {
         template<typename T>
-        void inplace_columnwise_add(matrix<T>& left, const matrix<T>& right);
+        void inplace_columnwise_subtract(matrix<T>& left, const matrix<T>& right);
     }
 }
 

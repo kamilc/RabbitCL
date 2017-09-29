@@ -7,4 +7,5 @@ CMakeCache.txt
 CMakeFiles/
 *.swp
 *.swo
+*.swn
 *.pc
