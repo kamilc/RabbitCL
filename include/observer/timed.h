@@ -4,6 +4,8 @@
 #include <memory>
 #include <chrono>
 #include <thread>
+#include <deque>
+#include <cstdlib>
 #include "utilities.h"
 #include "stat.h"
 #include "observer.h"
@@ -52,6 +54,7 @@ namespace mozart
             std::chrono::duration<double> _last_epoch_timing;
             std::chrono::system_clock::time_point _last_epoch_start;
             std::chrono::system_clock::time_point _last_report;
+            std::deque<std::chrono::duration<double>> _epoch_timings;
             typename stat<T>::function _function;
             bool _epoch_timing;
             unsigned int _last_epoch_number;

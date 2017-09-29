@@ -49,10 +49,22 @@ namespace mozart
 
                     if(this->_epoch_timing)
                     {
-                        std::cout << " | " << rang::fg::gray << "Epoch timing:" << rang::fg::reset << std::right << std::setw(10) << this->_last_epoch_timing.count() * 1000 << "ms";
+                        std::cout << " | " << rang::fg::gray << "Epoch timing:" << rang::fg::reset << std::right << std::setw(6) << (int)(this->_last_epoch_timing.count() * 1000) << "ms";
 
                         auto epochs_left = this->_count_all_epochs - this->_last_epoch_number;
-                        std::cout << " | " << rang::fg::gray << "ETA:" << rang::fg::reset << std::setw(12) << this->_last_epoch_timing.count() * epochs_left / 60 << " minutes";
+                        auto epochs_size = this->_epoch_timings.size();
+                        double sum_epochs = 0;
+
+                        for(auto i = 0; i < epochs_size; i++)
+                        {
+                            sum_epochs += this->_epoch_timings[i].count();
+                        }
+
+                        auto left = (sum_epochs / epochs_size) * epochs_left / 60;
+                        int minutes = (int)left;
+                        int seconds = 60 * (left - minutes);
+
+                        std::cout << " | " << rang::fg::gray << "ETA:" << rang::fg::reset << std::setw(5) << minutes << ":" << std::setw(2) << std::setfill('0') << std::right << seconds << std::setfill(' ');
                     }
 
                     std::cout << std::endl;
@@ -105,6 +117,11 @@ namespace mozart
             {
                 auto now = std::chrono::system_clock::now();
                 this->_last_epoch_timing = std::chrono::duration<double, std::milli>(now - this->_last_epoch_start);
+                this->_epoch_timings.push_back(this->_last_epoch_timing);
+                if(this->_epoch_timings.size() > 100)
+                {
+                    this->_epoch_timings.pop_front();
+                }
             }
         }
 
