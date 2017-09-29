@@ -69,17 +69,19 @@ add_library(mozart STATIC src/sequence.cpp
                           src/random_matrix_generator.cpp
                           src/gradient_descent.cpp)
 
-
-add_executable(mozart_test test/mozart_test.cpp)
-
 message("Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message("Found OpenCL libs: ${OPENCL_LIBRARIES}")
 
 message("ClBlast includes: ${ClBlast_INCLUDE}")
 message("ClBlast lib: ${ClBlast_LIB}")
 
-# todo: add the clblast resolution
+add_executable(simple_feed_forward_example examples/simple_feed_forward_example.cpp)
+target_link_libraries(simple_feed_forward_example mozart pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
+
+add_executable(mozart_test test/mozart_test.cpp)
 target_link_libraries(mozart_test mozart /opt/local/lib/libgtest_main.a /opt/local/lib/libgtest.a pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
+
+# todo: add the clblast resolution
 
 add_test(NAME mozart_test COMMAND mozart_test)
 
