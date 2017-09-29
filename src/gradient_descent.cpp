@@ -15,9 +15,9 @@ namespace mozart
     {
         try
         {
-            for(auto i = 0; i < this->_reporters.size(); i++)
+            for(auto i = 0; i < this->_observers.size(); i++)
             {
-                this->_reporters[i]->start();
+                this->_observers[i]->start();
             }
 
             auto batches_len = data.size1() / this->_batches;
@@ -26,16 +26,16 @@ namespace mozart
 
             for(auto epoch = 0; epoch < this->_epochs; epoch++)
             {
-                for(auto i = 0; i < this->_reporters.size(); i++)
+                for(auto i = 0; i < this->_observers.size(); i++)
                 {
-                    this->_reporters[i]->start_epoch(epoch, this->_epochs);
+                    this->_observers[i]->start_epoch(epoch, this->_epochs);
                 }
 
                 for(auto batch = 0; batch < batches_len; batch++)
                 {
-                    for(auto i = 0; i < this->_reporters.size(); i++)
+                    for(auto i = 0; i < this->_observers.size(); i++)
                     {
-                      this->_reporters[i]->start_batch(batch, batches_len);
+                      this->_observers[i]->start_batch(batch, batches_len);
                     }
 
                     auto start = batch * this->_batches;
@@ -46,29 +46,29 @@ namespace mozart
 
                     run_batch(network, batch_data, batch_targets);
 
-                    for(auto i = 0; i < this->_reporters.size(); i++)
+                    for(auto i = 0; i < this->_observers.size(); i++)
                     {
-                      this->_reporters[i]->end_batch();
+                      this->_observers[i]->end_batch();
                     }
                 }
 
-                for(auto i = 0; i < this->_reporters.size(); i++)
+                for(auto i = 0; i < this->_observers.size(); i++)
                 {
-                  this->_reporters[i]->end_epoch(network);
+                  this->_observers[i]->end_epoch(network);
                 }
             }
 
-            for(auto i = 0; i < this->_reporters.size(); i++)
+            for(auto i = 0; i < this->_observers.size(); i++)
             {
-                this->_reporters[i]->end();
+                this->_observers[i]->end();
             }
 
         }
         catch(std::exception& e)
         {
-            for(auto i = 0; i < this->_reporters.size(); i++)
+            for(auto i = 0; i < this->_observers.size(); i++)
             {
-                this->_reporters[i]->end();
+                this->_observers[i]->end();
             }
         }
     }
@@ -126,10 +126,10 @@ namespace mozart
             network[layer_index]->update_weights(weight_delta);
         }
 
-        for(auto i = 0; i < this->_reporters.size(); i++)
+        for(auto i = 0; i < this->_observers.size(); i++)
         {
-            this->_reporters[i]->push_outputs(last_output, targets);
-            this->_reporters[i]->push_error(network_error);
+            this->_observers[i]->push_outputs(last_output, targets);
+            this->_observers[i]->push_error(network_error);
         }
     }
 
@@ -150,9 +150,9 @@ namespace mozart
     }
 
     template<typename T>
-    gradient_descent<T>& gradient_descent<T>::push_reporter(mozart::reporter::config<T>& config)
+    gradient_descent<T>& gradient_descent<T>::push_observer(mozart::observer::config<T>& config)
     {
-        this->_reporters.push_back(std::move(config.construct()));
+        this->_observers.push_back(std::move(config.construct()));
 
         return *this;
     }

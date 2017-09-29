@@ -1,8 +1,8 @@
-#include "reporter/timed.h"
+#include "observer/timed.h"
 
 namespace mozart
 {
-    namespace reporter
+    namespace observer
     {
         template<typename T>
         timed<T>::timed(std::chrono::duration<int> duration)
@@ -29,11 +29,11 @@ namespace mozart
         template<typename T>
         std::unique_ptr<base<T>> timed<T>::construct()
         {
-            return std::unique_ptr<base<T>>(new timed_reporter<T>(*this));
+            return std::unique_ptr<base<T>>(new timed_observer<T>(*this));
         }
 
         template<typename T>
-        void timed_reporter<T>::main()
+        void timed_observer<T>::main()
         {
             while(!this->_should_end)
             {
@@ -62,21 +62,21 @@ namespace mozart
         }
 
         template<typename T>
-        void timed_reporter<T>::start()
+        void timed_observer<T>::start()
         {
-            std::cout << "Beginning optimization reported by the timed reporter (showing approximations)" << std::endl;
+            std::cout << "Beginning optimization reported by the timed observer (showing approximations)" << std::endl;
 
-            this->_thread = std::thread(&timed_reporter<T>::main, this);
+            this->_thread = std::thread(&timed_observer<T>::main, this);
         }
 
         template<typename T>
-        void timed_reporter<T>::end()
+        void timed_observer<T>::end()
         {
             this->_should_end = true;
         }
 
         template<typename T>
-        timed_reporter<T>::timed_reporter(timed<T>& config)
+        timed_observer<T>::timed_observer(timed<T>& config)
         {
             this->_interval = config._interval;
             this->_function = config._function;
@@ -84,13 +84,13 @@ namespace mozart
         }
 
         template<typename T>
-        void timed_reporter<T>::push_error(cost<T>& error)
+        void timed_observer<T>::push_error(cost<T>& error)
         {
             this->_last_error = error.avg();
         }
 
         template<typename T>
-        void timed_reporter<T>::start_epoch(unsigned int epoch, unsigned int count_all)
+        void timed_observer<T>::start_epoch(unsigned int epoch, unsigned int count_all)
         {
             this->_last_epoch_number = epoch;
             this->_count_all_epochs = count_all;
@@ -98,7 +98,7 @@ namespace mozart
         }
 
         template<typename T>
-        void timed_reporter<T>::end_epoch(sequence<T>& network)
+        void timed_observer<T>::end_epoch(sequence<T>& network)
         {
             if(this->_epoch_timing)
             {

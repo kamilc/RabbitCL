@@ -10,7 +10,7 @@
 #include "sequence.h"
 #include "cost.h"
 #include "function/dot.h"
-#include "reporter.h"
+#include "observer.h"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ namespace mozart
         gradient_descent& epochs(unsigned long epochs);
         gradient_descent& batches(unsigned long batches);
         gradient_descent& eta(T eta);
-        gradient_descent& push_reporter(mozart::reporter::config<T>& config);
+        gradient_descent& push_observer(mozart::observer::config<T>& config);
 
         void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
         void run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
@@ -34,7 +34,7 @@ namespace mozart
         unsigned long  _epochs;
         unsigned long  _batches;
         typename cost<T>::function _cost;
-        vector<unique_ptr<mozart::reporter::base<T>>> _reporters;
+        vector<unique_ptr<mozart::observer::base<T>>> _observers;
     };
 }
 

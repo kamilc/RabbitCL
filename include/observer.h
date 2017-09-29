@@ -9,7 +9,7 @@
 
 namespace mozart
 {
-    namespace reporter
+    namespace observer
     {
         template<typename T>
         class base

@@ -6,22 +6,22 @@
 #include <thread>
 #include "utilities.h"
 #include "stat.h"
-#include "reporter.h"
+#include "observer.h"
 #include "cost.h"
 
 using namespace std;
 
 namespace mozart
 {
-    namespace reporter
+    namespace observer
     {
         template<typename T>
-        class timed_reporter;
+        class timed_observer;
 
         template<typename T>
         class timed : public config<T>
         {
-          friend class timed_reporter<T>;
+          friend class timed_observer<T>;
         public:
             timed(std::chrono::duration<int>);
 
@@ -36,10 +36,10 @@ namespace mozart
         };
 
         template<typename T>
-        class timed_reporter : public base<T>
+        class timed_observer : public base<T>
         {
         public:
-            timed_reporter(timed<T>& config);
+            timed_observer(timed<T>& config);
             void push_error(cost<T>&);
             void start_epoch(unsigned int, unsigned int);
             void end_epoch(sequence<T>&);

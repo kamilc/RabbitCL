@@ -21,14 +21,14 @@
 #include "function/dot.h"
 #include "function/element_mul.h"
 #include "function/squashmax.h"
-#include "reporter.h"
-#include "reporter/timed.h"
+#include "observer.h"
+#include "observer/timed.h"
 #include "stats/accuracy.h"
 
 using namespace mozart;
 using namespace mozart::function;
 using namespace mozart::stats;
-using namespace mozart::reporter;
+using namespace mozart::observer;
 
 TEST(element_mul_test, element_mul_test)
 {
@@ -581,7 +581,7 @@ TEST(learn_binary_test_case, learn_binary_test)
     optimizer.epochs(1000)
              .eta(0.05)
              .batches(4)
-             .push_reporter(
+             .push_observer(
                  timed<float>(std::chrono::seconds(1))
                      .stats(accuracy<float>)
                      .epoch_timing(true)
