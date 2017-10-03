@@ -58,7 +58,9 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/inplace_columnwise_subtract.cpp
                           src/function/inplace_reduce_column_sum.cpp
                           src/random_matrix_generator.cpp
-                          src/optimizer/gradient_descent.cpp)
+                          src/optimizers/gradient_descent.cpp
+                          src/optimizers/adagrad.cpp
+                          )
 
 message("Found OpenCL includes: ${OPENCL_INCLUDE_DIR}")
 message("Found OpenCL libs: ${OPENCL_LIBRARIES}")

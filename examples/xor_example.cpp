@@ -7,7 +7,7 @@
 #include "function/softmax.h"
 #include "function/squared_error.h"
 #include "function/categorical_cross_entropy.h"
-#include "optimizer/gradient_descent.h"
+#include "optimizers/gradient_descent.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"
@@ -23,6 +23,7 @@ using namespace mozart;
 using namespace mozart::function;
 using namespace mozart::stats;
 using namespace mozart::observer;
+using namespace mozart::optimizers;
 
 template<typename T>
 void expect_near(T value, T expected, T delta)
@@ -36,7 +37,8 @@ int main()
 
     network.add(input_config<float>(2))
            .add(dense_config<float>(4, tanh<float>))
-           .add(dense_config<float>(4, relu<float>))
+           .add(dense_config<float>(4, tanh<float>))
+           .add(dense_config<float>(4, tanh<float>))
            .add(dense_config<float>(2, softmax<float>));
 
     auto data = make_matrix<float>({
@@ -55,9 +57,9 @@ int main()
 
     gradient_descent<float> optimizer(categorical_cross_entropy<float>);
 
-    optimizer.epochs(500)
-             .eta(0.1)
-             .batches(2)
+    optimizer.epochs(5000)
+             .eta(0.0001)
+             .batches(4)
              .push_observer(
                  timed<float>(std::chrono::seconds(1))
                      .stats(accuracy<float>)

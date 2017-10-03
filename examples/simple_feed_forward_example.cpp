@@ -7,7 +7,7 @@
 #include "function/softmax.h"
 #include "function/squared_error.h"
 #include "function/categorical_cross_entropy.h"
-#include "optimizer/gradient_descent.h"
+#include "optimizers/gradient_descent.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"
@@ -23,6 +23,7 @@ using namespace mozart;
 using namespace mozart::function;
 using namespace mozart::stats;
 using namespace mozart::observer;
+using namespace mozart::optimizers;
 
 template<typename T>
 void expect_near(T value, T expected, T delta)
