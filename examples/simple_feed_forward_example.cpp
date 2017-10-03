@@ -64,8 +64,8 @@ int main()
 
     gradient_descent<float> optimizer(categorical_cross_entropy<float>);
 
-    optimizer.epochs(1000)
-             .eta(0.05)
+    optimizer.eta(0.05)
+             .epochs(1000)
              .batches(4)
              .push_observer(
                  timed<float>(std::chrono::seconds(1))

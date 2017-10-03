@@ -85,25 +85,6 @@ namespace mozart
             // 2. compute the network error
             cost<T> network_error = this->_cost(last_output.out, targets, true);
 
-          //if(network_error.avg() * 0.0 != 0.0)
-          //{
-          //    std::cout << "Got nan in network error" << std::endl;
-          //    std::cout << "Error matrix: " << network_error.out << std::endl;
-          //    std::cout << "Data matrix: " << data << std::endl;
-          //    std::cout << "Targets: " << targets << std::endl;
-
-          //    for(unsigned int i = 0; i < outputs.size(); i++)
-          //    {
-          //        std::cout << "Output #" << i << std::endl;
-          //        std::cout << outputs[i].out;
-          //        std::cout << "Deriv #" << i << std::endl;
-          //        std::cout << outputs[i].deriv;
-          //        std::cout << "Weights #" << i << std::endl;
-          //        std::cout << network[i]->weights() << std::endl;
-          //    }
-          //    assert(network_error.avg() * 0.0 == 0.0);
-          //}
-
             // 3. compute little deltas
             std::vector<matrix<T>> deltas(outputs.size());
 
@@ -124,8 +105,7 @@ namespace mozart
                 matrix<T>& layer_input = outputs[layer_index - 1].out;
 
                 auto weight_delta = matrix<T>(-1 * this->_eta * dot(layer_input, delta, true, false));
-                network[layer_index]->update_bias(delta);
-                network[layer_index]->update_weights(weight_delta);
+                this->update(network[layer_index], delta, weight_delta);
             }
 
             for(auto i = 0; i < this->_observers.size(); i++)
@@ -136,27 +116,10 @@ namespace mozart
         }
 
         template<typename T>
-        gradient_descent<T>& gradient_descent<T>::epochs(unsigned long epochs)
+        void gradient_descent<T>::update(std::shared_ptr<layer<T>> layer, matrix<T>& delta, matrix<T>& weight_delta)
         {
-            this->_epochs = epochs;
-
-            return *this;
-        }
-
-        template<typename T>
-        gradient_descent<T>& gradient_descent<T>::batches(unsigned long batches)
-        {
-            this->_batches = batches;
-
-            return *this;
-        }
-
-        template<typename T>
-        gradient_descent<T>& gradient_descent<T>::push_observer(mozart::observer::config<T>& config)
-        {
-            this->_observers.push_back(std::move(config.construct()));
-
-            return *this;
+            layer->update_bias(delta);
+            layer->update_weights(weight_delta);
         }
 
         template<typename T>
