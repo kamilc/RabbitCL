@@ -68,6 +68,8 @@ namespace mozart
             }
             catch(std::exception& e)
             {
+                std::cout << "Error ocurred inside an optimizer! - " << e.what() << std::endl;
+
                 for(auto i = 0; i < this->_observers.size(); i++)
                 {
                     this->_observers[i]->end();
@@ -104,8 +106,8 @@ namespace mozart
                 matrix<T>& delta = deltas[layer_index];
                 matrix<T>& layer_input = outputs[layer_index - 1].out;
 
-                auto weight_delta = matrix<T>(-1 * this->_eta * dot(layer_input, delta, true, false));
-                this->update(network[layer_index], delta, weight_delta);
+                auto weight_delta = dot(layer_input, delta, true, false);
+                this->update(layer_index, network[layer_index], delta, weight_delta);
             }
 
             for(auto i = 0; i < this->_observers.size(); i++)
@@ -116,10 +118,12 @@ namespace mozart
         }
 
         template<typename T>
-        void gradient_descent<T>::update(std::shared_ptr<layer<T>> layer, matrix<T>& delta, matrix<T>& weight_delta)
+        void gradient_descent<T>::update(size_t index, std::shared_ptr<layer<T>> layer, matrix<T>& delta, matrix<T>& weight_delta)
         {
+            auto update_delta = matrix<T>(-1 * this->_eta * weight_delta);
+
             layer->update_bias(delta);
-            layer->update_weights(weight_delta);
+            layer->update_weights(update_delta);
         }
 
         template<typename T>

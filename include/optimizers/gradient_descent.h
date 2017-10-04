@@ -28,7 +28,7 @@ namespace mozart
             gradient_descent& eta(T eta);
             void run(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
             void run_batch(sequence<T> &network, matrix<T> &data, matrix<T> &targets);
-            virtual void update(std::shared_ptr<layer<T>> layer, matrix<T>& deltas, matrix<T>& weight_deltas);
+            virtual void update(size_t index, std::shared_ptr<layer<T>> layer, matrix<T>& deltas, matrix<T>& weight_deltas);
         private:
             T _eta;
         };

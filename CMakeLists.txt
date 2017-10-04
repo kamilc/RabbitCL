@@ -57,6 +57,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/function/squashmax.cpp
                           src/function/inplace_columnwise_subtract.cpp
                           src/function/inplace_reduce_column_sum.cpp
+                          src/function/adagrad_update.cpp
                           src/random_matrix_generator.cpp
                           src/optimizers/gradient_descent.cpp
                           src/optimizers/adagrad.cpp
@@ -73,6 +74,9 @@ target_link_libraries(simple_feed_forward_example mozart pthread ${OPENCL_LIBRAR
 
 add_executable(xor_example examples/xor_example.cpp)
 target_link_libraries(xor_example mozart pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
+
+add_executable(xor_adagrad_example examples/xor_adagrad_example.cpp)
+target_link_libraries(xor_adagrad_example mozart pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
 
 add_executable(mozart_test test/mozart_test.cpp)
 target_link_libraries(mozart_test mozart /opt/local/lib/libgtest_main.a /opt/local/lib/libgtest.a pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
