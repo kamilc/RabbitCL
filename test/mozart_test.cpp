@@ -20,6 +20,7 @@
 #include "function/dot.h"
 #include "function/element_mul.h"
 #include "function/squashmax.h"
+#include "function/adagrad_update.h"
 
 using namespace mozart;
 using namespace mozart::function;
@@ -536,3 +537,18 @@ TEST(reduce_column_sum, simple_reduce_column_sum)
 //     EXPECT_NEAR(data(6, 2), 3, 0.01);
 //     EXPECT_NEAR(data(7, 2), 4, 0.01);
 // }
+
+// TEST(adagrad_update, adagrad_update_1)
+// {
+//     auto memo = make_matrix<float>({
+//         { 7.4246e-07, 0.000332555, 2.49854e-06, 4.52723e-09, 1.74763e-12, 6.36695e-14, 5.83191e-14, 1.60086e-05 },
+//         { 0, 0, 0, 0, 0, 0, 0, 0 },
+//         { 0, 0, 0, 0, 0, 0, 0, 0 },
+//         { 0.000111749, 0.0503772, 0.000174712, 1.76435e-06, 6.41502e-09, 9.06837e-10, 2.15051e-10, 0.00237573 }
+//     });
+//
+//     auto weight_deltas = make_matrix<float>({
+//
+//     });
+// }
+

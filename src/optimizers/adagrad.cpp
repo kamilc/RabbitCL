@@ -31,6 +31,7 @@ namespace mozart
         {
             if(this->_memo.find(index) == this->_memo.end())
             {
+                //std::cout << "Creating memo for: " << deltas << std::endl;
                 this->_memo[index] = std::make_shared<matrix<T>>(deltas.size1(), deltas.size2());
             }
 
@@ -40,11 +41,13 @@ namespace mozart
         template<typename T>
         void adagrad<T>::update(size_t index, std::shared_ptr<layer<T>> layer, matrix<T>& delta, matrix<T>& weight_delta)
         {
-            matrix<T>& memo = this->memo_for_index(index, delta); // *this->_memo[index];
+            matrix<T>& memo = this->memo_for_index(index, weight_delta);
+
+            //std::cout << "Before\n" << "Memo: " << memo << "Weight Delta: " << weight_delta << std::endl;
 
             adagrad_update(this->_alpha, weight_delta, memo, this->_eps);
 
-//            std::cout << weight_delta << std::endl;
+            //std::cout << "After\n" << "Memo: " << memo << "Weight Delta: " << weight_delta << std::endl;
 
             layer->update_bias(delta);
             layer->update_weights(weight_delta);

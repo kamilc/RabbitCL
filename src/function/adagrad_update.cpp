@@ -32,7 +32,9 @@ namespace mozart
         template<typename T>
         void adagrad_update(T alpha, matrix<T>& weight_delta, matrix<T>& memo, T eps)
         {
-          //std::cout << "Weight Delta" << weight_delta << "Memo: " << memo << "Alpha " << alpha << " Eps: " << eps << std::endl;
+            assert(weight_delta.size1() == memo.size1());
+            assert(weight_delta.size2() == memo.size2());
+
             kernel<T, adagrad_update_kernel>::instance()
                 .with_global_size(weight_delta.total_size())
                 // todo: infer as large of a localsize as possible
