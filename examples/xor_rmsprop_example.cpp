@@ -7,7 +7,7 @@
 #include "function/softmax.h"
 #include "function/squared_error.h"
 #include "function/categorical_cross_entropy.h"
-#include "optimizers/adagrad.h"
+#include "optimizers/rmsprop.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"
@@ -55,7 +55,7 @@ int main()
         {1, 0}  // 0
      });
 
-    adagrad<float> optimizer(categorical_cross_entropy<float>);
+    rmsprop<float> optimizer(categorical_cross_entropy<float>);
 
     optimizer.epochs(500)
              .batches(4)

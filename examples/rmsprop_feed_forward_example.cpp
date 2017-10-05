@@ -7,7 +7,7 @@
 #include "function/softmax.h"
 #include "function/squared_error.h"
 #include "function/categorical_cross_entropy.h"
-#include "optimizers/adagrad.h"
+#include "optimizers/rmsprop.h"
 #include "matrix_helpers.h"
 #include "function/reduce_avg.h"
 #include "function/dot.h"
@@ -35,29 +35,36 @@ int main()
 {
     sequence<float> network;
 
-    network.add(input_config<float>(2))
-           .add(dense_config<float>(4, tanh<float>))
-           .add(dense_config<float>(4, tanh<float>))
-           .add(dense_config<float>(4, tanh<float>))
-           .add(dense_config<float>(2, softmax<float>));
+    network.add(input_config<float>(3))
+           .add(dense_config<float>(8, relu<float>))
+           .add(dense_config<float>(8, relu<float>))
+           .add(dense_config<float>(8, softmax<float>));
 
     auto data = make_matrix<float>({
-        {1, 1},
-        {0, 1},
-        {1, 0},
-        {0, 0}
+        {0, 0, 0},
+        {0, 0, 1}, /* 1 */
+        {0, 1, 0}, /* 2 */
+        {0, 1, 1}, /* 3 */
+        {1, 0, 0}, /* 4 */
+        {1, 0, 1}, /* 5 */
+        {1, 1, 0}, /* 6 */
+        {1, 1, 1}  /* 7 */
     });
 
      auto ys = make_matrix<float>({
-        {1, 0}, // 0
-        {0, 1}, // 1
-        {0, 1}, // 1
-        {1, 0}  // 0
+        {1, 0, 0, 0, 0, 0, 0, 0}, /* 0 */
+        {0, 1, 0, 0, 0, 0, 0, 0}, /* 1 */
+        {0, 0, 1, 0, 0, 0, 0, 0}, /* 2 */
+        {0, 0, 0, 1, 0, 0, 0, 0}, /* 3 */
+        {0, 0, 0, 0, 1, 0, 0, 0}, /* 4 */
+        {0, 0, 0, 0, 0, 1, 0, 0}, /* 5 */
+        {0, 0, 0, 0, 0, 0, 1, 0}, /* 6 */
+        {0, 0, 0, 0, 0, 0, 0, 1} /* 7 */
      });
 
-    adagrad<float> optimizer(categorical_cross_entropy<float>);
+    rmsprop<float> optimizer(categorical_cross_entropy<float>);
 
-    optimizer.epochs(500)
+    optimizer.epochs(1000)
              .batches(4)
              .push_observer(
                  timed<float>(std::chrono::seconds(1))
@@ -67,31 +74,21 @@ int main()
 
     optimizer.run(network, data, ys);
 
-    auto test = make_matrix<float>({
-        {1, 1},
-        {0, 1},
-        {1, 0},
-        {0, 0}
-    });
-
+    auto test = make_matrix<float>({{ 0, 1, 0 }});
     auto output = network.forward(test);
     auto predicted = squashmax<float>(output);
 
     std::cout << output << std::endl;
     std::cout << predicted << std::endl;
 
-    expect_near<float>(predicted(0, 0), 1, 0.01);
+    expect_near<float>(predicted(0, 0), 0, 0.01);
     expect_near<float>(predicted(0, 1), 0, 0.01);
-
-    expect_near<float>(predicted(1, 0), 0, 0.01);
-    expect_near<float>(predicted(1, 1), 1, 0.01);
-
-    expect_near<float>(predicted(2, 0), 0, 0.01);
-    expect_near<float>(predicted(2, 1), 1, 0.01);
-
-    expect_near<float>(predicted(3, 0), 1, 0.01);
-    expect_near<float>(predicted(3, 1), 0, 0.01);
+    expect_near<float>(predicted(0, 2), 1, 0.01);
+    expect_near<float>(predicted(0, 3), 0, 0.01);
+    expect_near<float>(predicted(0, 4), 0, 0.01);
+    expect_near<float>(predicted(0, 5), 0, 0.01);
+    expect_near<float>(predicted(0, 6), 0, 0.01);
+    expect_near<float>(predicted(0, 7), 0, 0.01);
 
     return 0;
 }
-

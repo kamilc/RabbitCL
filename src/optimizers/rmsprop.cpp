@@ -1,17 +1,17 @@
-#include "optimizers/adagrad.h"
+#include "optimizers/rmsprop.h"
 
 namespace mozart
 {
     namespace optimizers
     {
         template<typename T>
-        adagrad<T>::adagrad(typename cost<T>::function func) : gradient_descent<T>(func)
+        rmsprop<T>::rmsprop(typename cost<T>::function func) : gradient_descent<T>(func)
         {
             // no-op
         }
 
         template<typename T>
-        adagrad<T>& adagrad<T>::alpha(T alpha)
+        rmsprop<T>& rmsprop<T>::alpha(T alpha)
         {
             this->_alpha = alpha;
 
@@ -19,7 +19,15 @@ namespace mozart
         }
 
         template<typename T>
-        adagrad<T>& adagrad<T>::eps(T eps)
+        rmsprop<T>& rmsprop<T>::mu(T mu)
+        {
+            this->_mu = mu;
+
+            return *this;
+        }
+
+        template<typename T>
+        rmsprop<T>& rmsprop<T>::eps(T eps)
         {
             this->_eps = eps;
 
@@ -27,7 +35,7 @@ namespace mozart
         }
 
         template<typename T>
-        matrix<T>& adagrad<T>::memo_for_index(size_t index, matrix<T>& deltas)
+        matrix<T>& rmsprop<T>::memo_for_index(size_t index, matrix<T>& deltas)
         {
             if(this->_memo.find(index) == this->_memo.end())
             {
@@ -38,16 +46,16 @@ namespace mozart
         }
 
         template<typename T>
-        void adagrad<T>::update(size_t index, std::shared_ptr<layer<T>> layer, matrix<T>& delta, matrix<T>& weight_delta)
+        void rmsprop<T>::update(size_t index, std::shared_ptr<layer<T>> layer, matrix<T>& delta, matrix<T>& weight_delta)
         {
             matrix<T>& memo = this->memo_for_index(index, weight_delta);
 
-            adagrad_update(this->_alpha, weight_delta, memo, this->_eps);
+            rmsprop_update(this->_alpha, weight_delta, memo, this->_eps, this->_mu);
 
             layer->update_bias(delta);
             layer->update_weights(weight_delta);
         }
 
-        INSTANTIATE(adagrad);
+        INSTANTIATE(rmsprop);
     }
 }
