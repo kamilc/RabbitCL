@@ -10,7 +10,7 @@
 #include "sequence.h"
 #include "layer.h"
 #include "cost.h"
-#include "function/dot.h"
+#include "opencl/dot.h"
 #include "observer.h"
 
 using namespace std;

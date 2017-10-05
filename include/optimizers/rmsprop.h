@@ -8,10 +8,10 @@
 #include "matrix.h"
 #include "utilities.h"
 #include "sequence.h"
-#include "function/rmsprop_update.h"
+#include "opencl/rmsprop_update.h"
 
 using namespace std;
-using namespace mozart::function;
+using namespace mozart::opencl;
 
 namespace mozart
 {

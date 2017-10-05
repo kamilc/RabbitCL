@@ -7,12 +7,12 @@
 #include "matrix.h"
 #include "scalar.h"
 #include "utilities.h"
-#include "function/reduce_avg.h"
+#include "opencl/reduce_avg.h"
 
 using namespace std;
 using namespace boost;
 
-using namespace mozart::function;
+using namespace mozart::opencl;
 
 namespace mozart {
 

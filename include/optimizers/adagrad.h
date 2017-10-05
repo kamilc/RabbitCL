@@ -8,10 +8,10 @@
 #include "matrix.h"
 #include "utilities.h"
 #include "sequence.h"
-#include "function/adagrad_update.h"
+#include "opencl/adagrad_update.h"
 
 using namespace std;
-using namespace mozart::function;
+using namespace mozart::opencl;
 
 namespace mozart
 {

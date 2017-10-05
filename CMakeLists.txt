@@ -42,23 +42,23 @@ add_library(mozart STATIC src/sequence.cpp
                           src/observer.cpp
                           src/observer/timed.cpp
                           src/stats/accuracy.cpp
-                          src/function/dot.cpp
-                          src/function/scale.cpp
-                          src/function/scalar_translate.cpp
-                          src/function/element_mul.cpp
-                          src/function/element_add.cpp
-                          src/function/element_add_assign.cpp
-                          src/function/squared_error.cpp
-                          src/function/categorical_cross_entropy.cpp
-                          src/function/reduce_avg.cpp
-                          src/function/tanh.cpp
-                          src/function/relu.cpp
-                          src/function/softmax.cpp
-                          src/function/squashmax.cpp
-                          src/function/inplace_columnwise_subtract.cpp
-                          src/function/inplace_reduce_column_sum.cpp
-                          src/function/adagrad_update.cpp
-                          src/function/rmsprop_update.cpp
+                          src/opencl/dot.cpp
+                          src/opencl/scale.cpp
+                          src/opencl/scalar_translate.cpp
+                          src/opencl/element_mul.cpp
+                          src/opencl/element_add.cpp
+                          src/opencl/element_add_assign.cpp
+                          src/opencl/squared_error.cpp
+                          src/opencl/categorical_cross_entropy.cpp
+                          src/opencl/reduce_avg.cpp
+                          src/opencl/tanh.cpp
+                          src/opencl/relu.cpp
+                          src/opencl/softmax.cpp
+                          src/opencl/squashmax.cpp
+                          src/opencl/inplace_columnwise_subtract.cpp
+                          src/opencl/inplace_reduce_column_sum.cpp
+                          src/opencl/adagrad_update.cpp
+                          src/opencl/rmsprop_update.cpp
                           src/random_matrix_generator.cpp
                           src/optimizers/gradient_descent.cpp
                           src/optimizers/adagrad.cpp

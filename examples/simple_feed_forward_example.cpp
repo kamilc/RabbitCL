@@ -2,17 +2,17 @@
 #include "sequence.h"
 #include "input_config.h"
 #include "dense_config.h"
-#include "function/tanh.h"
-#include "function/relu.h"
-#include "function/softmax.h"
-#include "function/squared_error.h"
-#include "function/categorical_cross_entropy.h"
+#include "opencl/tanh.h"
+#include "opencl/relu.h"
+#include "opencl/softmax.h"
+#include "opencl/squared_error.h"
+#include "opencl/categorical_cross_entropy.h"
 #include "optimizers/gradient_descent.h"
 #include "matrix_helpers.h"
-#include "function/reduce_avg.h"
-#include "function/dot.h"
-#include "function/element_mul.h"
-#include "function/squashmax.h"
+#include "opencl/reduce_avg.h"
+#include "opencl/dot.h"
+#include "opencl/element_mul.h"
+#include "opencl/squashmax.h"
 #include "observer.h"
 #include "observer/timed.h"
 #include "stats/accuracy.h"
@@ -20,7 +20,7 @@
 #define BOOST_COMPUTE_DEBUG_KERNEL_COMPILATION 1
 
 using namespace mozart;
-using namespace mozart::function;
+using namespace mozart::opencl;
 using namespace mozart::stats;
 using namespace mozart::observer;
 using namespace mozart::optimizers;

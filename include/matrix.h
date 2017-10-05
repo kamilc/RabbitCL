@@ -10,13 +10,13 @@
 #include "matrix_size.h"
 #include "context_manager.h"
 #include "scalar.h"
-#include "function/scale.h"
-#include "function/scalar_translate.h"
-#include "function/element_mul.h"
-#include "function/element_add.h"
-#include "function/element_add_assign.h"
-#include "function/inplace_columnwise_subtract.h"
-#include "function/inplace_reduce_column_sum.h"
+#include "opencl/scale.h"
+#include "opencl/scalar_translate.h"
+#include "opencl/element_mul.h"
+#include "opencl/element_add.h"
+#include "opencl/element_add_assign.h"
+#include "opencl/inplace_columnwise_subtract.h"
+#include "opencl/inplace_reduce_column_sum.h"
 
 using namespace std;
 using namespace boost;

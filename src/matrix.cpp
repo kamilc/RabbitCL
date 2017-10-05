@@ -109,7 +109,7 @@ namespace mozart
     template<typename T>
     matrix<T> matrix<T>::reduce_column_sum()
     {
-        mozart::function::inplace_reduce_column_sum<T>(*this);
+        mozart::opencl::inplace_reduce_column_sum<T>(*this);
 
         return matrix<T>::view(*this, 0, 0, 0, this->size2() - 1);
     }
@@ -117,7 +117,7 @@ namespace mozart
     template<typename T>
     void matrix<T>::columnwise_subtract(matrix<T>& other)
     {
-      mozart::function::inplace_columnwise_subtract<T>(*this, other);
+      mozart::opencl::inplace_columnwise_subtract<T>(*this, other);
     }
 
     template<typename T>
@@ -176,31 +176,31 @@ namespace mozart
     template<typename T>
     matrix<T> operator*(T lhs, const matrix<T>& rhs)
     {
-        return mozart::function::scale<T>(rhs, lhs);
+        return mozart::opencl::scale<T>(rhs, lhs);
     }
 
     template<typename T>
     matrix<T> operator+(T lhs, const matrix<T>& rhs)
     {
-        return mozart::function::scalar_translate<T>(rhs, lhs);
+        return mozart::opencl::scalar_translate<T>(rhs, lhs);
     }
 
     template<typename T>
     matrix<T> operator+(const matrix<T>& lhs, const matrix<T>& rhs)
     {
-        return mozart::function::element_add<T>(rhs, lhs);
+        return mozart::opencl::element_add<T>(rhs, lhs);
     }
 
     template<typename T>
     matrix<T> operator*(const matrix<T>& lhs, const matrix<T>& rhs)
     {
-        return mozart::function::element_mul<T>(lhs, rhs);
+        return mozart::opencl::element_mul<T>(lhs, rhs);
     }
 
     template<typename T>
     void operator+=(const matrix<T>& lhs, const matrix<T>& rhs)
     {
-        mozart::function::element_add_assign<T>(lhs, rhs);
+        mozart::opencl::element_add_assign<T>(lhs, rhs);
     }
 
     template<typename T>

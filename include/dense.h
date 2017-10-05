@@ -4,7 +4,7 @@
 #include "utilities.h"
 #include "layer.h"
 #include "activation.h"
-#include "function/dot.h"
+#include "opencl/dot.h"
 
 namespace mozart
 {

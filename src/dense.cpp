@@ -5,7 +5,7 @@ namespace mozart
     template<typename T>
     activation<T> dense<T>::forward(matrix<T> &data)
     {
-        matrix<T> _inter = mozart::function::dot(data, this->_weights);
+        matrix<T> _inter = mozart::opencl::dot(data, this->_weights);
 
         _inter.columnwise_subtract(this->_biases);
 
@@ -15,7 +15,7 @@ namespace mozart
     template<typename T>
     activation<T> dense<T>::train_forward(matrix<T> &data)
     {
-        matrix<T> _inter = mozart::function::dot(data, this->_weights);
+        matrix<T> _inter = mozart::opencl::dot(data, this->_weights);
 
         _inter.columnwise_subtract(this->_biases);
 

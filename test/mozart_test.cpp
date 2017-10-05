@@ -10,20 +10,20 @@
 #include "sequence.h"
 #include "input_config.h"
 #include "dense_config.h"
-#include "function/tanh.h"
-#include "function/relu.h"
-#include "function/softmax.h"
-#include "function/squared_error.h"
-#include "function/categorical_cross_entropy.h"
+#include "opencl/tanh.h"
+#include "opencl/relu.h"
+#include "opencl/softmax.h"
+#include "opencl/squared_error.h"
+#include "opencl/categorical_cross_entropy.h"
 #include "matrix_helpers.h"
-#include "function/reduce_avg.h"
-#include "function/dot.h"
-#include "function/element_mul.h"
-#include "function/squashmax.h"
-#include "function/adagrad_update.h"
+#include "opencl/reduce_avg.h"
+#include "opencl/dot.h"
+#include "opencl/element_mul.h"
+#include "opencl/squashmax.h"
+#include "opencl/adagrad_update.h"
 
 using namespace mozart;
-using namespace mozart::function;
+using namespace mozart::opencl;
 
 TEST(element_mul_test, element_mul_test)
 {
