@@ -6,6 +6,8 @@
 #include <thread>
 #include <deque>
 #include <vector>
+#include <boost/optional.hpp>
+#include <functional>
 #include <unordered_map>
 #include <cstdlib>
 #include <string>
@@ -33,12 +35,14 @@ namespace mozart
 
             timed& stats(typename stat<T>::function);
             timed& epoch_timing(bool);
+            timed& early_stop_when(std::function<bool(timed_observer<T>&)>);
 
             std::unique_ptr<base<T>> construct();
         private:
             std::chrono::duration<int> _interval;
             typename stat<T>::function _function;
             bool _epoch_timing;
+            boost::optional<std::function<bool(timed_observer<T>&)>> _early_stop_when;
         };
 
         template<typename T>
@@ -49,16 +53,16 @@ namespace mozart
             void push_error(cost<T>&);
             void start_epoch(unsigned int, unsigned int);
             void start_batch(unsigned int, unsigned int);
-            void end_epoch(sequence<T>&);
+            bool end_epoch(sequence<T>&);
             void push_outputs(activation<T>&, matrix<T>&);
             void start();
             void end();
-        private:
-            void main();
             T last_error();
             T last_stat();
+            T _last_stat_value;
+        private:
+            void main();
             std::string stat_name();
-
             std::chrono::duration<int> _interval;
             std::chrono::duration<double> _last_epoch_timing;
             std::chrono::system_clock::time_point _last_epoch_start;
@@ -67,7 +71,7 @@ namespace mozart
             std::unordered_map<unsigned int, std::vector<T>> _errors;
             typename stat<T>::function _function;
             std::vector<stat<T>> _stats;
-            T _last_stat_value;
+            boost::optional<std::function<bool(timed_observer<T>&)>> _early_stop_when;
             bool _epoch_timing;
             unsigned int _last_epoch_number;
             unsigned int _last_batch_number;

@@ -15,6 +15,8 @@ namespace mozart
         template<typename T>
         void gradient_descent<T>::run(sequence<T> &network, matrix<T> &data, matrix<T> &targets)
         {
+            bool should_continue = true;
+
             try
             {
                 for(auto i = 0; i < this->_observers.size(); i++)
@@ -26,7 +28,7 @@ namespace mozart
                 auto columns_length = data.size2();
                 auto targets_columns_length = targets.size2();
 
-                for(auto epoch = 0; epoch < this->_epochs; epoch++)
+                for(auto epoch = 0; should_continue && (epoch < this->_epochs); epoch++)
                 {
                     for(auto i = 0; i < this->_observers.size(); i++)
                     {
@@ -56,7 +58,7 @@ namespace mozart
 
                     for(auto i = 0; i < this->_observers.size(); i++)
                     {
-                      this->_observers[i]->end_epoch(network);
+                        should_continue = this->_observers[i]->end_epoch(network);
                     }
                 }
 

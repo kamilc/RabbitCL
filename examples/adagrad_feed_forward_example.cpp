@@ -70,6 +70,14 @@ int main()
              .push_observer(
                  timed<float>(std::chrono::seconds(1))
                      .stats(accuracy<float>)
+                     .early_stop_when([](timed_observer<float>& observer){
+                         if(observer._last_stat_value >= 1 && observer.last_error() < 0.04)
+                         {
+                            std::cout << "Early stopping with accuracy of " << observer._last_stat_value << std::endl;
+                            return true;
+                         }
+                         return false;
+                     })
                      .epoch_timing(true)
              );
 

@@ -50,9 +50,9 @@ namespace mozart
                 // no-op
             }
 
-            virtual void end_epoch(sequence<T>&)
+            virtual bool end_epoch(sequence<T>&)
             {
-                // no-op
+                return true;
             }
         };
 

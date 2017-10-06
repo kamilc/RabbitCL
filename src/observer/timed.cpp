@@ -28,6 +28,14 @@ namespace mozart
         }
 
         template<typename T>
+        timed<T>& timed<T>::early_stop_when(std::function<bool(timed_observer<T>&)> when)
+        {
+            this->_early_stop_when = when;
+
+            return *this;
+        }
+
+        template<typename T>
         std::unique_ptr<base<T>> timed<T>::construct()
         {
             return std::unique_ptr<base<T>>(new timed_observer<T>(*this));
@@ -97,6 +105,7 @@ namespace mozart
             this->_interval = config._interval;
             this->_function = config._function;
             this->_epoch_timing = config._epoch_timing;
+            this->_early_stop_when = config._early_stop_when;
         }
 
         template<typename T>
@@ -178,7 +187,7 @@ namespace mozart
         }
 
         template<typename T>
-        void timed_observer<T>::end_epoch(sequence<T>& network)
+        bool timed_observer<T>::end_epoch(sequence<T>& network)
         {
             if(this->_epoch_timing)
             {
@@ -192,7 +201,20 @@ namespace mozart
             }
 
             this->_last_stat_value = this->last_stat();
+
+            if(this->_early_stop_when)
+            {
+                if((*this->_early_stop_when)(*this))
+                {
+                    this->_should_end = true;
+                    std::cout << "Requesting early stop" << std::endl;
+                    return false;
+                }
+            }
+
             this->_stats.clear();
+
+            return true;
         }
 
         template<typename T>
