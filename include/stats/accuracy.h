@@ -3,6 +3,9 @@
 
 #include "matrix.h"
 #include "stat.h"
+#include "opencl/squashmax.h"
+
+using namespace mozart::opencl;
 
 namespace mozart
 {

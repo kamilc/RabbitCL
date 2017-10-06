@@ -36,8 +36,9 @@ int main()
     sequence<float> network;
 
     network.add(input_config<float>(3))
-           .add(dense_config<float>(8, relu<float>))
-           .add(dense_config<float>(8, relu<float>))
+           .add(dense_config<float>(64, tanh<float>))
+           .add(dense_config<float>(32, tanh<float>))
+           .add(dense_config<float>(16, tanh<float>))
            .add(dense_config<float>(8, softmax<float>));
 
     auto data = make_matrix<float>({
@@ -65,7 +66,7 @@ int main()
     rmsprop<float> optimizer(categorical_cross_entropy<float>);
 
     optimizer.epochs(1000)
-             .batches(4)
+             .batches(8)
              .push_observer(
                  timed<float>(std::chrono::seconds(1))
                      .stats(accuracy<float>)
@@ -74,21 +75,93 @@ int main()
 
     optimizer.run(network, data, ys);
 
-    auto test = make_matrix<float>({{ 0, 1, 0 }});
+    auto test = make_matrix<float>({
+        {0, 0, 0},
+        {0, 0, 1}, /* 1 */
+        {0, 1, 0}, /* 2 */
+        {0, 1, 1}, /* 3 */
+        {1, 0, 0}, /* 4 */
+        {1, 0, 1}, /* 5 */
+        {1, 1, 0}, /* 6 */
+        {1, 1, 1}  /* 7 */
+    });
     auto output = network.forward(test);
     auto predicted = squashmax<float>(output);
 
     std::cout << output << std::endl;
     std::cout << predicted << std::endl;
 
-    expect_near<float>(predicted(0, 0), 0, 0.01);
+    expect_near<float>(predicted(0, 0), 1, 0.01);
     expect_near<float>(predicted(0, 1), 0, 0.01);
-    expect_near<float>(predicted(0, 2), 1, 0.01);
+    expect_near<float>(predicted(0, 2), 0, 0.01);
     expect_near<float>(predicted(0, 3), 0, 0.01);
     expect_near<float>(predicted(0, 4), 0, 0.01);
     expect_near<float>(predicted(0, 5), 0, 0.01);
     expect_near<float>(predicted(0, 6), 0, 0.01);
     expect_near<float>(predicted(0, 7), 0, 0.01);
+
+    expect_near<float>(predicted(1, 0), 0, 0.01);
+    expect_near<float>(predicted(1, 1), 1, 0.01);
+    expect_near<float>(predicted(1, 2), 0, 0.01);
+    expect_near<float>(predicted(1, 3), 0, 0.01);
+    expect_near<float>(predicted(1, 4), 0, 0.01);
+    expect_near<float>(predicted(1, 5), 0, 0.01);
+    expect_near<float>(predicted(1, 6), 0, 0.01);
+    expect_near<float>(predicted(1, 7), 0, 0.01);
+
+    expect_near<float>(predicted(2, 0), 0, 0.01);
+    expect_near<float>(predicted(2, 1), 0, 0.01);
+    expect_near<float>(predicted(2, 2), 1, 0.01);
+    expect_near<float>(predicted(2, 3), 0, 0.01);
+    expect_near<float>(predicted(2, 4), 0, 0.01);
+    expect_near<float>(predicted(2, 5), 0, 0.01);
+    expect_near<float>(predicted(2, 6), 0, 0.01);
+    expect_near<float>(predicted(2, 7), 0, 0.01);
+
+    expect_near<float>(predicted(3, 0), 0, 0.01);
+    expect_near<float>(predicted(3, 1), 0, 0.01);
+    expect_near<float>(predicted(3, 2), 0, 0.01);
+    expect_near<float>(predicted(3, 3), 1, 0.01);
+    expect_near<float>(predicted(3, 4), 0, 0.01);
+    expect_near<float>(predicted(3, 5), 0, 0.01);
+    expect_near<float>(predicted(3, 6), 0, 0.01);
+    expect_near<float>(predicted(3, 7), 0, 0.01);
+
+    expect_near<float>(predicted(4, 0), 0, 0.01);
+    expect_near<float>(predicted(4, 1), 0, 0.01);
+    expect_near<float>(predicted(4, 2), 0, 0.01);
+    expect_near<float>(predicted(4, 3), 0, 0.01);
+    expect_near<float>(predicted(4, 4), 1, 0.01);
+    expect_near<float>(predicted(4, 5), 0, 0.01);
+    expect_near<float>(predicted(4, 6), 0, 0.01);
+    expect_near<float>(predicted(4, 7), 0, 0.01);
+
+    expect_near<float>(predicted(5, 0), 0, 0.01);
+    expect_near<float>(predicted(5, 1), 0, 0.01);
+    expect_near<float>(predicted(5, 2), 0, 0.01);
+    expect_near<float>(predicted(5, 3), 0, 0.01);
+    expect_near<float>(predicted(5, 4), 0, 0.01);
+    expect_near<float>(predicted(5, 5), 1, 0.01);
+    expect_near<float>(predicted(5, 6), 0, 0.01);
+    expect_near<float>(predicted(5, 7), 0, 0.01);
+
+    expect_near<float>(predicted(6, 0), 0, 0.01);
+    expect_near<float>(predicted(6, 1), 0, 0.01);
+    expect_near<float>(predicted(6, 2), 0, 0.01);
+    expect_near<float>(predicted(6, 3), 0, 0.01);
+    expect_near<float>(predicted(6, 4), 0, 0.01);
+    expect_near<float>(predicted(6, 5), 0, 0.01);
+    expect_near<float>(predicted(6, 6), 1, 0.01);
+    expect_near<float>(predicted(6, 7), 0, 0.01);
+
+    expect_near<float>(predicted(7, 0), 0, 0.01);
+    expect_near<float>(predicted(7, 1), 0, 0.01);
+    expect_near<float>(predicted(7, 2), 0, 0.01);
+    expect_near<float>(predicted(7, 3), 0, 0.01);
+    expect_near<float>(predicted(7, 4), 0, 0.01);
+    expect_near<float>(predicted(7, 5), 0, 0.01);
+    expect_near<float>(predicted(7, 6), 0, 0.01);
+    expect_near<float>(predicted(7, 7), 1, 0.01);
 
     return 0;
 }

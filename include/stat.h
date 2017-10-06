@@ -2,7 +2,9 @@
 #define Stat_h
 
 #include "matrix.h"
+#include <string>
 
+using namespace std;
 using namespace mozart;
 
 namespace mozart
@@ -12,6 +14,10 @@ namespace mozart
     {
     public:
         typedef stat<T> (*function)(matrix<T>&, matrix<T>&);
+
+        T out;
+        size_t count;
+        string name;
     };
 }
 

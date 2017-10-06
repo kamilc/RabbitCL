@@ -5,8 +5,12 @@
 #include <chrono>
 #include <thread>
 #include <deque>
+#include <vector>
+#include <unordered_map>
 #include <cstdlib>
+#include <string>
 #include "utilities.h"
+#include "activation.h"
 #include "stat.h"
 #include "observer.h"
 #include "cost.h"
@@ -44,22 +48,31 @@ namespace mozart
             timed_observer(timed<T>& config);
             void push_error(cost<T>&);
             void start_epoch(unsigned int, unsigned int);
+            void start_batch(unsigned int, unsigned int);
             void end_epoch(sequence<T>&);
+            void push_outputs(activation<T>&, matrix<T>&);
             void start();
             void end();
         private:
             void main();
+            T last_error();
+            T last_stat();
+            std::string stat_name();
 
             std::chrono::duration<int> _interval;
             std::chrono::duration<double> _last_epoch_timing;
             std::chrono::system_clock::time_point _last_epoch_start;
             std::chrono::system_clock::time_point _last_report;
             std::deque<std::chrono::duration<double>> _epoch_timings;
+            std::unordered_map<unsigned int, std::vector<T>> _errors;
             typename stat<T>::function _function;
+            std::vector<stat<T>> _stats;
+            T _last_stat_value;
             bool _epoch_timing;
             unsigned int _last_epoch_number;
+            unsigned int _last_batch_number;
             unsigned int _count_all_epochs;
-            T _last_error;
+            unsigned int _count_all_batches;
             std::thread _thread;
             bool _should_end;
         };

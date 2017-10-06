@@ -41,11 +41,14 @@ namespace mozart
                 auto now = std::chrono::system_clock::now();
 
                 if(this->_last_epoch_number > 0 &&
-                   std::chrono::duration<double, std::milli>(now - this->_last_report) > this->_interval)
+                   std::chrono::duration<double, std::milli>(now - this->_last_report) > this->_interval &&
+                   this->_last_batch_number + 1 == this->_count_all_batches)
                 {
                     std::cout << rang::fg::gray << "Epoch:" << rang::fg::reset << std::right << std::setw(6) << this->_last_epoch_number << "/" << this->_count_all_epochs;
 
-                    std::cout << " | " << rang::fg::gray << "Error:" << rang::fg::reset << std::right << std::setw(14) << this->_last_error;
+                    std::cout << " | " << rang::fg::gray << "Error:" << rang::fg::reset << std::right << std::setw(14) << this->last_error();
+
+                    std::cout << " | " << rang::fg::gray << this->stat_name() << ":" << rang::fg::reset << std::right << std::setw(14) << this->_last_stat_value;
 
                     if(this->_epoch_timing)
                     {
@@ -99,7 +102,64 @@ namespace mozart
         template<typename T>
         void timed_observer<T>::push_error(cost<T>& error)
         {
-            this->_last_error = error.avg();
+            if(!this->_epoch_timing) return;
+
+            if(this->_errors.find(this->_last_epoch_number) == this->_errors.end())
+            {
+                if(this->_count_all_batches > 0)
+                {
+                    this->_errors[this->_last_epoch_number] = std::vector<T>(this->_count_all_batches);
+                }
+                else
+                {
+                    this->_errors[this->_last_epoch_number] = std::vector<T>();
+                }
+            }
+
+            this->_errors[this->_last_epoch_number].push_back(error.avg());
+        }
+
+        template<typename T>
+        T timed_observer<T>::last_error()
+        {
+            if(this->_errors.find(this->_last_epoch_number - 1) == this->_errors.end())
+            {
+                return 0;
+            }
+
+            T sum = 0;
+
+            for(auto element : this->_errors[this->_last_epoch_number - 1])
+            {
+                sum += element;
+            }
+
+            return sum / this->_count_all_batches;
+        }
+
+        template<typename T>
+        T timed_observer<T>::last_stat()
+        {
+            size_t count_all = 0;
+            T result = 0;
+
+            for(auto stat : this->_stats)
+            {
+                count_all += stat.count;
+            }
+
+            for(auto stat : this->_stats)
+            {
+                result += stat.out * ((T)stat.count/(T)count_all);
+            }
+
+            return result;
+        }
+
+        template<typename T>
+        std::string timed_observer<T>::stat_name()
+        {
+            return this->_stats[0].name;
         }
 
         template<typename T>
@@ -108,6 +168,13 @@ namespace mozart
             this->_last_epoch_number = epoch;
             this->_count_all_epochs = count_all;
             this->_last_epoch_start = std::chrono::system_clock::now();
+        }
+
+        template<typename T>
+        void timed_observer<T>::start_batch(unsigned int batch, unsigned int count_all)
+        {
+            this->_last_batch_number = batch;
+            this->_count_all_batches = count_all;
         }
 
         template<typename T>
@@ -123,6 +190,15 @@ namespace mozart
                     this->_epoch_timings.pop_front();
                 }
             }
+
+            this->_last_stat_value = this->last_stat();
+            this->_stats.clear();
+        }
+
+        template<typename T>
+        void timed_observer<T>::push_outputs(activation<T>& outputs, matrix<T>& targets)
+        {
+            this->_stats.push_back(this->_function(outputs.out, targets));
         }
 
         INSTANTIATE(timed);
