@@ -9,6 +9,7 @@
 #include "utilities.h"
 #include "matrix_size.h"
 #include "context_manager.h"
+#include "raw.h"
 #include "scalar.h"
 #include "opencl/scale.h"
 #include "opencl/scalar_translate.h"
@@ -30,7 +31,7 @@ namespace mozart
         matrix();
         matrix(size_t size1, size_t size2);
         matrix(matrix& source, size_t start1, size_t size1, size_t start2, size_t size2);
-        matrix(std::shared_ptr<compute::vector<T>> data, size_t start1, size_t size1, size_t isize1, size_t start2, size_t size2, size_t isize2, bool initialize = true);
+        matrix(std::shared_ptr<raw<T>> data, size_t start1, size_t size1, size_t isize1, size_t start2, size_t size2, size_t isize2, bool initialize = false);
 
         static matrix view(matrix& source, size_t start1, size_t end1, size_t start2, size_t end2);
         matrix clone();
@@ -59,7 +60,7 @@ namespace mozart
         size_t _internal_size2;
         size_t _start1;
         size_t _start2;
-        std::shared_ptr<compute::vector<T>> _data;
+        std::shared_ptr<raw<T>> _data;
     };
 
     template<typename T>

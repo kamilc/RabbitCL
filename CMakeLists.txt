@@ -59,6 +59,7 @@ add_library(mozart STATIC src/sequence.cpp
                           src/opencl/inplace_reduce_column_sum.cpp
                           src/opencl/adagrad_update.cpp
                           src/opencl/rmsprop_update.cpp
+                          src/opencl/accuracy_rate.cpp
                           src/random_matrix_generator.cpp
                           src/optimizers/gradient_descent.cpp
                           src/optimizers/adagrad.cpp

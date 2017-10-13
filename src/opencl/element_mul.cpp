@@ -3,7 +3,7 @@
 namespace mozart
 {
     KERNEL(element_mul_kernel,
-        __kernel void element_mul_kernel(              
+        __kernel void element_mul_kernel(
                     __global TYPE * lhs,
                     __global TYPE * rhs,
                     __global TYPE * out,
@@ -13,13 +13,13 @@ namespace mozart
             unsigned int global_id  = get_global_id(0);
             unsigned int total_size = lhs_size.size1 * lhs_size.size2;
 
-            if(global_id < total_size)                
+            if(global_id < total_size)
             {
                 unsigned int lhs_id = id_to_internal_id(global_id, &lhs_size);
                 unsigned int rhs_id = id_to_internal_id(global_id, &rhs_size);
 
                 out[global_id] = lhs[lhs_id] * rhs[rhs_id];
-            }                                         
+            }
         }
     )
 
@@ -31,6 +31,8 @@ namespace mozart
             assert(lhs.size1() == rhs.size1() && lhs.size2() == rhs.size2());
 
             matrix<T> out(lhs.size1(), lhs.size2());
+
+            out.fill_zeros();
 
             kernel<T, element_mul_kernel>::instance()
                 .with_global_size(lhs.total_size())

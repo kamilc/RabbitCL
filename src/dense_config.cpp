@@ -17,6 +17,7 @@ namespace mozart {
         // todo: improve the initailization here to help with faster convergence
         _layer->_weights = make_random_matrix<T>(parent_size, this->_size, 0.0, 1.0);
         _layer->_biases = matrix<T>(1, this->_size);
+        _layer->_biases.fill_zeros();
         _layer->_fun = this->fun;
 
         return _layer;

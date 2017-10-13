@@ -17,6 +17,8 @@ namespace mozart
 
             matrix<T> out(lhs_size1, rhs_size2);
 
+            out.fill_zeros();
+
             compute::event _event;
             compute::command_queue queue = context_manager::instance().new_queue();
 

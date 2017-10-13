@@ -1,5 +1,7 @@
 #include "opencl/softmax.h"
 
+#include <cmath>
+
 namespace mozart
 {
     KERNEL(softmax_kernel,

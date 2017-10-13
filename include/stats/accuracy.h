@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include "stat.h"
 #include "opencl/squashmax.h"
+#include "opencl/accuracy_rate.h"
 
 using namespace mozart::opencl;
 

@@ -10,7 +10,7 @@ namespace mozart
 
     template<typename T>
     matrix<T>::matrix(size_t size1, size_t size2) :
-    matrix(std::make_shared<compute::vector<T>>(size1 * size2, context_manager::instance().context()),
+    matrix(std::make_shared<raw<T>>(size1, size2, context_manager::instance().context()),
           0, size1, size1,
           0, size2, size2)
     {
@@ -27,7 +27,7 @@ namespace mozart
     }
 
     template<typename T>
-    matrix<T>::matrix(std::shared_ptr<compute::vector<T>> data,
+    matrix<T>::matrix(std::shared_ptr<raw<T>> data,
                       size_t start1, size_t size1, size_t internal_size1,
                       size_t start2, size_t size2, size_t internal_size2,
                       bool initialize)
@@ -78,13 +78,13 @@ namespace mozart
     template<typename T>
     void matrix<T>::set(size_t at1, size_t at2, T value)
     {
-        (*this->_data)[this->index(at1, at2)] = value;
+        (*(*(*this->_data)))[this->index(at1, at2)] = value;
     }
 
     template<typename T>
     compute::vector<T>& matrix<T>::data() const
     {
-        return *this->_data;
+        return (*(*(*this->_data)));
     }
 
     template<typename T>
@@ -100,7 +100,7 @@ namespace mozart
         generate(host_data.begin(), host_data.end(), gen);
 
         compute::copy(
-            host_data.begin(), host_data.end(), this->_data->begin(), queue
+            host_data.begin(), host_data.end(), this->data().begin(), queue
         );
 
         queue.finish();
@@ -134,7 +134,7 @@ namespace mozart
         }
 
         compute::copy(
-            host_data.begin(), host_data.end(), this->_data->begin(), queue
+            host_data.begin(), host_data.end(), this->data().begin(), queue
         );
 
         queue.finish();
@@ -143,7 +143,7 @@ namespace mozart
     template<typename T>
     T matrix<T>::operator()(size_t at1, size_t at2)
     {
-        return (*this->_data)[this->index(at1, at2)];
+        return this->data()[this->index(at1, at2)];
     }
 
     template<typename T>
@@ -167,7 +167,7 @@ namespace mozart
     matrix<T> matrix<T>::clone()
     {
         return matrix<T>(
-            std::make_shared<compute::vector<T>>(*(this->_data)),
+            std::make_shared<raw<T>>(*(this->_data)),
             this->_start1, this->_size1, this->_internal_size1,
             this->_start2, this->_size2, this->_internal_size2
         );
@@ -211,7 +211,7 @@ namespace mozart
         compute::copy(
             data.begin(),
             data.end(),
-            this->_data->begin(),
+            this->data().begin(),
         queue);
 
         queue.finish();

@@ -18,7 +18,7 @@ namespace mozart
     {
         // todo: provide proper non train version
         std::vector<activation<T>> out(this->size());
-        
+
         out[0] = this->_layers[0]->train_forward(data);
 
         for(auto index = 1; index < this->size(); index++)

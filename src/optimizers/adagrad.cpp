@@ -32,6 +32,7 @@ namespace mozart
             if(this->_memo.find(index) == this->_memo.end())
             {
                 this->_memo[index] = std::make_shared<matrix<T>>(deltas.size1(), deltas.size2());
+                this->_memo[index]->fill_zeros();
             }
 
             return *this->_memo[index];
