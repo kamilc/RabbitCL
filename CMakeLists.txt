@@ -81,6 +81,9 @@ target_link_libraries(adagrad_feed_forward_example mozart pthread ${OPENCL_LIBRA
 add_executable(rmsprop_feed_forward_example examples/rmsprop_feed_forward_example.cpp)
 target_link_libraries(rmsprop_feed_forward_example mozart pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
 
+add_executable(rmsprop_big_matrices_example examples/rmsprop_big_matrices_example.cpp)
+target_link_libraries(rmsprop_big_matrices_example mozart pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
+
 add_executable(xor_example examples/xor_example.cpp)
 target_link_libraries(xor_example mozart pthread ${OPENCL_LIBRARIES} ${ClBlast_LIB})
 

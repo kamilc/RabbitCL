@@ -28,8 +28,6 @@ namespace mozart {
             assert(stack != this->_map.end());
 
             (*stack).second.push(buffer);
-
-            //std::cout << "BACK (" << (*stack).second.size() << " elements)" << std::endl;
         }
 
         std::shared_ptr<compute::vector<T>> get(size_t rows, size_t columns)
@@ -47,22 +45,17 @@ namespace mozart {
             {
                 this->_map.insert({ size, std::stack<std::shared_ptr<compute::vector<T>>>() });
 
-                //std::cout << "NEW (stack)" << std::endl;
-
                 return std::make_shared<compute::vector<T>>(size, ctx);
             }
             else
             {
-                //std::cout << "Checking stack number of elements: " << (*stack).second.size() << std::endl;
                 if((*stack).second.empty())
                 {
-                    //std::cout << "NEW (buffer)" << std::endl;
                     return std::make_shared<compute::vector<T>>(size, ctx);
                 }
                 else
                 {
                     auto ret = (*stack).second.top();
-                    //std::cout << "CACHE" << std::endl;
                     (*stack).second.pop();
                     return ret;
                 }
